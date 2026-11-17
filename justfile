@@ -90,8 +90,7 @@ fmt-check:
 [doc("update devpro coding harness plugin")]
 agents:
   @command -v devpro > /dev/null || { echo 'devpro not installed. run `brew install benn-herrera/tap/devpro`' >&2; exit 1; }
-  devpro install . --harness=claude
-  devpro install . --harness=opencode
+  devpro install .
 
 # NOT the tool for adding one dependency (see add-dependency) — this is
 # deliberate whole-graph churn.

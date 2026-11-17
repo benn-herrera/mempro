@@ -1,57 +1,41 @@
 # ROADMAP – Personant
 
-This file owns **future intent**. It sits **outside** the contract-document precedence chain
-(`THESIS.md` > `SPEC.md` > `ARCHITECTURE.md` > `CONVENTIONS.md` > code): those state only the *now*
-— current behavior, constraints and scope — and cross-reference here for anything not yet built.
-Read this file for planning. Do not hand it to a coding agent as a work order; an item graduates
-into a contract document (with acceptance criteria) before it is built, per the project's planning
-discipline.
-
-Personant is a memory system under opencode: a stateless TypeScript plugin plus a Go memory service
-(`ARCHITECTURE.md` "Plugin route"). Where an item is described in more detail, it cites the place:
-a dated report (`OPENCODE_RESEARCH/`), `SPEC.md` or `ARCHITECTURE.md`. A known defect is an item
-here that states the fact and where it lives.
-
-**Checklist lifecycle.** Every item is a checkbox. An open item is `- [ ]`; it checks off to `- [x]`
-**in place** the moment it ships and stays visible while its list has open siblings. When every item
-in a list is checked, the **list is disposed of**: removed from this file, its history already in
-`git log`. Without this, ROADMAP becomes the next memory store.
-
----
+Future intent only. Not part of the contract doc set; not handed to coding dispatches.
+A finished item leaves nothing. Do not mark it as done and let it persist. Just remove it.
 
 ## Maintenance
 
-- Review of `PROJECT_DOCS/CONVENTIONS/`, particularly house rules. some or all of the conventions
-  may have undergone some rot or may have become superseded/duplicates to changes in global
-  CLAUDE.md/AGENTS.md or agent definitions
+### Reformat ROADMAP
+It's a hodgepodge of old an new format and has violations of the 'remove when done' rule
+
+### Review of CONVENTIONS
+particularly house rules. some or all of the conventions
+may have undergone some rot or may have become superseded/duplicates to changes in global
+CLAUDE.md/AGENTS.md or agent definitions
 
 ## Pending decisions
-
 SPEC and ARCHITECTURE tag clauses that wait on a decision with `Open: Un`. Once a decision is made,
 the tagged clauses get a follow-up pass. Each entry states when it must be decided.
 
-- [ ] **U3 Model-supplied anchors.** Under **U12**, sessions will set thread boundaries, so
-  the topic tag's thread list will have no job. Open: whether the model still contributes per-turn
-  anchors (`source = model`), in band at response start (which needs the stream
-  abort-and-re-issue and transcript stripping) or through a tool, or not at all; and whether a
-  recall tool the model calls replaces the §5.5 fetch trigger. Tagged at SPEC §3.0.1, §3.1,
-  §5.1, §5.5, §9.1. **Decide in A10.**
-- [x] **U4 Memory-native commands and the ack channel: none.** Personant registers
-  no command in opencode and asks the user nothing; memory work runs automatically (SPEC §4).
-- [x] **U5 Inference for Personant's internal calls** (summarizer, clusterer, embedder,
-  memory-vetting reviewer). Personant has no inference path or provider configuration of its own:
-  every call goes through opencode, text generation through the plugin's `experimental.generate`,
-  embeddings per A12a (forking opencode if it has no route).
-- [x] **U6 Front-end version line: retired.** The memory store and home-format lines stay.
-- [ ] **U7 Plugin failure policy.** Fail open (leave the hook input unmodified; opencode's own
-  composition reaches the model and memory silently misses the step) or fail closed (refuse the
-  request; the session stops while the service is down). What opencode does when the `context` hook
-  throws or the service refuses is unestablished (`OPENCODE_RESEARCH/OPENCODE_RESUME_PROBE.md` §6). Blocks
-  ARCHITECTURE "Plugin route". A5 ships fail-open as the interim; **decide before A9 finalises.**
-- [x] **U8 Interrupted prompts and retraction: Personant's rule.** A retracted prompt
-  never enters memory, whatever opencode's transcript shows: Personant composes its own context,
-  and the transcript does not decide what enters it.
-- [ ] **U9 Restart persistence.** After a service restart the model sees no earlier conversation
+### U3 Model-supplied anchors
+Under **U12**, sessions will set thread boundaries, so
+the topic tag's thread list will have no job. Open: whether the model still contributes per-turn
+anchors (`source = model`), in band at response start (which needs the stream
+abort-and-re-issue and transcript stripping) or through a tool, or not at all; and whether a
+recall tool the model calls replaces the §5.5 fetch trigger. Tagged at SPEC §3.0.1, §3.1,
+§5.1, §5.5, §9.1. **Decide in A10.**
+
+### U7 Plugin failure policy
+Fail open (leave the hook input unmodified; opencode's own
+composition reaches the model and memory silently misses the step) or fail closed (refuse the
+request; the session stops while the service is down). What opencode does when the `context` hook
+throws or the service refuses is unestablished (`OPENCODE_RESEARCH/OPENCODE_RESUME_PROBE.md` §6). Blocks
+ARCHITECTURE "Plugin route". A5 ships fail-open as the interim; **decide before A9 finalises.**
+never enters memory, whatever opencode's transcript shows: Personant composes its own context,
+and the transcript does not decide what enters it.
+
+### U9 Restart persistence
+  After a service restart the model sees no earlier conversation
   while the TUI shows all of it (`OPENCODE_RESEARCH/OPENCODE_RESUME_PROBE.md` §3); today only the working set
   reloads. (a) Persist in-run history and the turn counter. (b) Rebuild them from opencode's stored
   messages. (c) Accept: threads carry the memory. Sets a SPEC continuity outcome (SPEC §1.6,
@@ -59,26 +43,19 @@ the tagged clauses get a follow-up pass. Each entry states when it must be decid
   persistence is this question. The same counter drives turn-based decay and the unknown-thread-id
   owner fallback through the stored `last_engaged_turn` (`internal/turn/closure.go`
   `decayEligible`). **Decide before A8.**
-- [ ] **U10 Model family.** ARCHITECTURE "Model-family as platform" targets one family (Gemma);
+
+### U10 Model family
+  ARCHITECTURE "Model-family as platform" targets one family (Gemma);
   opencode lets the user pick any model. (a) Keep one tuned family for the memory prompts and warn
   on others. (b) Support whatever opencode runs and measure tag and summarizer quality per family,
   which grows the eval surface (U3's recall-tool option shrinks it). Gates no item below.
-- [ ] **U11 CONVENTIONS rule, not adopted.** External state (an agent's data home, telemetry) never
+
+### U11 CONVENTIONS rule
+  Not adopted.** External state (an agent's data home, telemetry) never
   lives inside `~/.personant/` or a test store directory, because crash recovery quarantines untracked files.
   The requirement for opencode's data home holds either way (`OPENCODE_RESEARCH/OPENCODE_RESUME_PROBE.md` §5,
   ARCHITECTURE "Start order and resume"); the question is whether it becomes a general CONVENTIONS
   rule. Yes or no; adopt into CONVENTIONS if yes.
-- [x] **U12 Session as thread.** A project is opencode's project directory and
-  a bundle of threads; an opencode session is one thread. Recall works across a project's
-  threads, and across projects for career-level memory. Sessions, not in-band topic tags, set
-  thread boundaries: a returned-to session keeps its thread, and a new session on an old topic
-  relies on recall. Follow-up pass: SPEC §1.1, §3.0.4, §3.2, §3.3, §5.1, §5.5, §9.1, and an
-  optional opencode session ID on the thread (frontmatter and thread registry) with a store
-  format-revision bump. THESIS "What is new" item 2 and SPEC §1.1 ("by the problem it concerns,
-  never by session") change with A10.
-  Plan: A10.
-
----
 
 ## Sequence
 
@@ -87,12 +64,6 @@ the tagged clauses get a follow-up pass. Each entry states when it must be decid
 Runner-target done-lines are written when each item is planned. A8, A9, A10 and A12 wait on the
 decisions named in them.
 
-- [x] **A0. Start the implementation branch.** `plugin-route`, cut from `pivot-setup` with the
-  recalibrated documents and reports carried across and the probe code left behind. `probe-path`
-  stays alive, untagged and undeleted, as the reference until it is no longer needed. Every code
-  item below lands on `plugin-route`.
-- [x] **A1. Fix the stale model name in `TestLoadConfigFixture`** so `just test` is green; every
-  checkpoint commit needs that gate (CONVENTIONS "Two gates").
 - [ ] **A2. Carry over the probe code worth keeping.** Bring the baseline comparator
   (`sim-baseline`, `sim-fidelity`, the committed baselines) from `probe-path`, and decide whether
   to keep `model.MockServer` (the mock served as an OpenAI-compatible endpoint; if kept, add it to
@@ -163,23 +134,6 @@ decisions named in them.
   day 54) and the daily index near 2,000 entries. What remains is the re-measure with opencode in the
   loop, worth running when it can show memory-side cost under real inference that a mock run
   cannot. (`OPENCODE_RESEARCH/OPENCODE_PROBE_RESULTS.md` §§4, 11; SPEC §3.11, §9.1.)
-- [x] **A11a. Per-turn growth outside the commit: `Chain.LiveWindow` is quadratic.** Mean per-turn
-  time rises with sim-day and accelerates, breaking SPEC §9.1's flat per-operation latency. The main
-  cause is `dedup.(*Chain).LiveWindow` (`internal/dedup/livewindow.go`), called per turn from
-  `loadTrackedFiles` (`internal/memops/fileadapter/workset_compose.go`): it `Reconstruct`s every
-  version of a tracked file's chain, only to hash the old ones into identifiers. Cost is versions ×
-  file size, and both grow with every edit. The chain never shrinks in a mock run because §3.9
-  aging requires the version's blob to be reachable in the workspace repo (`store.BlobReachable`).
-  The sim never commits the workspace, so every aging attempt is refused with
-  `reason=blob-unreachable`. A real user who never commits a tracked file sees the same thing.
-  This misses SPEC §3.9's intent. Older copies were meant to be replaced in place where the context
-  holds them. The build instead appends a per-version identifier list in a separate tracked-files
-  section, and ties retention to the user's git. The fix is to implement the designed in-place
-  dedup. Secondary, smaller: `LoadThreadFiles` decodes `files.json` twice per
-  engaged turn (compose and `AgeFileChains`). The same `LiveWindow` cost also runs in the sim
-  harness's `VerifyNoBudgetOverflow`, which roughly doubles the sim's run time. Rule out after the
-  fix: residual growth in `CommitTurn` CPU, `ReadThreadBody` → `readExcerptText`, and
-  `closeTurnAndUpdateEngagement`.
 - [ ] **A11b. Whole-thread reads grow with thread length.** `store.ReadThreadBody` reads every
   excerpt of a thread (`store.LoadThread` passes no byte budget), so its per-turn CPU rises with
   sim-day. Its callers in a mock run are `turn.fetchThroughChain` and `turn.draftClosure`, via
@@ -199,12 +153,6 @@ decisions named in them.
 
 ### Part B: after the first usable build
 
-- [x] **B1. Retire the self-built harness.** Remove `internal/chat`, `internal/term`,
-  `internal/shell`, `internal/tools` and `internal/tools/web`, `internal/ping`,
-  `internal/modellist` and the provider pool, the `chat`, `ping` and `models` verbs (**U5**), and
-  `version.FrontEnd`, `test-fe` and `fe-scope-check` (**U6**); then delete the readability,
-  html-to-markdown, terminal/signal and `langchaingo/llms` dependencies. The old systems are not a fallback: nothing waits on the plugin route to remove
-  them. Done.
 - [ ] **B2. `recall_query_latency_*` does not measure recall.** The sim's p50/p95/p99 gauges
   (`metricRecallQueryLatencyP50/P95/P99`, `internal/scenarios/sim/workload.go`, populated in
   `sim/telemetry.go`) copy turn-duration percentiles instead of timing recall queries. (SPEC §9.4.)
