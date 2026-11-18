@@ -8,6 +8,11 @@ A finished item leaves nothing. Do not mark it as done and let it persist. Just 
 ### Reformat ROADMAP
 It's a hodgepodge of old an new format and has violations of the 'remove when done' rule
 
+### Rename repo to `mempro`
+It's no longer a personal assistant it is an opencode memory plugin.
+It needs to be installable via a conventional, expected opencode "front door"
+Whether that is self-installing or some other mechanism, TBD.
+
 ### Review of CONVENTIONS
 particularly house rules. some or all of the conventions
 may have undergone some rot or may have become superseded/duplicates to changes in global
