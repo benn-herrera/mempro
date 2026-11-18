@@ -7,7 +7,7 @@ duplication sweep built at the end of it.*
 ## REFERENCE PROJECTS
 - ../../devpro
 - ../../devpro/kb_tools
-- ../../personant
+- ../../mempro
 
 ## BLUF
 

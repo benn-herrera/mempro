@@ -12,7 +12,7 @@ import (
 	"github.com/go-git/go-git/v5/plumbing"
 	gitindex "github.com/go-git/go-git/v5/plumbing/format/index"
 
-	"personant/internal/store"
+	"mempro/internal/store"
 )
 
 // TestAddPaths_MatchesPerPathAdd stages one write set two ways over the
@@ -47,7 +47,7 @@ func TestAddPaths_MatchesPerPathAdd(t *testing.T) {
 	for _, rel := range baseline {
 		write(rel, "baseline "+rel+"\n")
 	}
-	for _, p := range []store.PersonantPaths{perPath, batched} {
+	for _, p := range []store.MemproPaths{perPath, batched} {
 		if err := InitDaily(ctx, p); err != nil {
 			t.Fatalf("InitDaily %s: %v", p.GitDaily, err)
 		}
@@ -109,7 +109,7 @@ func TestAddPaths_MatchesPerPathAdd(t *testing.T) {
 }
 
 // addPerPath stages rels one AddWithOptions call at a time.
-func addPerPath(t *testing.T, paths store.PersonantPaths, rels []string) {
+func addPerPath(t *testing.T, paths store.MemproPaths, rels []string) {
 	t.Helper()
 	repo, err := openRepo(paths, Daily)
 	if err != nil {
@@ -126,7 +126,7 @@ func addPerPath(t *testing.T, paths store.PersonantPaths, rels []string) {
 	}
 }
 
-func loadIndexEntries(t *testing.T, paths store.PersonantPaths) []gitindex.Entry {
+func loadIndexEntries(t *testing.T, paths store.MemproPaths) []gitindex.Entry {
 	t.Helper()
 	repo, err := openRepo(paths, Daily)
 	if err != nil {
@@ -144,7 +144,7 @@ func loadIndexEntries(t *testing.T, paths store.PersonantPaths) []gitindex.Entry
 }
 
 // commitTree commits the staged index and returns the commit's tree hash.
-func commitTree(t *testing.T, paths store.PersonantPaths) plumbing.Hash {
+func commitTree(t *testing.T, paths store.MemproPaths) plumbing.Hash {
 	t.Helper()
 	if err := Commit(context.Background(), paths, Daily, "turn", 0, 0); err != nil {
 		t.Fatalf("commit %s: %v", paths.GitDaily, err)

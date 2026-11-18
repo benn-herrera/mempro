@@ -8,9 +8,9 @@ import (
 	"path/filepath"
 	"time"
 
-	"personant/internal/crashpoint"
-	"personant/internal/dedup"
-	"personant/internal/memops"
+	"mempro/internal/crashpoint"
+	"mempro/internal/dedup"
+	"mempro/internal/memops"
 )
 
 // trackedRecord is one files.jsonl line. Field order is the on-disk key
@@ -35,19 +35,19 @@ type trackedChange struct {
 
 // TrackedIndexPath returns the path of a thread's tracked-file index:
 // <Home>/threads/thr_<n>/files.jsonl.
-func TrackedIndexPath(paths PersonantPaths, threadID string) string {
+func TrackedIndexPath(paths MemproPaths, threadID string) string {
 	return filepath.Join(ThreadDir(paths, threadID), trackedIndexName)
 }
 
 // TrackedBlobPath returns the path of the blob holding the bytes whose
 // content id is id: <Home>/threads/thr_<n>/files/<id>.
-func TrackedBlobPath(paths PersonantPaths, threadID, id string) string {
+func TrackedBlobPath(paths MemproPaths, threadID, id string) string {
 	return filepath.Join(ThreadDir(paths, threadID), trackedFilesDirName, id)
 }
 
 // TrackedDiffPath returns the path of the kept forward diff from content
 // id from to content id to: <Home>/threads/thr_<n>/files/<from>-<to>.diff.
-func TrackedDiffPath(paths PersonantPaths, threadID, from, to string) string {
+func TrackedDiffPath(paths MemproPaths, threadID, from, to string) string {
 	return filepath.Join(ThreadDir(paths, threadID), trackedFilesDirName, trackedDiffName(from, to))
 }
 
@@ -56,7 +56,7 @@ func trackedDiffName(from, to string) string { return from + "-" + to + ".diff" 
 // ReadTrackedDiff returns the bytes of the kept diff from content id from
 // to content id to, failing when either is not a content id. A missing
 // diff's error satisfies errors.Is(err, os.ErrNotExist).
-func ReadTrackedDiff(paths PersonantPaths, threadID, from, to string) ([]byte, error) {
+func ReadTrackedDiff(paths MemproPaths, threadID, from, to string) ([]byte, error) {
 	if !isContentID(from) || !isContentID(to) {
 		return nil, fmt.Errorf("read tracked diff %s: %q -> %q: not content ids", threadID, from, to)
 	}
@@ -71,7 +71,7 @@ func ReadTrackedDiff(paths PersonantPaths, threadID, from, to string) ([]byte, e
 // path order. A missing index is no tracked files. An index that does not
 // decode, is not strictly ascending by path, or names a malformed content
 // id or timestamp is an error.
-func ReadTrackedIndex(paths PersonantPaths, threadID string) ([]dedup.FileEntry, error) {
+func ReadTrackedIndex(paths MemproPaths, threadID string) ([]dedup.FileEntry, error) {
 	recs, err := ReadJSONL[trackedRecord](TrackedIndexPath(paths, threadID))
 	if errors.Is(err, os.ErrNotExist) {
 		return nil, nil
@@ -151,7 +151,7 @@ func isContentID(s string) bool {
 // ReadTrackedBlob returns the bytes of the blob named id, failing when id
 // is not a content id or the bytes do not hash to it. A missing blob's
 // error satisfies errors.Is(err, os.ErrNotExist).
-func ReadTrackedBlob(paths PersonantPaths, threadID, id string) ([]byte, error) {
+func ReadTrackedBlob(paths MemproPaths, threadID, id string) ([]byte, error) {
 	if !isContentID(id) {
 		return nil, fmt.Errorf("read tracked blob %s: %q is not a content id", threadID, id)
 	}
@@ -182,7 +182,7 @@ var cpApplyEventsPreIndex = crashpoint.Register("fs.applyEvents.preIndex")
 // bytes differ from what would be written, and all of them before the
 // index, which is written once at the end. On error the paths already
 // written are returned with it.
-func ApplyFileEvents(paths PersonantPaths, threadID string, turn int, at time.Time, events []memops.FileEvent) ([]string, error) {
+func ApplyFileEvents(paths MemproPaths, threadID string, turn int, at time.Time, events []memops.FileEvent) ([]string, error) {
 	if len(events) == 0 {
 		return nil, nil
 	}
@@ -249,7 +249,7 @@ func ApplyFileEvents(paths PersonantPaths, threadID string, turn int, at time.Ti
 	return append(written, TrackedIndexRel(threadID)), nil
 }
 
-func writeTrackedIndex(paths PersonantPaths, threadID string, entries []dedup.FileEntry) error {
+func writeTrackedIndex(paths MemproPaths, threadID string, entries []dedup.FileEntry) error {
 	recs := make([]trackedRecord, len(entries))
 	for i, e := range entries {
 		recs[i] = trackedRecordOf(e)
@@ -280,7 +280,7 @@ type TrackedPrune struct {
 // crash between the two leaves orphans, never an index naming an absent
 // file. An index that does not read leaves the thread untouched, with
 // Skip set to PruneUnreadable.
-func PruneTrackedFiles(paths PersonantPaths, threadID string, turnCount int) (TrackedPrune, error) {
+func PruneTrackedFiles(paths MemproPaths, threadID string, turnCount int) (TrackedPrune, error) {
 	var out TrackedPrune
 	entries, err := ReadTrackedIndex(paths, threadID)
 	if err != nil {

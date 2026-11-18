@@ -13,7 +13,7 @@ import (
 // model-response bodies a live-inference rung retained for its tag-miss
 // turns — see scenarios.stepCaptureTagMiss). Unset → the test skips clean,
 // so `just test` is unaffected.
-const TagMissReplayDirEnv = "PERSONANT_TAGMISS_REPLAY_DIR"
+const TagMissReplayDirEnv = "MEMPRO_TAGMISS_REPLAY_DIR"
 
 // TestTagMissReplay is the cheap-instrument acceptance harness for parser
 // changes: it re-parses EVERY captured tag-miss body from a live run and

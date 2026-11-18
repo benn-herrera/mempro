@@ -5,9 +5,9 @@ import (
 	"reflect"
 	"testing"
 
-	"personant/internal/memops"
-	"personant/internal/memops/fileadapter"
-	"personant/internal/model"
+	"mempro/internal/memops"
+	"mempro/internal/memops/fileadapter"
+	"mempro/internal/model"
 )
 
 // symSet is a test helper: builds a normalized-symbol set from a list.

@@ -1,7 +1,7 @@
 #### Version lines
 
 The memory service this spec defines carries a semver
-line; `personant version` prints the current value, `personant --version` prints it in one-line
+line; `mempro version` prints the current value, `mempro --version` prints it in one-line
 form, and `system.bootstrap` records it once per process open ([§2.8](../../2-data-model/2.8-log-event-format-logs-yyyy-mm-dd-log/index.md)). CONVENTIONS, "Versioning and
 acceptance", carries the bump contract. The four-month acceptance criterion converges the memory
 service. Milestone:
@@ -24,15 +24,14 @@ cannot interpret. The open sequence is format check → startup recovery → ser
 - **Older on disk → migrate forward** when this binary can migrate from
   that format revision to the current one: the store is brought to the current format revision and
   its `version.toml` rewritten, and the open emits a `system.home-format-migrated` event ([§2.8](../../2-data-model/2.8-log-event-format-logs-yyyy-mm-dd-log/index.md))
-  naming both revisions. An older revision this binary cannot migrate from is refused. `personant init`
+  naming both revisions. An older revision this binary cannot migrate from is refused. `mempro init`
   runs the format check and writes `version.toml` at the current format revision only when the store has none; it never rewrites one, so it leaves an older store's revision for
   the next open to migrate.
 - **No revision → treated as revision 1.** A store predating versioning is taken
   to be format revision 1 — always 1, even after the current revision advances — and then takes the
   older-on-disk path, so it is migrated and its revision written at the current one.
 
-`personant version` is **exempt from the format check**: it reports the binary's identity, the
+`mempro version` is **exempt from the format check**: it reports the binary's identity, the
 resolved store directory, and the store's format revision (a concrete number, *absent*, or
 *unreadable*) and exits 0 either way. It never runs the format check or startup recovery and never
 fails on a store it cannot read.
-

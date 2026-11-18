@@ -6,9 +6,9 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/memops/fileadapter"
-	"personant/internal/model"
-	"personant/internal/store"
+	"mempro/internal/memops/fileadapter"
+	"mempro/internal/model"
+	"mempro/internal/store"
 )
 
 // TestIndexer_WatermarkTieSecondFlushPublishes is the watermark-tie

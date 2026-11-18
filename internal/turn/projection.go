@@ -3,7 +3,7 @@ package turn
 import (
 	"sort"
 
-	"personant/internal/memops"
+	"mempro/internal/memops"
 )
 
 // ProjectAnchors re-derives a thread's headline anchor set as a

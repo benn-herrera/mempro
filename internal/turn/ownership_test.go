@@ -7,16 +7,16 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/memops"
-	"personant/internal/memops/fileadapter"
-	"personant/internal/model"
-	"personant/internal/store"
+	"mempro/internal/memops"
+	"mempro/internal/memops/fileadapter"
+	"mempro/internal/model"
+	"mempro/internal/store"
 )
 
 // seedActiveThread writes a spine record + thread file for thrID with the
 // given turn count and anchors, and returns the record. Helper for the
 // ownership tests, which need pre-existing threads the model can re-tag.
-func seedActiveThread(t *testing.T, paths store.PersonantPaths, project, thrID string, turnCount int, anchors []string) {
+func seedActiveThread(t *testing.T, paths store.MemproPaths, project, thrID string, turnCount int, anchors []string) {
 	t.Helper()
 	rec := memops.SpineRecord{
 		ID:           thrID,
@@ -54,7 +54,7 @@ func seedActiveThread(t *testing.T, paths store.PersonantPaths, project, thrID s
 
 // turnFileCount returns the number of turn-excerpt files in a thread's
 // turns/ directory — the count of turns whose content the thread owns.
-func turnFileCount(t *testing.T, paths store.PersonantPaths, thrID string) int {
+func turnFileCount(t *testing.T, paths store.MemproPaths, thrID string) int {
 	t.Helper()
 	body, err := store.LoadThread(paths, thrID)
 	if err != nil {

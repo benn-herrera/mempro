@@ -7,12 +7,12 @@ import (
 	"strings"
 	"time"
 
-	"personant/internal/clock"
-	"personant/internal/store"
+	"mempro/internal/clock"
+	"mempro/internal/store"
 )
 
 // DayIndexOf is the single-clock day derivation the barrier and the
-// Personant-Day trailer use: whole UTC calendar days since the Unix
+// mempro-Day trailer use: whole UTC calendar days since the Unix
 // epoch. Monotone with the Timeline clock (which the sim slaves to its
 // pinned clock), exact under UTC (no DST), and stable across processes
 // — everything the new-day poll needs. The absolute value is arbitrary;
@@ -27,9 +27,9 @@ func CurrentDay() int {
 	return DayIndexOf(clock.Timeline())
 }
 
-// Personant-Day trailer machinery (#94 R3b §4, F3). Every PRIMARY commit
+// mempro-Day trailer machinery (#94 R3b §4, F3). Every PRIMARY commit
 // — day-commit, all three archival commits, the cell-12 adopt, and the
-// recovery stamp/roll-forward commits — carries `Personant-Day: <N>`,
+// recovery stamp/roll-forward commits — carries `mempro-Day: <N>`,
 // the day being sealed or repaired. Consequence: HEADDAY (the trailer of
 // primary HEAD) is always defined on any primary that has taken a
 // trailered commit, and there is no tag fallback anywhere.
@@ -46,7 +46,7 @@ func CurrentDay() int {
 
 // DayTrailerKey is the commit-message trailer key carrying the day index
 // on primary commits.
-const DayTrailerKey = "Personant-Day"
+const DayTrailerKey = "mempro-Day"
 
 // daySubjectPrefix is the day-commit subject shape ("day <N>"). The
 // one-day-commit guard matches the SHAPE, not just the trailer — every primary
@@ -61,7 +61,7 @@ func DayCommitMessage(day int) string {
 	return daySubjectPrefix + strconv.Itoa(day) + "\n\n" + DayTrailerKey + ": " + strconv.Itoa(day) + "\n"
 }
 
-// WithDayTrailer appends the Personant-Day trailer to msg — the helper
+// WithDayTrailer appends the mempro-Day trailer to msg — the helper
 // every non-day-shape primary commit path (archival, adopt, recovery
 // repair) uses so primary commits are trailered uniformly (F3).
 func WithDayTrailer(msg string, day int) string {
@@ -70,7 +70,7 @@ func WithDayTrailer(msg string, day int) string {
 }
 
 // ParseDayTrailer extracts the day index from a commit message. ok is
-// false when the message carries no (or a malformed) Personant-Day
+// false when the message carries no (or a malformed) mempro-Day
 // trailer. The last matching line wins, per git trailer convention.
 func ParseDayTrailer(message string) (day int, ok bool) {
 	const prefix = DayTrailerKey + ":"
@@ -97,7 +97,7 @@ func isDayCommitMessage(message string, day int) bool {
 }
 
 // headMessage loads `which`'s HEAD commit message.
-func headMessage(paths store.PersonantPaths, which Repo) (string, error) {
+func headMessage(paths store.MemproPaths, which Repo) (string, error) {
 	repo, err := openRepo(paths, which)
 	if err != nil {
 		return "", fmt.Errorf("open repo: %w", err)
@@ -113,11 +113,11 @@ func headMessage(paths store.PersonantPaths, which Repo) (string, error) {
 	return commit.Message, nil
 }
 
-// HeadDay returns the Personant-Day trailer of `which`'s HEAD commit —
+// HeadDay returns the mempro-Day trailer of `which`'s HEAD commit —
 // the new-day DETECTION read. ok=false means HEAD carries no trailer
 // (⊥): a bare/legacy/pre-R3b primary that has never taken a trailered
 // commit. Callers pass Primary; daily commits never carry the trailer.
-func HeadDay(ctx context.Context, paths store.PersonantPaths, which Repo) (day int, ok bool, err error) {
+func HeadDay(ctx context.Context, paths store.MemproPaths, which Repo) (day int, ok bool, err error) {
 	if err := ctx.Err(); err != nil {
 		return 0, false, fmt.Errorf("autogit.HeadDay: %w", err)
 	}
@@ -133,7 +133,7 @@ func HeadDay(ctx context.Context, paths store.PersonantPaths, which Repo) (day i
 // reports whether `which`'s HEAD is a DayCommitMessage-shape commit for
 // exactly `day`.
 // See the package comment above for why this is stricter than HeadDay.
-func HeadIsDayCommit(ctx context.Context, paths store.PersonantPaths, which Repo, day int) (bool, error) {
+func HeadIsDayCommit(ctx context.Context, paths store.MemproPaths, which Repo, day int) (bool, error) {
 	if err := ctx.Err(); err != nil {
 		return false, fmt.Errorf("autogit.HeadIsDayCommit: %w", err)
 	}

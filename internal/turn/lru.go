@@ -3,7 +3,7 @@ package turn
 import (
 	"context"
 
-	"personant/internal/memops"
+	"mempro/internal/memops"
 )
 
 // EmbeddingDebtCap is memops.EmbeddingDebtCap, the §6.5 debt window.

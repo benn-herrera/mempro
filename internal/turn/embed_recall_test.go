@@ -8,18 +8,18 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/memops"
-	"personant/internal/memops/fileadapter"
-	"personant/internal/model"
-	"personant/internal/recall/measure"
-	"personant/internal/store"
+	"mempro/internal/memops"
+	"mempro/internal/memops/fileadapter"
+	"mempro/internal/model"
+	"mempro/internal/recall/measure"
+	"mempro/internal/store"
 )
 
 // seedThreadWithBody writes a thread (spine record + file) with a
 // caller-controlled body — the embedding tests need the embedded text
 // to be exactly what they specify, free of the boilerplate
 // seedThreadWithAnchors injects.
-func seedThreadWithBody(t *testing.T, paths store.PersonantPaths, project, thrID, body string) {
+func seedThreadWithBody(t *testing.T, paths store.MemproPaths, project, thrID, body string) {
 	t.Helper()
 	rec := memops.SpineRecord{
 		ID:           thrID,
@@ -51,7 +51,7 @@ func seedThreadWithBody(t *testing.T, paths store.PersonantPaths, project, thrID
 
 // embeddingState builds a turn State whose Recaller is embedding-enabled
 // (a measure.Service over a MockEmbedder), with its index prepared.
-func embeddingState(t *testing.T, paths store.PersonantPaths, meta memops.ProjectMeta) *State {
+func embeddingState(t *testing.T, paths store.MemproPaths, meta memops.ProjectMeta) *State {
 	t.Helper()
 	ops := fileadapter.NewFileAdapter(paths)
 	state := NewState(ops, meta, model.NewScriptedMock(nil))

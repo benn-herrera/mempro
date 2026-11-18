@@ -11,7 +11,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"personant/internal/clock"
+	"mempro/internal/clock"
 )
 
 // JournalKind distinguishes the two content journal record kinds.
@@ -54,9 +54,9 @@ type JournalRecord struct {
 // guaranteed durable (§4.5.8's known rename-durability gap). The journal
 // avoids rename entirely (pure append), so its content-durability
 // guarantee does not inherit that gap.
-func AppendJournal(paths PersonantPaths, turnID string, kind JournalKind, content []byte) error {
+func AppendJournal(paths MemproPaths, turnID string, kind JournalKind, content []byte) error {
 	if paths.TurnJournal == "" {
-		return errors.New("store: AppendJournal: PersonantPaths.TurnJournal is empty")
+		return errors.New("store: AppendJournal: MemproPaths.TurnJournal is empty")
 	}
 	if turnID == "" {
 		return errors.New("store: AppendJournal: turnID is empty")
@@ -120,9 +120,9 @@ func AppendJournal(paths PersonantPaths, turnID string, kind JournalKind, conten
 //
 // Only the first line is read — the journal can carry a whole model
 // response, and the conflict checks that call this run on every turn.
-func JournalOwner(paths PersonantPaths) (turnID string, inFlight bool, err error) {
+func JournalOwner(paths MemproPaths) (turnID string, inFlight bool, err error) {
 	if paths.TurnJournal == "" {
-		return "", false, errors.New("store: JournalOwner: PersonantPaths.TurnJournal is empty")
+		return "", false, errors.New("store: JournalOwner: MemproPaths.TurnJournal is empty")
 	}
 	f, oerr := os.Open(paths.TurnJournal)
 	if oerr != nil {
@@ -155,9 +155,9 @@ func JournalOwner(paths PersonantPaths) (turnID string, inFlight bool, err error
 // mid-write), are skipped rather than fatal — torn counts how many lines
 // were dropped, which the recovery caller reports. An absent file yields
 // (nil, 0, nil): no journal is the clean-shutdown steady state.
-func ScanJournal(paths PersonantPaths) (records []JournalRecord, torn int, err error) {
+func ScanJournal(paths MemproPaths) (records []JournalRecord, torn int, err error) {
 	if paths.TurnJournal == "" {
-		return nil, 0, errors.New("store: ScanJournal: PersonantPaths.TurnJournal is empty")
+		return nil, 0, errors.New("store: ScanJournal: MemproPaths.TurnJournal is empty")
 	}
 	data, rerr := os.ReadFile(paths.TurnJournal)
 	if rerr != nil {
@@ -233,9 +233,9 @@ func ScanJournal(paths PersonantPaths) (records []JournalRecord, torn int, err e
 // honest-coverage table (mad-design/crash-stability/SOLUTION.md) — the
 // ≤1-turn durability bar covers fsync-acked content, and a commit lost
 // before its own fsync is below that bar by construction.
-func TruncateJournal(paths PersonantPaths) error {
+func TruncateJournal(paths MemproPaths) error {
 	if paths.TurnJournal == "" {
-		return errors.New("store: TruncateJournal: PersonantPaths.TurnJournal is empty")
+		return errors.New("store: TruncateJournal: MemproPaths.TurnJournal is empty")
 	}
 	f, err := os.OpenFile(paths.TurnJournal, os.O_WRONLY|os.O_TRUNC, 0o644)
 	if err != nil {
@@ -252,7 +252,7 @@ func TruncateJournal(paths PersonantPaths) error {
 
 // fsyncDir opens dir and fsyncs it, making a directory-entry change (a
 // file creation) durable. A directory opened read-only can still be
-// Sync'd on the platforms personant targets.
+// Sync'd on the platforms mempro targets.
 func fsyncDir(dir string) error {
 	d, err := os.Open(dir)
 	if err != nil {

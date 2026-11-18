@@ -1,6 +1,6 @@
-// Package fileadapter implements memops.MemoryOps against personant's
+// Package fileadapter implements memops.MemoryOps against mempro's
 // canonical file substrate (JSONL + markdown + YAML frontmatter + TOML
-// providers + git on ~/.personant/). Delegates to internal/store,
+// providers + git on ~/.mempro/). Delegates to internal/store,
 // internal/index, internal/recall/scoring, internal/workset,
 // internal/verify, and internal/eventlog.
 //
@@ -28,14 +28,14 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"personant/internal/clock"
-	"personant/internal/eventlog"
-	"personant/internal/index"
-	"personant/internal/memops"
-	"personant/internal/recall/scoring"
-	"personant/internal/recovery"
-	"personant/internal/store"
-	"personant/internal/verify"
+	"mempro/internal/clock"
+	"mempro/internal/eventlog"
+	"mempro/internal/index"
+	"mempro/internal/memops"
+	"mempro/internal/recall/scoring"
+	"mempro/internal/recovery"
+	"mempro/internal/store"
+	"mempro/internal/verify"
 )
 
 // FileAdapter is the file-backed implementation of memops.MemoryOps.
@@ -43,7 +43,7 @@ import (
 // Construct via NewFileAdapter. The zero value is not useful — paths
 // must be supplied.
 type FileAdapter struct {
-	paths store.PersonantPaths
+	paths store.MemproPaths
 
 	// Logger is a supplementary sink for non-fatal warnings (workset
 	// layer-render failures, log-compaction misses, etc.). nil-safe.
@@ -148,7 +148,7 @@ func (a *FileAdapter) resetTurnScope() {
 // store.ResolvePaths or store.PathsForHome itself so that test code can
 // pin a t.TempDir() and CLI code can honor --home flags without the
 // adapter being involved in the resolution.
-func NewFileAdapter(paths store.PersonantPaths) *FileAdapter {
+func NewFileAdapter(paths store.MemproPaths) *FileAdapter {
 	return &FileAdapter{paths: paths, fmCache: newFrontmatterCache()}
 }
 
@@ -437,7 +437,7 @@ func (a *FileAdapter) LoadWorkingSet(ctx context.Context) ([]string, []string, e
 // working-set.json — it is not a port concept and gets no MemoryOps method;
 // the recall Service discovers this directory by type-asserting the adapter
 // against a narrow optional interface (measure.recallCacheLocator). Paths
-// stay the adapter's secret: callers never see PersonantPaths, only this one
+// stay the adapter's secret: callers never see MemproPaths, only this one
 // resolved directory string when they need it.
 func (a *FileAdapter) RecallCacheDir() string {
 	return a.paths.RecallCache

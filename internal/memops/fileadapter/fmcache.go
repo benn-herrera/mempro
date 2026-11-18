@@ -4,8 +4,8 @@ import (
 	"slices"
 	"sync"
 
-	"personant/internal/memops"
-	"personant/internal/store"
+	"mempro/internal/memops"
+	"mempro/internal/store"
 )
 
 // frontmatterCache is an in-memory, write-through cache of parsed thread
@@ -77,7 +77,7 @@ func newFrontmatterCache() *frontmatterCache {
 // read-only by callers (see the frontmatterCache aliasing contract). They
 // are NOT cloned on return — keeping the read path allocation-free is the
 // point of the cache.
-func (c *frontmatterCache) LoadAll(paths store.PersonantPaths, logf func(format string, args ...any)) ([]memops.ThreadMeta, error) {
+func (c *frontmatterCache) LoadAll(paths store.MemproPaths, logf func(format string, args ...any)) ([]memops.ThreadMeta, error) {
 	if logf == nil {
 		logf = func(string, ...any) {}
 	}

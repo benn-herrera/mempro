@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"personant/internal/memops"
-	"personant/internal/memops/fileadapter"
-	"personant/internal/store"
+	"mempro/internal/memops"
+	"mempro/internal/memops/fileadapter"
+	"mempro/internal/store"
 )
 
 // recordingOps wraps a real MemoryOps and captures every EmitDelta call's
@@ -143,7 +143,7 @@ func TestEventTaxonomyHasNoUnroutedEvents(t *testing.T) {
 }
 
 // readChainLogs concatenates every *.log file under LogsDir.
-func readChainLogs(t *testing.T, paths store.PersonantPaths) string {
+func readChainLogs(t *testing.T, paths store.MemproPaths) string {
 	t.Helper()
 	entries, err := os.ReadDir(paths.LogsDir)
 	if err != nil {

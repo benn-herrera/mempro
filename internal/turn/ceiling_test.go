@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/memops/fileadapter"
-	"personant/internal/model"
+	"mempro/internal/memops/fileadapter"
+	"mempro/internal/model"
 )
 
 // The #127 post-flight token-ceiling guard, both of its outcomes.

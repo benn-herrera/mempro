@@ -10,12 +10,12 @@ import (
 	"path/filepath"
 	"strings"
 
-	"personant/internal/autogit"
-	"personant/internal/clock"
-	"personant/internal/crashpoint"
-	"personant/internal/eventlog"
-	"personant/internal/memops"
-	"personant/internal/store"
+	"mempro/internal/autogit"
+	"mempro/internal/clock"
+	"mempro/internal/crashpoint"
+	"mempro/internal/eventlog"
+	"mempro/internal/memops"
+	"mempro/internal/store"
 )
 
 // Filesystem phases of recovery: the log-tail heal, the unconditional
@@ -42,12 +42,12 @@ const quarantineParentName = "quarantine"
 // and are never committed. Each action is recorded in the report and as
 // a recovery.quarantined event.
 type quarantine struct {
-	paths store.PersonantPaths
+	paths store.MemproPaths
 	dir   string // absolute recovery/quarantine/<stamp>; created lazily
 	rep   *memops.RecoveryReport
 }
 
-func newQuarantine(paths store.PersonantPaths, rep *memops.RecoveryReport) *quarantine {
+func newQuarantine(paths store.MemproPaths, rep *memops.RecoveryReport) *quarantine {
 	stamp := clock.Timeline().UTC().Format("20060102T150405.000000000Z")
 	return &quarantine{
 		paths: paths,
@@ -120,7 +120,7 @@ func (q *quarantine) record(rel string) {
 // means a prior recovery pass crashed mid-reset.
 const logsPreserveDirName = "logs-preserve"
 
-func logsPreserveDir(paths store.PersonantPaths) string {
+func logsPreserveDir(paths store.MemproPaths) string {
 	return filepath.Join(paths.RecoveryDir, logsPreserveDirName)
 }
 
@@ -129,7 +129,7 @@ func logsPreserveDir(paths store.PersonantPaths) string {
 // returns the names of the files it healed. Only top-level *.log files
 // are line-oriented; logs/archive/ holds rotated tarballs and is not
 // touched.
-func healLogTails(paths store.PersonantPaths) ([]string, error) {
+func healLogTails(paths store.MemproPaths) ([]string, error) {
 	entries, err := os.ReadDir(paths.LogsDir)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
@@ -199,7 +199,7 @@ func tailIsTorn(path string) (bool, error) {
 // managed by restorePreservedLogs, and walking the quarantine would
 // re-sweep already-quarantined files forever). Returns home-relative
 // slash paths of swept files, sorted by walk order (lexical).
-func sweepTmpResidue(paths store.PersonantPaths, q *quarantine) ([]string, error) {
+func sweepTmpResidue(paths store.MemproPaths, q *quarantine) ([]string, error) {
 	var swept []string
 	err := filepath.WalkDir(paths.Home, func(p string, d os.DirEntry, walkErr error) error {
 		if walkErr != nil {
@@ -240,7 +240,7 @@ func sweepTmpResidue(paths store.PersonantPaths, q *quarantine) ([]string, error
 // the tmp- prefix stripped) exists, or its parent is a canonical-
 // namespace directory the substrate writes atomically (home root,
 // directives/, archive/, and the threads/ and projects/ subtrees).
-func atomicResidue(paths store.PersonantPaths, abs string) bool {
+func atomicResidue(paths store.MemproPaths, abs string) bool {
 	dir := filepath.Dir(abs)
 	target := filepath.Join(dir, strings.TrimPrefix(filepath.Base(abs), "tmp-"))
 	if _, err := os.Stat(target); err == nil {
@@ -281,7 +281,7 @@ func underDir(p, root string) bool {
 // recovery/ (this package's own preserved artifacts + quarantine; also
 // gitignored, listed here as belt-and-braces for homes whose .gitignore
 // predates the entry). Empty parent directories left behind are pruned.
-func sweepUntrackedDebris(ctx context.Context, paths store.PersonantPaths, q *quarantine) ([]string, error) {
+func sweepUntrackedDebris(ctx context.Context, paths store.MemproPaths, q *quarantine) ([]string, error) {
 	// Untracked-ness is a DAILY observable: turns commit to daily, so
 	// in-flight turn debris is whatever daily HEAD does not know. Both
 	// git-dirs are gitignored, so neither can appear here.
@@ -312,7 +312,7 @@ func sweepUntrackedDebris(ctx context.Context, paths store.PersonantPaths, q *qu
 // the Init layout and must survive even when empty), or the first
 // non-empty directory. Best-effort — a leftover empty directory is
 // cosmetic, never load-bearing.
-func pruneEmptyParents(paths store.PersonantPaths, dir string) {
+func pruneEmptyParents(paths store.MemproPaths, dir string) {
 	scaffold := map[string]struct{}{
 		paths.Home: {}, paths.ThreadsDir: {}, paths.ProjectsDir: {},
 		paths.DirectivesDir: {}, paths.LogsDir: {}, paths.LogsArchive: {},
@@ -334,7 +334,7 @@ func pruneEmptyParents(paths store.PersonantPaths, dir string) {
 // file already staged is never overwritten, so a re-entered recovery
 // (whose live logs may already be truncated by the first pass's reset)
 // cannot clobber the fuller copy with a shorter one.
-func preserveLogs(ctx context.Context, paths store.PersonantPaths) error {
+func preserveLogs(ctx context.Context, paths store.MemproPaths) error {
 	rels, err := trackedLogFiles(ctx, paths)
 	if err != nil {
 		return err
@@ -369,7 +369,7 @@ func preserveLogs(ctx context.Context, paths store.PersonantPaths) error {
 // revert — resets target daily, never primary — so daily HEAD is the right
 // tree (untracked log files are untouched by reset and exempt from
 // the debris sweep, so they need no preservation).
-func trackedLogFiles(ctx context.Context, paths store.PersonantPaths) ([]string, error) {
+func trackedLogFiles(ctx context.Context, paths store.MemproPaths) ([]string, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, err
 	}
@@ -419,7 +419,7 @@ func trackedLogFiles(ctx context.Context, paths store.PersonantPaths) ([]string,
 //     no forensic line from either pass is lost.
 //
 // A missing staging dir is the common no-op.
-func restorePreservedLogs(paths store.PersonantPaths) error {
+func restorePreservedLogs(paths store.MemproPaths) error {
 	dir := logsPreserveDir(paths)
 	if _, err := os.Stat(dir); err != nil {
 		if errors.Is(err, os.ErrNotExist) {

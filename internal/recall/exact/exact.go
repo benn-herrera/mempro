@@ -47,7 +47,7 @@ import (
 	"sort"
 	"strings"
 
-	"personant/internal/memops"
+	"mempro/internal/memops"
 )
 
 // metaTurnNumber is the synthetic turn number GrepThreads assigns to a match

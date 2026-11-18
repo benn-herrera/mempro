@@ -2,7 +2,7 @@
 
 **MODEL**: reaper/Qwen3.8-Flash-Next
 
-*Status: discussion record. Sources of record: this KB's volume (arxiv 2603.15381v1), personant (`/Users/agent-user/projects/personant/`), ModernSwarm draft (`/Users/agent-user/projects/ModernCorp/kb-root/session/for-keith/modernswarm-draft.md`), polytexnical record (`/Users/agent-user/projects/polytexnical/record/`). Attributions: **paper** = KB content; **draft** = ModernSwarm (itself specification, not validated finding); **personant** = its contract docs; **user** = owner decisions and position statements; **noodle** = reasoning in discussion, unvalidated.*
+*Status: discussion record. Sources of record: this KB's volume (arxiv 2603.15381v1), mempro (`/Users/agent-user/projects/mempro/`), ModernSwarm draft (`/Users/agent-user/projects/ModernCorp/kb-root/session/for-keith/modernswarm-draft.md`), polytexnical record (`/Users/agent-user/projects/polytexnical/record/`). Attributions: **paper** = KB content; **draft** = ModernSwarm (itself specification, not validated finding); **mempro** = its contract docs; **user** = owner decisions and position statements; **noodle** = reasoning in discussion, unvalidated.*
 
 ---
 
@@ -32,16 +32,16 @@ Dynamic *training* is too expensive to be dynamic; the lever is **runtime**: a f
 - Ceiling is the paper's own claim accepted rather than deferred: retrieval buys access, one-shot transmission, offloaded working memory — not System-A perceptual/schema change.
 - The KB session mechanism is the same structure run slow; the open question is where composition-with-retrieval becomes functionally indistinguishable from learning — the paper never separates this.
 
-## 3. Personant: multicameral mind on an existing substrate
+## 3. mempro: multicameral mind on an existing substrate
 
 ### Model set as platform (user decision)
 - **Amended: "model family as platform" → "model set as platform"** — each model is a platform; families may be mixed to seat capability correctly; single-family composition is not required and undermines independence.
 - Infra prompts tuned **per model, scoped to that model's seat's task domain**; cost becomes O(model × seat-domain), paid in free local tokens; new costs: VRAM, per-seat eval suites, model updates as platform events.
-- Rationale vs original single-family rule: family-wide coherence assumed models talk raw to each other; in personant they don't — the substrate is canonical, inter-chamber contracts live in deterministic schemas, model-specific priors contaminate seats, not the ledger.
+- Rationale vs original single-family rule: family-wide coherence assumed models talk raw to each other; in mempro they don't — the substrate is canonical, inter-chamber contracts live in deterministic schemas, model-specific priors contaminate seats, not the ledger.
 - 26B-A4B tier retired from main seat on evidence; wider local menu changes the set.
 
 ### Multicameral composition (user direction)
-- Models are **chambers, not chores**: tier table becomes activation conditions over telemetry, not assignments. Arbiter starts hand-written deterministic (personant's answer to the bootstrap), becomes learned from outcome history later.
+- Models are **chambers, not chores**: tier table becomes activation conditions over telemetry, not assignments. Arbiter starts hand-written deterministic (mempro's answer to the bootstrap), becomes learned from outcome history later.
 - Identity already lives outside the model (THESIS: deterministic, inspectable state) — the precondition for interchangeable chambers. Telemetry already flows (`recall_fires`, bands, decay, oMLX inference timings as somatic signals); propose-and-ack is epistemic vigilance with a gate.
 
 ### Hardware sizing (noodle, estimates)
@@ -51,7 +51,7 @@ Dynamic *training* is too expensive to be dynamic; the lever is **runtime**: a f
 
 ## 4. Synthesis with ModernSwarm (governance → mind scale)
 
-- **§5 tiers re-diagnosed**: the static tier table is loyalty-ratchet-in-config; chambers + ground-truth-routed authority is the fix; personant's deterministic runtime *is* the un-blinded experiential channel, free.
+- **§5 tiers re-diagnosed**: the static tier table is loyalty-ratchet-in-config; chambers + ground-truth-routed authority is the fix; mempro's deterministic runtime *is* the un-blinded experiential channel, free.
 - **§7 blind debate ≈ already built** in the mad-design/mad-review protocol; its "record the map, never force unanimity" is what makes multicamery safe.
 - **§6 elder concretized**: the 31B-class seat is *calibrated*, not biggest; scored on discrimination (did dissents predict environment-confirmed outcomes), never on agreement or objective success.
 - **§2 cost inversion explains 26B-A4B**: cheap tiers carry highest kᵢ — the most distorted signal per output; govern by environmentalizing first.
@@ -112,7 +112,7 @@ AST borrows pandoc's shape (not JSON), taking missing concepts/nomenclature from
 2. Model set as platform; per-seat domain-scoped prompt tuning + eval; family mixing permitted; adversarial decorrelation required for judgment channels.
 3. Multicameral composition: chambers with activation conditions, not chores; deterministic arbiter first, earned/learned arbiter later; disagreement to the ledger, never forced unanimity.
 4. ptxl schema: pandoc AST shape + LaTeXML concepts; witness-based minimality; host query-log as criteria feed.
-5. The record survives the session: this synthesis feeds personant restart planning, ptxl v-next, and the gen0 ledger design.
+5. The record survives the session: this synthesis feeds mempro restart planning, ptxl v-next, and the gen0 ledger design.
 
 **Synthesis skeleton (noodle, decision-ready):**
 - **Substrate** (own, model-free): deterministic canonical state; append-only ledger; replayable executor; envelopes + tripwires; census-vs-allowed-set gates; meta-action journal.
@@ -152,7 +152,7 @@ AST borrows pandoc's shape (not JSON), taking missing concepts/nomenclature from
 
 ### Toe-on-the-ice probe sequence (cheap, reject-able, before the fleet)
 1. **Gen0 "only dataset factory" crack** — narrow A/B whether an instrumented run yields verdict-bound traces the plain corpus lacks. If no, the data-spine ambition cracks first.
-2. **System-M-as-control-plane crack** — tiny routing layer + discrimination ledger over personant telemetry vs no-routing; measurable prediction gains?
+2. **System-M-as-control-plane crack** — tiny routing layer + discrimination ledger over mempro telemetry vs no-routing; measurable prediction gains?
 3. **Multicameral-governance crack** — blind-debate protocol (2 peers) scored on dissent-vs-environment-verdict discrimination.
 4. **Ceiling crack** — does crawled-index retrieval + verdict-bound pairs shift measured outcomes beyond one-shot transmission?
 
@@ -196,6 +196,6 @@ Governor: escalate only where a probe returns signal; stop before the fleet on e
 - `kb-root/why-ai-systems-dont-learn-and-what-to-do-about/claim-quality.md`
 
 **Cross-cited, outside this KB root (referenced; not re-listed per session-bibliography discipline, recorded here as pointers):**
-- personant: `THESIS.md`, `ACTIVE_PLAN.md`, `ARCHITECTURE.md` (layered working set; recall mechanisms; consolidation; model-family→model-set amendment pending); personant `mad-design/`, `mad-review/`, `.opencode/commands/`
+- mempro: `THESIS.md`, `ACTIVE_PLAN.md`, `ARCHITECTURE.md` (layered working set; recall mechanisms; consolidation; model-family→model-set amendment pending); mempro `mad-design/`, `mad-review/`, `.opencode/commands/`
 - ModernSwarm: `/Users/agent-user/projects/ModernCorp/kb-root/session/for-keith/modernswarm-draft.md`
 - polytexnical: `/Users/agent-user/projects/polytexnical/record/` (structure + summary/ruling inventory via read-only skim, 2026-10-16; details in the agent's report at session `ses_eb946284dffea9tX9LYU215ocE`)

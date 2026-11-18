@@ -1,7 +1,7 @@
 package turn
 
 import (
-	"personant/internal/memops"
+	"mempro/internal/memops"
 )
 
 // stagedSymbol is one entry in the per-State staging buffer. Bytes

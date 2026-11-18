@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"strings"
 
-	"personant/internal/memops"
-	"personant/internal/recall/measure"
+	"mempro/internal/memops"
+	"mempro/internal/recall/measure"
 )
 
 // joinInts renders a turn-number slice as a comma-separated token for the

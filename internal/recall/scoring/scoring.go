@@ -16,7 +16,7 @@ package scoring
 import (
 	"sort"
 
-	"personant/internal/memops"
+	"mempro/internal/memops"
 )
 
 // Defaults from spec §2.6.1. The 0.4 threshold mirrors

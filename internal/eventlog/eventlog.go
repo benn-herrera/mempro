@@ -18,8 +18,8 @@ import (
 	"sync"
 	"time"
 
-	"personant/internal/clock"
-	"personant/internal/store"
+	"mempro/internal/clock"
+	"mempro/internal/store"
 )
 
 // writeMu serializes the open-append-close cycle so concurrent writers
@@ -33,7 +33,7 @@ var writeMu sync.Mutex
 // free-form. category and action must be non-empty and contain no
 // whitespace; details may be empty (the line still gets a trailing
 // space-then-newline).
-func Log(paths store.PersonantPaths, category, action, details string) error {
+func Log(paths store.MemproPaths, category, action, details string) error {
 	if category == "" || action == "" {
 		return fmt.Errorf("eventlog: category and action are required")
 	}
@@ -41,7 +41,7 @@ func Log(paths store.PersonantPaths, category, action, details string) error {
 		return fmt.Errorf("eventlog: category/action must not contain whitespace")
 	}
 	if paths.LogsDir == "" {
-		return fmt.Errorf("eventlog: PersonantPaths.LogsDir is empty")
+		return fmt.Errorf("eventlog: MemproPaths.LogsDir is empty")
 	}
 
 	now := clock.Timeline()
@@ -89,7 +89,7 @@ func DayLogRel(at time.Time) string {
 // one of the §3.0.1 event names ("user.prompt", "model.response",
 // "tool.result", "thread.fetched", ...); byteSize is the delta size in
 // bytes.
-func LogContextModified(paths store.PersonantPaths, source string, byteSize int) error {
+func LogContextModified(paths store.MemproPaths, source string, byteSize int) error {
 	return Log(paths, "context", "modified", fmt.Sprintf("source=%s bytes=%d", source, byteSize))
 }
 

@@ -7,7 +7,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"personant/internal/memops"
+	"mempro/internal/memops"
 )
 
 // archiveSummaryWidth caps the spine-summary column in `archive list` so a
@@ -17,7 +17,7 @@ const archiveSummaryWidth = 48
 var archiveCmd = &cobra.Command{
 	Use:   "archive",
 	Short: "inspect and recover deep-cold archived topics",
-	Long: `Operate on personant's recoverable git-based archive (§3.8).
+	Long: `Operate on mempro's recoverable git-based archive (§3.8).
 Retired topics drained from the active spine are preserved as git
 deletion commits with a lookup entry in archive/index.jsonl. 'list'
 shows the index; 'recover' restores a topic to the spine as wip.`,

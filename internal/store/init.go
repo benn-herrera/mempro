@@ -15,8 +15,8 @@ import (
 	"github.com/go-git/go-git/v5/plumbing/object"
 	"github.com/go-git/go-git/v5/storage/filesystem"
 
-	"personant/internal/clock"
-	"personant/internal/version"
+	"mempro/internal/clock"
+	"mempro/internal/version"
 )
 
 // InitOptions controls the behavior of Init.
@@ -29,7 +29,7 @@ type InitOptions struct {
 	Logger func(format string, args ...any)
 }
 
-// Init scaffolds $PERSONANT_HOME according to spec §2.1.
+// Init scaffolds $MEMPRO_HOME according to spec §2.1.
 //
 // The operation is idempotent by construction: directories are created with
 // MkdirAll, git init is skipped if .git/ already exists, and the initial
@@ -50,11 +50,11 @@ type InitOptions struct {
 //     for why re-stamping would be actively wrong).
 //
 // Git is managed in-process via go-git: `git init` plus the bootstrap
-// "personant init" commit run on the home tree. No git binary is
+// "mempro init" commit run on the home tree. No git binary is
 // required on $PATH. Substrate validation for autonomic git operations
 // post-init runs through internal/autogit's GitCheckFlags bitmask —
 // not through a git pre-commit hook. See spec §8.3.
-func Init(paths PersonantPaths, opts InitOptions) error {
+func Init(paths MemproPaths, opts InitOptions) error {
 	logf := func(format string, args ...any) {
 		if opts.Quiet || opts.Logger == nil {
 			return
@@ -63,7 +63,7 @@ func Init(paths PersonantPaths, opts InitOptions) error {
 	}
 
 	if paths.Home == "" {
-		return errors.New("init: PersonantPaths.Home is empty")
+		return errors.New("init: MemproPaths.Home is empty")
 	}
 
 	dirs := []struct {
@@ -250,8 +250,8 @@ func writeAlways(path string, content []byte) error {
 // The managed-block markers for .gitignore. Init keeps the block between
 // them authoritative while preserving everything outside it.
 const (
-	gitignoreBeginMarker = "# >>> personant managed (rewritten by init; add your entries outside this block) >>>"
-	gitignoreEndMarker   = "# <<< personant managed <<<"
+	gitignoreBeginMarker = "# >>> mempro managed (rewritten by init; add your entries outside this block) >>>"
+	gitignoreEndMarker   = "# <<< mempro managed <<<"
 )
 
 // writeGitignoreMerged installs the seeded gitignore block, preserving
@@ -324,8 +324,8 @@ func mergeGitignore(existing []byte) []byte {
 //   - If .git/ already exists, it is opened with go-git.PlainOpen and
 //     left otherwise untouched.
 //   - Otherwise go-git.PlainInit creates the repo.
-//   - If HEAD has no commits, an initial "personant init" commit is made
-//     via go-git's worktree. Author identity falls back to a personant
+//   - If HEAD has no commits, an initial "mempro init" commit is made
+//     via go-git's worktree. Author identity falls back to a mempro
 //     fallback when the repo's git config has no user.name/user.email.
 //
 // No git binary is required on $PATH; the work is done in-process.
@@ -370,7 +370,7 @@ func initGit(home string, logf func(format string, args ...any)) (created bool, 
 // barrier; the worktree is the truth and primary (.git) is the career
 // history. Both git-dirs are covered by the seeded .gitignore block
 // (written above, before the baseline Add honors it).
-func initGitDaily(paths PersonantPaths, logf func(format string, args ...any)) error {
+func initGitDaily(paths MemproPaths, logf func(format string, args ...any)) error {
 	if _, err := os.Stat(paths.GitDaily); err == nil {
 		return nil
 	} else if !errors.Is(err, os.ErrNotExist) {
@@ -414,7 +414,7 @@ func initialCommitIfEmpty(repo *git.Repository, logf func(format string, args ..
 	if err := wt.AddWithOptions(&git.AddOptions{All: true}); err != nil {
 		return fmt.Errorf("init: git add: %w", err)
 	}
-	if _, err := wt.Commit("personant init", &git.CommitOptions{
+	if _, err := wt.Commit("mempro init", &git.CommitOptions{
 		Author: CommitSignature(repo),
 	}); err != nil {
 		return fmt.Errorf("init: git commit: %w", err)
@@ -427,7 +427,7 @@ func initialCommitIfEmpty(repo *git.Repository, logf func(format string, args ..
 // against repo. If the repo's git config (including local + global
 // scopes via go-git's ConfigScoped) yields a user.name + user.email
 // pair, those are used (preserving user identity). Otherwise the
-// personant fallback identity ("personant" <personant@localhost>)
+// mempro fallback identity ("mempro" <mempro@localhost>)
 // kicks in so a freshly-initialized tempdir with no git config still
 // produces a valid commit.
 //
@@ -444,8 +444,8 @@ func CommitSignature(repo *git.Repository) *object.Signature {
 		}
 	}
 	return &object.Signature{
-		Name:  "personant",
-		Email: "personant@localhost",
+		Name:  "mempro",
+		Email: "mempro@localhost",
 		When:  clock.Timeline(),
 	}
 }
@@ -482,11 +482,11 @@ modification_source: install
 
 # System defaults
 
-These are the baked-in default parameter values for the personant runtime.
+These are the baked-in default parameter values for the mempro runtime.
 Per spec §2.6, user.md and project-scoped overrides take precedence in that
 order; this file is the floor.
 
-This file is install-shipped and rewritten on every ` + "`personant init`" + `
+This file is install-shipped and rewritten on every ` + "`mempro init`" + `
 to match the binary. Hand-editing is unsupported here — set overrides in
 ` + "`user.md`" + ` or project directives instead (see spec §2.6).
 `
@@ -504,9 +504,9 @@ modification_source: install
 This file holds user-wide overrides. See spec §2.6 for precedence rules.
 `
 
-const seedReadmeMD = "# personant home\n" +
+const seedReadmeMD = "# mempro home\n" +
 	"\n" +
-	"This directory is managed by the **personant** runtime. It holds the\n" +
+	"This directory is managed by the **mempro** runtime. It holds the\n" +
 	"agent's persistent working memory across all projects.\n" +
 	"\n" +
 	"- `spine.jsonl` — unified thread spine (canonical).\n" +
@@ -521,7 +521,7 @@ const seedReadmeMD = "# personant home\n" +
 	"This directory is git-managed by the runtime; you do not need to run git\n" +
 	"commands here yourself.\n"
 
-const seedGitignoreBody = `# personant home gitignore
+const seedGitignoreBody = `# mempro home gitignore
 tmp/
 # Both git-dirs are ignored EXPLICITLY. git auto-ignores
 # only a repo's OWN git-dir: the daily handle (.git-daily as git-dir over

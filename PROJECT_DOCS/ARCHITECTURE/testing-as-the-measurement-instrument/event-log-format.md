@@ -16,7 +16,7 @@ a new decision event adds its entry here. Actions ending in `-error` (and `warni
 diagnostics; §9 measurement keys off the decision events. No event carries multi-line content.
 
 ```
-2026-05-08T02:55:44-07:00 system.bootstrap version=0.1.0 home-format=4 commit=abc1234 home=/Users/u/.personant
+2026-05-08T02:55:44-07:00 system.bootstrap version=0.1.0 home-format=4 commit=abc1234 home=/Users/u/.mempro
 2026-05-08T02:55:45-07:00 session.started active=prj_3
 2026-05-08T02:55:50-07:00 thread.engaged thr_42 turn_count=1247
 2026-05-08T02:55:51-07:00 spine.match-fire thr_88 score=0.62 matched=trefoil,unknot query_size=5
@@ -53,4 +53,3 @@ Some category and code names predate the settled vocabulary: `spine` is the thre
 `dissect.cluster-proposed`, `dissect.complete`, `directive.accrual-update`,
 `directive.parameter-read` (sampled), `index.rebuild-start`, `index.rebuild-complete`,
 `index.verify-fail`.
-

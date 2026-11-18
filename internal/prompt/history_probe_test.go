@@ -52,7 +52,7 @@
 // how the V0 baseline is carried for free). Summary artifacts are written
 // separately as summary_history_seed<seed>.{json,txt}. Sanity pass:
 //
-//	PERSONANT_PROBE_N=3 PERSONANT_LIVE_TESTS=1 \
+//	MEMPRO_PROBE_N=3 MEMPRO_LIVE_TESTS=1 \
 //	  make test-run PKG=./internal/prompt RUN=TestHistoryPrecedentProbe
 package prompt_test
 
@@ -65,11 +65,11 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"personant/internal/clock"
-	"personant/internal/memops"
-	"personant/internal/model"
-	"personant/internal/prompt"
-	"personant/internal/testsupport"
+	"mempro/internal/clock"
+	"mempro/internal/memops"
+	"mempro/internal/model"
+	"mempro/internal/prompt"
+	"mempro/internal/testsupport"
 )
 
 const (
@@ -283,7 +283,7 @@ func historyReportNames(vs []historyVariant) []string {
 func TestHistoryPrecedentProbe_Live(t *testing.T) {
 	testsupport.RequireLive(t)
 
-	n := envIntDefault(t, "PERSONANT_PROBE_N", probeN)
+	n := envIntDefault(t, "MEMPRO_PROBE_N", probeN)
 	articles := loadCorpus(t)
 	fixtures := buildFixtures(t, articles, n)
 	fstats := statFixtures(fixtures)

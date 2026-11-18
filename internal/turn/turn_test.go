@@ -10,17 +10,17 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/clock"
-	"personant/internal/dedup"
-	"personant/internal/memops"
-	"personant/internal/memops/fileadapter"
-	"personant/internal/model"
-	"personant/internal/store"
+	"mempro/internal/clock"
+	"mempro/internal/dedup"
+	"mempro/internal/memops"
+	"mempro/internal/memops/fileadapter"
+	"mempro/internal/model"
+	"mempro/internal/store"
 )
 
 // newTestHome scaffolds the minimum home layout the turn package needs:
 // logs/, projects/<id>/meta.json, and an empty spine file.
-func newTestHome(t *testing.T) (store.PersonantPaths, memops.ProjectMeta) {
+func newTestHome(t *testing.T) (store.MemproPaths, memops.ProjectMeta) {
 	t.Helper()
 	tmp := t.TempDir()
 	paths := store.PathsForHome(tmp)
@@ -829,7 +829,7 @@ func TestEvictProtectsHighSpecificity(t *testing.T) {
 		{Raw: "deadbeefcafe123", Normalized: "deadbeefcafe123", FirstSeenTurn: 500, Count: 1, Source: memops.SourceModel},
 		{Raw: "internal/turn/history.go", Normalized: "internal/turn/history.go", FirstSeenTurn: 501, Count: 1, Source: memops.SourceModel},
 		{Raw: "https://example.com/spec#2.3", Normalized: "https://example.com/spec#2.3", FirstSeenTurn: 502, Count: 1, Source: memops.SourceModel},
-		{Raw: "./cmd/personant/main.go", Normalized: "./cmd/personant/main.go", FirstSeenTurn: 503, Count: 1, Source: memops.SourceModel},
+		{Raw: "./cmd/mempro/main.go", Normalized: "./cmd/mempro/main.go", FirstSeenTurn: 503, Count: 1, Source: memops.SourceModel},
 	}
 	existing = append(existing, rare...)
 
@@ -915,7 +915,7 @@ func TestEvictGracefulDegradationProtectedOverflow(t *testing.T) {
 // seedThreadAndSpine writes a minimal-but-valid thread file plus the
 // matching spine record for thrID. Returns nothing — t.Fatalf on any
 // error so tests fail fast at setup.
-func seedThreadAndSpine(t *testing.T, paths store.PersonantPaths, project, thrID string) {
+func seedThreadAndSpine(t *testing.T, paths store.MemproPaths, project, thrID string) {
 	t.Helper()
 	rec := memops.SpineRecord{
 		ID:           thrID,
@@ -1193,7 +1193,7 @@ func TestRunPreambleBeforeTagDrivesFetchSuppressEngage(t *testing.T) {
 }
 
 // trackedEntry returns path's entry in threadID's tracked-file store.
-func trackedEntry(t *testing.T, paths store.PersonantPaths, threadID, path string) (dedup.FileEntry, bool) {
+func trackedEntry(t *testing.T, paths store.MemproPaths, threadID, path string) (dedup.FileEntry, bool) {
 	t.Helper()
 	entries, err := store.ReadTrackedIndex(paths, threadID)
 	if err != nil {

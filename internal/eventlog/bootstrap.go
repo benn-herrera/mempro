@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"personant/internal/clock"
-	"personant/internal/memops"
-	"personant/internal/store"
-	"personant/internal/version"
+	"mempro/internal/clock"
+	"mempro/internal/memops"
+	"mempro/internal/store"
+	"mempro/internal/version"
 )
 
 // LogBootstrap emits the SPEC §2.8 system.bootstrap event — the one line
@@ -15,7 +15,7 @@ import (
 // revision it found it. Emitted once per session open, after the §9.1
 // home-format gate has resolved the effective format.
 //
-//	<ts> system.bootstrap version=0.1.0 home-format=1 commit=abc1234 home=/home/user/.personant
+//	<ts> system.bootstrap version=0.1.0 home-format=1 commit=abc1234 home=/home/user/.mempro
 //
 // homeFormat is the EFFECTIVE on-disk revision the gate resolved
 // (memops.HomeFormatDecision.Format), not version.CurrentHomeFormat: on
@@ -23,7 +23,7 @@ import (
 // is knowing which one the session actually ran against. The commit
 // degrades to "unknown" on an unstamped binary rather than dropping the
 // field, so the line's shape is constant for log scrapers.
-func LogBootstrap(paths store.PersonantPaths, homeFormat int) error {
+func LogBootstrap(paths store.MemproPaths, homeFormat int) error {
 	// Heal first. This line is BY CONSTRUCTION the first event a process
 	// writes, and it lands BEFORE Reconcile — the §9.1 format gate must
 	// precede crash recovery, so recovery's phase-0 log-tail heal has not

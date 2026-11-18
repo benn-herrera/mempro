@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"personant/internal/version"
+	"mempro/internal/version"
 )
 
 // hasGit skips the test if `git` is not available on the host.
@@ -20,9 +20,9 @@ func hasGit(t *testing.T) {
 	}
 }
 
-// initIntoTempDir runs Init against a fresh PersonantPaths under t.TempDir().
+// initIntoTempDir runs Init against a fresh MemproPaths under t.TempDir().
 // Returns the paths struct so the test can assert on it.
-func initIntoTempDir(t *testing.T) PersonantPaths {
+func initIntoTempDir(t *testing.T) MemproPaths {
 	t.Helper()
 	home := t.TempDir()
 	paths := PathsForHome(home)
@@ -440,7 +440,7 @@ func TestInitLoggerEmitsAndQuietSuppresses(t *testing.T) {
 }
 
 func TestInitEmptyHomeRejected(t *testing.T) {
-	err := Init(PersonantPaths{}, InitOptions{Quiet: true})
+	err := Init(MemproPaths{}, InitOptions{Quiet: true})
 	if err == nil {
 		t.Fatal("expected error for empty Home, got nil")
 	}

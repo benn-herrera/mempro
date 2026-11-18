@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"personant/internal/scenarios"
+	"mempro/internal/scenarios"
 )
 
 // TestClockMonotonicUnderRefinement is the burndown A3 regression. Under the

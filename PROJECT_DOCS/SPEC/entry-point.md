@@ -1,4 +1,4 @@
-# SPEC – Personant
+# SPEC – mempro
 
 Consumer-facing behaviors and outcomes
 
@@ -123,11 +123,11 @@ Contents:
     - [§5.5 Combined mid-turn re-prompt bound (with §3.3 fallback)](5-model-interaction/5.5-mid-turn-thread-fetch-system-injected/combined-mid-turn-re-prompt-bound-with-3-3-fallback.md)
 - [§6 Tool surface and permissions](6-tool-surface-and-permissions.md)
 - [§8 Bootstrap and lifecycle](8-bootstrap-and-lifecycle/index.md)
-  - [§8.1 First-run scaffolding (`personant init`)](8-bootstrap-and-lifecycle/8.1-first-run-scaffolding-personant-init/index.md)
-    - [§8.1 opencode settings](8-bootstrap-and-lifecycle/8.1-first-run-scaffolding-personant-init/opencode-settings.md)
+  - [§8.1 First-run scaffolding (`mempro init`)](8-bootstrap-and-lifecycle/8.1-first-run-scaffolding-mempro-init/index.md)
+    - [§8.1 opencode settings](8-bootstrap-and-lifecycle/8.1-first-run-scaffolding-mempro-init/opencode-settings.md)
   - [§8.2 Configuration sources and precedence](8-bootstrap-and-lifecycle/8.2-configuration-sources-and-precedence/index.md)
     - [§8.2.1 Model access through the host](8-bootstrap-and-lifecycle/8.2-configuration-sources-and-precedence/8.2.1-model-access-through-the-host.md)
-    - [§8.2.2 Personant settings: `~/.config/personant/config.toml`](8-bootstrap-and-lifecycle/8.2-configuration-sources-and-precedence/8.2.2-personant-settings-config-personant-config-toml.md)
+    - [§8.2.2 mempro settings: `~/.config/mempro/config.toml`](8-bootstrap-and-lifecycle/8.2-configuration-sources-and-precedence/8.2.2-mempro-settings-config-mempro-config-toml.md)
     - [§8.2.3 Environment variables](8-bootstrap-and-lifecycle/8.2-configuration-sources-and-precedence/8.2.3-environment-variables.md)
     - [§8.2.4 Directive precedence](8-bootstrap-and-lifecycle/8.2-configuration-sources-and-precedence/8.2.4-directive-precedence.md)
   - [§8.3 Memory store validation in automatic git operations](8-bootstrap-and-lifecycle/8.3-memory-store-validation-in-automatic-git-operations/index.md)

@@ -11,9 +11,9 @@ import (
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
 
-	"personant/internal/clock"
-	"personant/internal/memops"
-	"personant/internal/store"
+	"mempro/internal/clock"
+	"mempro/internal/memops"
+	"mempro/internal/store"
 )
 
 // pinClock freezes clock.Timeline at a fixed instant for the duration of
@@ -29,7 +29,7 @@ func pinClock(t *testing.T) time.Time {
 
 // initRepo scaffolds a fresh substrate (PlainInit + bootstrap commit) and
 // returns its paths and an open repo handle.
-func initRepo(t *testing.T) (store.PersonantPaths, *git.Repository) {
+func initRepo(t *testing.T) (store.MemproPaths, *git.Repository) {
 	t.Helper()
 	paths := store.PathsForHome(t.TempDir())
 	if err := store.Init(paths, store.InitOptions{Quiet: true}); err != nil {
@@ -42,7 +42,7 @@ func initRepo(t *testing.T) (store.PersonantPaths, *git.Repository) {
 	return paths, repo
 }
 
-func commitAll(t *testing.T, paths store.PersonantPaths, repo *git.Repository, msg string) plumbing.Hash {
+func commitAll(t *testing.T, paths store.MemproPaths, repo *git.Repository, msg string) plumbing.Hash {
 	t.Helper()
 	wt, err := repo.Worktree()
 	if err != nil {
@@ -60,7 +60,7 @@ func commitAll(t *testing.T, paths store.PersonantPaths, repo *git.Repository, m
 
 // writeThreadDir lays down a representative thread directory:
 // thread.md + turns/<n>.md + files.jsonl + files/<id>. Returns the repo-relative path.
-func writeThreadDir(t *testing.T, paths store.PersonantPaths, id string) string {
+func writeThreadDir(t *testing.T, paths store.MemproPaths, id string) string {
 	t.Helper()
 	rel := filepath.ToSlash(filepath.Join("threads", id))
 	abs := filepath.Join(paths.Home, "threads", id)

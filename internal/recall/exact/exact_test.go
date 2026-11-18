@@ -4,10 +4,10 @@ import (
 	"context"
 	"testing"
 
-	"personant/internal/memops"
-	"personant/internal/memops/fileadapter"
-	"personant/internal/recall/exact"
-	"personant/internal/store"
+	"mempro/internal/memops"
+	"mempro/internal/memops/fileadapter"
+	"mempro/internal/recall/exact"
+	"mempro/internal/store"
 )
 
 // fakeSource is a deterministic in-memory excerptSource (no I/O) so the
@@ -219,7 +219,7 @@ func TestGrepThreads_RealSubstrate(t *testing.T) {
 	}
 }
 
-func seedThreadWithTurns(t *testing.T, paths store.PersonantPaths, id string, turns []string) {
+func seedThreadWithTurns(t *testing.T, paths store.MemproPaths, id string, turns []string) {
 	t.Helper()
 	ts := "2026-04-01T00:00:00Z"
 	rec := memops.SpineRecord{

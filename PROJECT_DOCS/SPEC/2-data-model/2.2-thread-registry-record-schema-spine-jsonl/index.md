@@ -12,7 +12,7 @@ drafts a thread's closing summary, [§5.2](../../5-model-interaction/5.2-summari
 `anchor.projection-max` (default 8, a provisional value calibrated in [§9](../../9-measurement-and-validation-regime/index.md)) normalized symbols
 (the keys recall matches on: file paths, URLs, named concepts, hashtags, [§2.7](../2.7-symbol-normalization-and-categories/index.md)), re-derived at the close of every owner turn (a turn the thread owns, [§3.2](../../3-core-algorithms/3.2-topic-tagging-and-engagement-update/index.md))
 from the thread's retained symbol history ([§2.7.4](../2.7-symbol-normalization-and-categories/2.7.4-symbol-lifecycle-and-anchor-projection.md)); the model never controls their count ([§5.1](../../5-model-interaction/5.1-topic-tag-emission-format/index.md)).
-`personant verify` enforces the structural constraints and flags an over-ceiling anchor count.
+`mempro verify` enforces the structural constraints and flags an over-ceiling anchor count.
 
 Contents:
 

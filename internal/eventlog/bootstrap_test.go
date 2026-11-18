@@ -8,9 +8,9 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/clock"
-	"personant/internal/store"
-	"personant/internal/version"
+	"mempro/internal/clock"
+	"mempro/internal/store"
+	"mempro/internal/version"
 )
 
 func TestLogBootstrapLine(t *testing.T) {

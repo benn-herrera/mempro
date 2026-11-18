@@ -5,8 +5,8 @@ import (
 	"path/filepath"
 	"time"
 
-	"personant/internal/clock"
-	"personant/internal/memops"
+	"mempro/internal/clock"
+	"mempro/internal/memops"
 )
 
 // ResolveActiveProject resolves the active project from hints.Dir alone
@@ -15,7 +15,7 @@ import (
 // directory's base name (StepCreated, persisted here), else prj_default
 // when no directory is given (StepDefault). Nothing inside the directory
 // is read, so a moved or copied directory is a new project.
-func ResolveActiveProject(paths PersonantPaths, hints memops.BootstrapHints) (memops.BootstrapResult, error) {
+func ResolveActiveProject(paths MemproPaths, hints memops.BootstrapHints) (memops.BootstrapResult, error) {
 	if hints.Dir == "" {
 		meta, err := LoadProjectMeta(paths, DefaultProjectID)
 		if err != nil {

@@ -15,8 +15,8 @@ import (
 	"io"
 	"strings"
 
-	"personant/internal/memops"
-	"personant/internal/model"
+	"mempro/internal/memops"
+	"mempro/internal/model"
 )
 
 // Curator drafts the closing summary for a retiring thread: a 100–150

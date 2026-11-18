@@ -7,8 +7,8 @@ import (
 	"sort"
 	"testing"
 
-	"personant/internal/memops"
-	"personant/internal/store"
+	"mempro/internal/memops"
+	"mempro/internal/store"
 )
 
 func mkSpine(id, project string, recallFires int, anchors ...string) memops.SpineRecord {

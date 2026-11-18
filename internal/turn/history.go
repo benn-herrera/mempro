@@ -4,7 +4,7 @@ import (
 	"context"
 	"sort"
 
-	"personant/internal/memops"
+	"mempro/internal/memops"
 )
 
 // ThreadMeta is a local alias to avoid the memops-qualified type literal

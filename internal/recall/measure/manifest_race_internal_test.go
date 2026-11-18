@@ -6,7 +6,7 @@ import (
 	"sync"
 	"testing"
 
-	"personant/internal/recall/scoring"
+	"mempro/internal/recall/scoring"
 )
 
 // TestVecCache_WriteSweepManifestRace drives vecCache.Write (the indexer

@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"personant/internal/memops/fileadapter"
-	"personant/internal/prompt"
+	"mempro/internal/memops/fileadapter"
+	"mempro/internal/prompt"
 )
 
 // TestChainTagInvalidLogEmission drives a model.response carrying a

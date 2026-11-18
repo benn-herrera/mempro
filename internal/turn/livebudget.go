@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"unicode/utf8"
 
-	"personant/internal/memops"
-	"personant/internal/model"
+	"mempro/internal/memops"
+	"mempro/internal/model"
 )
 
 // Live-turn budget sub-policy.

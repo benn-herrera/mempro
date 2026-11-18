@@ -9,11 +9,11 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/curator"
-	"personant/internal/memops"
-	"personant/internal/memops/fileadapter"
-	"personant/internal/model"
-	"personant/internal/store"
+	"mempro/internal/curator"
+	"mempro/internal/memops"
+	"mempro/internal/memops/fileadapter"
+	"mempro/internal/model"
+	"mempro/internal/store"
 )
 
 // stubCurator is a deterministic Curator for the closure tests: a fixed
@@ -47,7 +47,7 @@ func (emptyDraftCurator) DraftClosure(_ context.Context, _ memops.Thread) (strin
 // seedClosureThread writes a thread + spine record with explicit
 // state / last-engaged-turn / last-engaged-timestamp, for decay tests,
 // with four anchors and one engaged turn.
-func seedClosureThread(t *testing.T, paths store.PersonantPaths, project, thrID string, state memops.ThreadState, lastEngagedTurn int, lastEngaged string) {
+func seedClosureThread(t *testing.T, paths store.MemproPaths, project, thrID string, state memops.ThreadState, lastEngagedTurn int, lastEngaged string) {
 	t.Helper()
 	seedClosureThreadShape(t, paths, project, thrID, state, lastEngagedTurn, lastEngaged,
 		[]string{"alpha", "beta", "gamma", "delta"}, 1)
@@ -55,7 +55,7 @@ func seedClosureThread(t *testing.T, paths store.PersonantPaths, project, thrID 
 
 // seedClosureThreadShape is seedClosureThread with the anchor set and the
 // engaged-turn count under the test's control.
-func seedClosureThreadShape(t *testing.T, paths store.PersonantPaths, project, thrID string, state memops.ThreadState, lastEngagedTurn int, lastEngaged string, anchors []string, turnCount int) {
+func seedClosureThreadShape(t *testing.T, paths store.MemproPaths, project, thrID string, state memops.ThreadState, lastEngagedTurn int, lastEngaged string, anchors []string, turnCount int) {
 	t.Helper()
 	rec := memops.SpineRecord{
 		ID:              thrID,
@@ -105,7 +105,7 @@ func seedClosureThreadShape(t *testing.T, paths store.PersonantPaths, project, t
 
 // allLogs returns every day log concatenated; unlike readDayLog it
 // accepts an empty logs directory.
-func allLogs(t *testing.T, paths store.PersonantPaths) string {
+func allLogs(t *testing.T, paths store.MemproPaths) string {
 	t.Helper()
 	entries, err := os.ReadDir(paths.LogsDir)
 	if err != nil {

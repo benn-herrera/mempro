@@ -1,6 +1,6 @@
 package turn
 
-import "personant/internal/memops"
+import "mempro/internal/memops"
 
 // coalescedSymbol carries the per-turn record for one normalized symbol:
 // the surface form first observed, the dominant source per spec §2.7.3

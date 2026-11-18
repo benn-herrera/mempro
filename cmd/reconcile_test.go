@@ -7,10 +7,10 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/clock"
-	"personant/internal/memops"
-	"personant/internal/memops/fileadapter"
-	"personant/internal/store"
+	"mempro/internal/clock"
+	"mempro/internal/memops"
+	"mempro/internal/memops/fileadapter"
+	"mempro/internal/store"
 )
 
 // CLI reconcile wiring (#94, Wave R3 — the R2 verbs-bypass-Reconcile
@@ -20,7 +20,7 @@ import (
 
 // TestVerifyReconcilesUncleanHome: a home left with an in-flight turn
 // scope — a non-empty journal, the op=turn signal (the mid-model-call
-// crash shape, cell 6) — is reconciled by `personant verify` before the
+// crash shape, cell 6) — is reconciled by `mempro verify` before the
 // report runs: journal preserved to a recovery artifact and truncated.
 func TestVerifyReconcilesUncleanHome(t *testing.T) {
 	restore := clock.SetTimeline(func() time.Time {

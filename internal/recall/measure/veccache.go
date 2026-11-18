@@ -10,9 +10,9 @@ import (
 	"path/filepath"
 	"sync"
 
-	"personant/internal/memops"
-	"personant/internal/model"
-	"personant/internal/recall/scoring"
+	"mempro/internal/memops"
+	"mempro/internal/model"
+	"mempro/internal/recall/scoring"
 )
 
 // The §5 persisted derived-vector cache. It lives in package measure (not a
@@ -20,7 +20,7 @@ import (
 // without exporting the snapshot type or its scoring-vector plumbing across
 // a package boundary — keeping the index representation private to measure.
 //
-// Layout, under $PERSONANT_HOME/.recall-cache/ (gitignored,
+// Layout, under $MEMPRO_HOME/.recall-cache/ (gitignored,
 // operational, never canonical — I5):
 //
 //	.recall-cache/
@@ -49,7 +49,7 @@ const (
 type vecCache struct {
 	ops      memops.MemoryOps // canonical reads only (no git, no paths beyond dir)
 	embedder model.Embedder   // partial-miss re-embeds during Reconcile
-	dir      string           // $PERSONANT_HOME/.recall-cache
+	dir      string           // $MEMPRO_HOME/.recall-cache
 
 	// manifestMu serializes the manifest.json read-modify-write cycle. Write
 	// runs on the indexer goroutine (processJob write-through) while Sweep runs

@@ -16,15 +16,15 @@ import (
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
 
-	"personant/internal/autogit"
-	"personant/internal/clock"
-	"personant/internal/crashpoint"
-	"personant/internal/dedup"
-	"personant/internal/eventlog"
-	"personant/internal/index"
-	"personant/internal/memops"
-	"personant/internal/recovery"
-	"personant/internal/store"
+	"mempro/internal/autogit"
+	"mempro/internal/clock"
+	"mempro/internal/crashpoint"
+	"mempro/internal/dedup"
+	"mempro/internal/eventlog"
+	"mempro/internal/index"
+	"mempro/internal/memops"
+	"mempro/internal/recovery"
+	"mempro/internal/store"
 )
 
 // #94 R3b §7: barrier fixtures — mid-barrier on-disk states constructed
@@ -79,7 +79,7 @@ func newBarrierHome(t *testing.T, retired int) *FileAdapter {
 }
 
 // dayCommitCount walks primary history counting DayCommitMessage-shape
-// commits for `day`. It also asserts NO personant-day/* tag exists (F3
+// commits for `day`. It also asserts NO mempro-day/* tag exists (F3
 // removed the tag path entirely).
 func dayCommitCount(t *testing.T, a *FileAdapter, day int) int {
 	t.Helper()
@@ -112,8 +112,8 @@ func dayCommitCount(t *testing.T, a *FileAdapter, day int) int {
 	}
 	if tags, terr := repo.Tags(); terr == nil {
 		_ = tags.ForEach(func(ref *plumbing.Reference) error {
-			if strings.Contains(ref.Name().String(), "personant-day") {
-				t.Errorf("personant-day tag %s exists — the tag path is GONE (F3)", ref.Name())
+			if strings.Contains(ref.Name().String(), "mempro-day") {
+				t.Errorf("mempro-day tag %s exists — the tag path is GONE (F3)", ref.Name())
 			}
 			return nil
 		})
@@ -456,7 +456,7 @@ func seedPrunableStore(t *testing.T, a *FileAdapter) {
 
 // assertIndexedFilesPresent fails for each blob or kept diff a thread's
 // index names that is absent.
-func assertIndexedFilesPresent(t *testing.T, paths store.PersonantPaths, id string) {
+func assertIndexedFilesPresent(t *testing.T, paths store.MemproPaths, id string) {
 	t.Helper()
 	entries, err := store.ReadTrackedIndex(paths, id)
 	if err != nil {
@@ -707,7 +707,7 @@ func newFolioBindHome(t *testing.T) *FileAdapter {
 
 // threadExcerptBytes returns each excerpt name of a thread with its exact
 // bytes, from whichever tier holds it (the loose copy for a name in both).
-func threadExcerptBytes(t *testing.T, paths store.PersonantPaths, id string) map[string]string {
+func threadExcerptBytes(t *testing.T, paths store.MemproPaths, id string) map[string]string {
 	t.Helper()
 	entries, err := store.ListExcerptEntries(paths, id)
 	if err != nil {
@@ -743,7 +743,7 @@ func threadExcerptBytes(t *testing.T, paths store.PersonantPaths, id string) map
 
 // assertExcerptsReadBack asserts the thread's readers return each name in
 // want exactly once, oldest first, with its text.
-func assertExcerptsReadBack(t *testing.T, paths store.PersonantPaths, id string, want map[string]string) {
+func assertExcerptsReadBack(t *testing.T, paths store.MemproPaths, id string, want map[string]string) {
 	t.Helper()
 	got, err := store.ReadThreadExcerpts(paths, id)
 	if err != nil {

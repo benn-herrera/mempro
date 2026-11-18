@@ -5,11 +5,11 @@ import (
 	"sync"
 	"testing"
 
-	"personant/internal/memops"
-	"personant/internal/memops/fileadapter"
-	"personant/internal/model"
-	"personant/internal/recall/scoring"
-	"personant/internal/store"
+	"mempro/internal/memops"
+	"mempro/internal/memops/fileadapter"
+	"mempro/internal/model"
+	"mempro/internal/recall/scoring"
+	"mempro/internal/store"
 )
 
 // countingMock wraps the deterministic MockEmbedder and tallies how many
@@ -49,7 +49,7 @@ func (c *countingMock) count() int {
 // bypass NewService's cache wiring by constructing the Service directly with
 // just ops+embedder), so processJob exercises only the snapshot path the bug
 // lives in.
-func flushHome(t *testing.T, emb model.Embedder, body string, excerpts map[int]string) (*Service, store.PersonantPaths) {
+func flushHome(t *testing.T, emb model.Embedder, body string, excerpts map[int]string) (*Service, store.MemproPaths) {
 	t.Helper()
 	paths := store.PathsForHome(t.TempDir())
 	if err := store.Init(paths, store.InitOptions{Quiet: true}); err != nil {
@@ -83,7 +83,7 @@ func flushHome(t *testing.T, emb model.Embedder, body string, excerpts map[int]s
 	return s, paths
 }
 
-func appendExcerpts(t *testing.T, paths store.PersonantPaths, excerpts map[int]string) {
+func appendExcerpts(t *testing.T, paths store.MemproPaths, excerpts map[int]string) {
 	t.Helper()
 	for turn, text := range excerpts {
 		if err := store.AppendThreadTurn(paths, "thr_1", turn, text); err != nil {

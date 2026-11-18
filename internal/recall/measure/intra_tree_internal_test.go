@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"testing"
 
-	"personant/internal/model"
-	"personant/internal/recall/scoring"
+	"mempro/internal/model"
+	"mempro/internal/recall/scoring"
 )
 
 // This file is the #111 Inc B (within-thread summary hierarchy) internal

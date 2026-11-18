@@ -5,8 +5,8 @@ import (
 	"errors"
 	"io"
 
-	"personant/internal/model"
-	"personant/internal/prompt"
+	"mempro/internal/model"
+	"mempro/internal/prompt"
 )
 
 // streamThroughFilter pumps every chunk's Content through filter until

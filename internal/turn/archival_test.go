@@ -10,10 +10,10 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/memops"
-	"personant/internal/memops/fileadapter"
-	"personant/internal/model"
-	"personant/internal/store"
+	"mempro/internal/memops"
+	"mempro/internal/memops/fileadapter"
+	"mempro/internal/model"
+	"mempro/internal/store"
 )
 
 // #94 R3b: the §3.8 archival drain is BARRIER-ONLY — it fires inside the
@@ -27,7 +27,7 @@ import (
 
 // readArchivalEventLog returns the concatenated contents of every *.log
 // file under the home's LogsDir.
-func readArchivalEventLog(t *testing.T, paths store.PersonantPaths) string {
+func readArchivalEventLog(t *testing.T, paths store.MemproPaths) string {
 	t.Helper()
 	entries, err := os.ReadDir(paths.LogsDir)
 	if err != nil {
@@ -52,7 +52,7 @@ func readArchivalEventLog(t *testing.T, paths store.PersonantPaths) string {
 // must be canonical thr_<n> — the derived-index builder skips any file
 // whose name does not match that pattern, which would silently hollow
 // out the post-archival drift check.
-func seedArchivalThread(t *testing.T, paths store.PersonantPaths, project, thrID string, state memops.ThreadState, stateChanged string) {
+func seedArchivalThread(t *testing.T, paths store.MemproPaths, project, thrID string, state memops.ThreadState, stateChanged string) {
 	t.Helper()
 	anchors := []string{"alpha", "beta", "gamma", "delta"}
 	rec := memops.SpineRecord{

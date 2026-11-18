@@ -6,14 +6,14 @@ import (
 	"strconv"
 	"strings"
 
-	"personant/internal/memops"
+	"mempro/internal/memops"
 )
 
 // AppendSpineRecord adds a new memops.SpineRecord to the spine.jsonl file. Atomic:
 // the file is read, the new record is added in memory, and the full set is
 // rewritten via WriteSpine (temp+rename). Returns memops.ErrDuplicateThreadID if a
 // record with the same id is already present.
-func AppendSpineRecord(paths PersonantPaths, rec memops.SpineRecord) error {
+func AppendSpineRecord(paths MemproPaths, rec memops.SpineRecord) error {
 	records, err := ReadSpine(paths.Spine)
 	if err != nil {
 		return fmt.Errorf("append spine record: %w", err)
@@ -32,7 +32,7 @@ func AppendSpineRecord(paths PersonantPaths, rec memops.SpineRecord) error {
 
 // UpdateSpineRecord replaces the existing record whose id matches rec.ID.
 // Returns memops.ErrThreadNotFound if no such record exists. Atomic.
-func UpdateSpineRecord(paths PersonantPaths, rec memops.SpineRecord) error {
+func UpdateSpineRecord(paths MemproPaths, rec memops.SpineRecord) error {
 	records, err := ReadSpine(paths.Spine)
 	if err != nil {
 		return fmt.Errorf("update spine record: %w", err)
@@ -57,7 +57,7 @@ func UpdateSpineRecord(paths PersonantPaths, rec memops.SpineRecord) error {
 // RemoveSpineRecord deletes the record whose id matches the given id,
 // rewriting spine.jsonl with the remaining records (order preserved).
 // Returns memops.ErrThreadNotFound if no such record exists. Atomic.
-func RemoveSpineRecord(paths PersonantPaths, id string) error {
+func RemoveSpineRecord(paths MemproPaths, id string) error {
 	records, err := ReadSpine(paths.Spine)
 	if err != nil {
 		return fmt.Errorf("remove spine record: %w", err)
@@ -88,7 +88,7 @@ func RemoveSpineRecord(paths PersonantPaths, id string) error {
 // this op never fails on a missing id (unlike single-id RemoveSpineRecord,
 // which is kept for the CLI/wrapper path and still returns
 // memops.ErrThreadNotFound). Atomic.
-func RemoveSpineRecords(paths PersonantPaths, ids []string) error {
+func RemoveSpineRecords(paths MemproPaths, ids []string) error {
 	if len(ids) == 0 {
 		return nil
 	}
@@ -118,7 +118,7 @@ func RemoveSpineRecords(paths PersonantPaths, ids []string) error {
 
 // FindSpineRecord returns the spine record with the given id. The second
 // return is false if no such record exists. Errors only on read failures.
-func FindSpineRecord(paths PersonantPaths, id string) (memops.SpineRecord, bool, error) {
+func FindSpineRecord(paths MemproPaths, id string) (memops.SpineRecord, bool, error) {
 	records, err := ReadSpine(paths.Spine)
 	if err != nil {
 		return memops.SpineRecord{}, false, fmt.Errorf("find spine record: %w", err)
@@ -133,7 +133,7 @@ func FindSpineRecord(paths PersonantPaths, id string) (memops.SpineRecord, bool,
 
 // SpineRecordsByProject returns all records whose Project field matches the
 // given project id, sorted by ID ascending.
-func SpineRecordsByProject(paths PersonantPaths, projectID string) ([]memops.SpineRecord, error) {
+func SpineRecordsByProject(paths MemproPaths, projectID string) ([]memops.SpineRecord, error) {
 	records, err := ReadSpine(paths.Spine)
 	if err != nil {
 		return nil, fmt.Errorf("spine records by project: %w", err)

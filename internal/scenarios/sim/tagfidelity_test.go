@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/memops"
-	"personant/internal/scenarios"
+	"mempro/internal/memops"
+	"mempro/internal/scenarios"
 )
 
 // fakeEmbedder returns canned vectors keyed by text. An unknown text yields an

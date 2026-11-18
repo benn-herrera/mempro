@@ -11,17 +11,17 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/memops"
-	"personant/internal/memops/fileadapter"
-	"personant/internal/model"
-	"personant/internal/recall/measure"
-	"personant/internal/store"
+	"mempro/internal/memops"
+	"mempro/internal/memops/fileadapter"
+	"mempro/internal/model"
+	"mempro/internal/recall/measure"
+	"mempro/internal/store"
 )
 
 // readDayLog reads the single day-log file produced by tests; fails
 // when the directory does not contain exactly one entry. Returns the
 // log body as a string.
-func readDayLog(t *testing.T, paths store.PersonantPaths) string {
+func readDayLog(t *testing.T, paths store.MemproPaths) string {
 	t.Helper()
 	entries, err := os.ReadDir(paths.LogsDir)
 	if err != nil {
@@ -47,7 +47,7 @@ func readDayLog(t *testing.T, paths store.PersonantPaths) string {
 // seedThreadWithAnchors writes a minimal-but-valid thread file plus
 // matching spine record for thrID with caller-provided anchors. Used
 // by recall tests that need specific anchor sets per thread.
-func seedThreadWithAnchors(t *testing.T, paths store.PersonantPaths, project, thrID string, anchors []string) {
+func seedThreadWithAnchors(t *testing.T, paths store.MemproPaths, project, thrID string, anchors []string) {
 	t.Helper()
 	rec := memops.SpineRecord{
 		ID:           thrID,
@@ -255,7 +255,7 @@ func TestRunNoRecallWhenNoSymbols(t *testing.T) {
 // recallBandState seeds thr_1 at symbolic score 1.0 (anchors = the query,
 // at or above the 0.65 auto-fetch bar) and thr_2 at 0.5 (below it), and
 // returns a State with no resolver of any kind whose query is alpha+beta.
-func recallBandState(t *testing.T) (store.PersonantPaths, *State) {
+func recallBandState(t *testing.T) (store.MemproPaths, *State) {
 	t.Helper()
 	paths, meta := newTestHome(t)
 	seedThreadWithAnchors(t, paths, meta.ID, "thr_1", []string{"alpha", "beta"})
@@ -267,7 +267,7 @@ func recallBandState(t *testing.T) (store.PersonantPaths, *State) {
 }
 
 // recallFires reads thrID's §2.2 recall_fires counter off the spine.
-func recallFires(t *testing.T, paths store.PersonantPaths, thrID string) int {
+func recallFires(t *testing.T, paths store.MemproPaths, thrID string) int {
 	t.Helper()
 	recs, err := store.ReadSpine(paths.Spine)
 	if err != nil {

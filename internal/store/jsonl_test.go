@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"personant/internal/memops"
+	"mempro/internal/memops"
 )
 
 func sampleSpine() []memops.SpineRecord {

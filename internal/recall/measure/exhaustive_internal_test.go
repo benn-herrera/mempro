@@ -3,7 +3,7 @@ package measure
 import (
 	"testing"
 
-	"personant/internal/recall/scoring"
+	"mempro/internal/recall/scoring"
 )
 
 // This is the #117 SEMANTIC-EXACT tier internal test. It reaches the private

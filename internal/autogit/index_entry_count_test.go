@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"personant/internal/store"
+	"mempro/internal/store"
 )
 
 func TestIndexEntryCount(t *testing.T) {

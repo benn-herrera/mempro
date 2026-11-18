@@ -23,9 +23,9 @@ import (
 // WriteDerivedWatermark atomically records commitHash as the commit the
 // derived state was built from. An empty hash is a caller bug, refused
 // at the boundary.
-func WriteDerivedWatermark(paths PersonantPaths, commitHash string) error {
+func WriteDerivedWatermark(paths MemproPaths, commitHash string) error {
 	if paths.DerivedWatermark == "" {
-		return errors.New("store: WriteDerivedWatermark: PersonantPaths.DerivedWatermark is empty")
+		return errors.New("store: WriteDerivedWatermark: MemproPaths.DerivedWatermark is empty")
 	}
 	if commitHash == "" {
 		return errors.New("store: WriteDerivedWatermark: commitHash is empty")
@@ -41,9 +41,9 @@ func WriteDerivedWatermark(paths PersonantPaths, commitHash string) error {
 // "no watermark" is the legitimate greenfield/pre-upgrade state, not
 // corruption (an empty hash could never have been written by
 // WriteDerivedWatermark, so an empty file is treated the same as none).
-func ReadDerivedWatermark(paths PersonantPaths) (hash string, present bool, err error) {
+func ReadDerivedWatermark(paths MemproPaths) (hash string, present bool, err error) {
 	if paths.DerivedWatermark == "" {
-		return "", false, errors.New("store: ReadDerivedWatermark: PersonantPaths.DerivedWatermark is empty")
+		return "", false, errors.New("store: ReadDerivedWatermark: MemproPaths.DerivedWatermark is empty")
 	}
 	data, rerr := os.ReadFile(paths.DerivedWatermark)
 	if rerr != nil {

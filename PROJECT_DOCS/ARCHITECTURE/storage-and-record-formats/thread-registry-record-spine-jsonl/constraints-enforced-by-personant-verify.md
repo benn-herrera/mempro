@@ -1,4 +1,4 @@
-#### Constraints enforced by `personant verify`
+#### Constraints enforced by `mempro verify`
 
 | Field | Constraint |
 |---|---|
@@ -20,4 +20,3 @@ thr_<id> [<anchors joined with ", ">] — <summary> [<STATE>]
 
 Example: `thr_88 [trefoil, unknot] — electron body-topology conflict;
 entries trf3bd / unk0bd added; awaiting Grant resolution [WIP]`.
-

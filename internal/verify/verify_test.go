@@ -10,9 +10,9 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/index"
-	"personant/internal/memops"
-	"personant/internal/store"
+	"mempro/internal/index"
+	"mempro/internal/memops"
+	"mempro/internal/store"
 )
 
 // hasGit skips the test if git isn't on PATH (store.Init's git step
@@ -24,9 +24,9 @@ func hasGit(t *testing.T) {
 	}
 }
 
-// initFreshHome scaffolds a personant home with store.Init and returns
+// initFreshHome scaffolds a mempro home with store.Init and returns
 // the resulting paths.
-func initFreshHome(t *testing.T) store.PersonantPaths {
+func initFreshHome(t *testing.T) store.MemproPaths {
 	t.Helper()
 	hasGit(t)
 	home := t.TempDir()
@@ -60,7 +60,7 @@ func validRecord(id string) memops.SpineRecord {
 // — verify's thread check warns on a spine record with no thread.md.
 // Records whose ID does not match the canonical pattern are skipped for
 // the thread seed (those tests deliberately exercise a malformed ID).
-func writeSpine(t *testing.T, paths store.PersonantPaths, recs []memops.SpineRecord) {
+func writeSpine(t *testing.T, paths store.MemproPaths, recs []memops.SpineRecord) {
 	t.Helper()
 	if err := store.WriteSpine(paths.Spine, recs); err != nil {
 		t.Fatalf("WriteSpine: %v", err)
@@ -89,7 +89,7 @@ func writeSpine(t *testing.T, paths store.PersonantPaths, recs []memops.SpineRec
 
 // rebuild runs index.Rebuild quietly so the derived-files comparison
 // in Verify starts clean.
-func rebuild(t *testing.T, paths store.PersonantPaths) {
+func rebuild(t *testing.T, paths store.MemproPaths) {
 	t.Helper()
 	if err := index.Rebuild(paths, index.Options{Quiet: true}); err != nil {
 		t.Fatalf("index.Rebuild: %v", err)
@@ -99,7 +99,7 @@ func rebuild(t *testing.T, paths store.PersonantPaths) {
 // run invokes Verify quietly and returns the report. Failures from
 // Verify itself (I/O errors) are fatal; schema/drift findings are the
 // caller's concern to inspect.
-func run(t *testing.T, paths store.PersonantPaths) memops.VerifyReport {
+func run(t *testing.T, paths store.MemproPaths) memops.VerifyReport {
 	t.Helper()
 	r, err := Verify(paths, VerifyOptions{Quiet: true})
 	if err != nil {
@@ -323,7 +323,7 @@ func TestVerifyProjectReference(t *testing.T) {
 // writeMeta writes a ProjectMeta to projects/<dir>/meta.json. Caller
 // supplies the directory name; meta.ID is what the file says about
 // itself, which may diverge from dir for the mismatch test.
-func writeMeta(t *testing.T, paths store.PersonantPaths, dir string, meta memops.ProjectMeta) {
+func writeMeta(t *testing.T, paths store.MemproPaths, dir string, meta memops.ProjectMeta) {
 	t.Helper()
 	d := filepath.Join(paths.ProjectsDir, dir)
 	if err := os.MkdirAll(d, 0o755); err != nil {
@@ -437,7 +437,7 @@ func TestVerifyDirectivesMissing(t *testing.T) {
 
 // folioFixture seeds thr_1 with the given raw folio text and loose
 // excerpts (name -> bytes), then rebuilds the derived files.
-func folioFixture(t *testing.T, folio string, loose map[string]string) store.PersonantPaths {
+func folioFixture(t *testing.T, folio string, loose map[string]string) store.MemproPaths {
 	t.Helper()
 	paths := initFreshHome(t)
 	writeSpine(t, paths, []memops.SpineRecord{validRecord("thr_1")})
@@ -549,7 +549,7 @@ func TestFolioConflictWarning(t *testing.T) {
 // trackedFixture seeds thr_1's tracked-file store with a.go at two
 // versions (one kept diff) and b.go at one, and returns the paths, the
 // content ids of a.go's versions and b.go's id.
-func trackedFixture(t *testing.T) (paths store.PersonantPaths, a1, a2, b string) {
+func trackedFixture(t *testing.T) (paths store.MemproPaths, a1, a2, b string) {
 	t.Helper()
 	paths = initFreshHome(t)
 	writeSpine(t, paths, []memops.SpineRecord{validRecord("thr_1")})
@@ -645,12 +645,12 @@ func TestTrackedFilesSizeMismatch(t *testing.T) {
 		name string
 		// field returns the index text recording the size under test and
 		// that text with the size off by one.
-		field func(t *testing.T, paths store.PersonantPaths, a1, a2 string) (string, string)
+		field func(t *testing.T, paths store.MemproPaths, a1, a2 string) (string, string)
 	}{
-		{"blob", func(*testing.T, store.PersonantPaths, string, string) (string, string) {
+		{"blob", func(*testing.T, store.MemproPaths, string, string) (string, string) {
 			return `"size":2,"turn":1,`, `"size":3,"turn":1,` // b.go, "b\n"
 		}},
-		{"diff", func(t *testing.T, paths store.PersonantPaths, a1, a2 string) (string, string) {
+		{"diff", func(t *testing.T, paths store.MemproPaths, a1, a2 string) (string, string) {
 			info, err := os.Stat(store.TrackedDiffPath(paths, "thr_1", a1, a2))
 			if err != nil {
 				t.Fatal(err)

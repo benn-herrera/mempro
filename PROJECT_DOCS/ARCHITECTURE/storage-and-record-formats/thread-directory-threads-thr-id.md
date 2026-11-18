@@ -82,7 +82,7 @@ A turn-excerpt file (`turns/0000024.md`):
     one exists. A read never moves an excerpt: a re-engaged closed thread reads its bundled
     excerpts from the excerpt bundle until the next day rollover unbundles its newest
     `HotExcerptTail` excerpts. `store.ListExcerptEntries` and `store.ReadFolio` serve
-    `personant verify`'s bundle checks.
+    `mempro verify`'s bundle checks.
   - *UTF-8.* Excerpt content is valid UTF-8 (it arrives through JSON decoding). Bundling asserts it
     before writing anything for the thread, since Go's JSON encoder would silently replace invalid
     bytes; a violation fails the day rollover with `store.ErrExcerptNotUTF8` naming the file, never
@@ -137,11 +137,10 @@ type SymbolLifecycle = "active" | "superseded";  // "trimmed" is the absence of 
 ```
 
 A record decoding without the lifecycle fields is well-formed (the zero values above);
-`personant index rebuild` regenerates the symbol index from them; the anchor projection is recomputed at the thread's next owner turn.
+`mempro index rebuild` regenerates the symbol index from them; the anchor projection is recomputed at the thread's next owner turn.
 
 `history_symbols` is capped at `history.cap-per-thread` (default 40) over active and superseded
 entries together. Over the cap, trimming operates on the **trimmable** partition only: a symbol is
 trimmable iff it is not `ever_central` and not a high-specificity identifier (URL, file path, git
 SHA). Within it, lowest `count` goes first, ties broken by lowest `first_seen_turn`. If the
 protected set alone exceeds the cap, the lowest-`count` `superseded` entries go first.
-

@@ -10,10 +10,10 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/memops"
-	"personant/internal/model"
-	"personant/internal/store"
-	"personant/internal/turn"
+	"mempro/internal/memops"
+	"mempro/internal/model"
+	"mempro/internal/store"
+	"mempro/internal/turn"
 )
 
 // assertThreadCount returns an InvariantCheck asserting len(spine) == n.
@@ -559,10 +559,10 @@ func TestScenarioMetricsBlobShapeIsStable(t *testing.T) {
 	if err != nil {
 		t.Fatalf("read metrics blob: %v", err)
 	}
-	// On request (PERSONANT_METRICS_SAMPLE_PATH set), copy the blob to
+	// On request (MEMPRO_METRICS_SAMPLE_PATH set), copy the blob to
 	// a stable location so a developer can inspect it post-run.
 	// Self-contained — no external scripts required.
-	if dst := os.Getenv("PERSONANT_METRICS_SAMPLE_PATH"); dst != "" {
+	if dst := os.Getenv("MEMPRO_METRICS_SAMPLE_PATH"); dst != "" {
 		if werr := os.WriteFile(dst, body, 0o644); werr != nil {
 			t.Logf("sample-copy: %v", werr)
 		} else {
@@ -1199,7 +1199,7 @@ func fsWritePre(path string) []turn.Delta {
 
 // hasTrackedPath reports whether threadID's tracked-file store has an
 // entry for path.
-func hasTrackedPath(t *testing.T, paths store.PersonantPaths, threadID, path string) bool {
+func hasTrackedPath(t *testing.T, paths store.MemproPaths, threadID, path string) bool {
 	t.Helper()
 	entries, err := store.ReadTrackedIndex(paths, threadID)
 	if err != nil {

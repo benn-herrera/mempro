@@ -11,8 +11,8 @@ import (
 	"sync"
 	"time"
 
-	"personant/internal/clock"
-	"personant/internal/store"
+	"mempro/internal/clock"
+	"mempro/internal/store"
 )
 
 // Run is one measurement session: a set of named counters, histograms

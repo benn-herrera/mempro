@@ -43,7 +43,7 @@ Restore (`RecoverThread`, `autogit.CheckoutTree`):
 1. Look up the entry by `thr_id`; refuse with `ErrArchiveEntryNotFound` if absent, and refuse an
    entry whose `commit_hash` is empty.
 2. Restore the full `threads/thr_<n>/` subtree from the entry's `parent_commit_hash` commit; an
-   entry lacking it (written before the field existed) is restored from the deletion commit's first parent (`autogit.ParentCommitHash`), the capture commit, since Personant makes no merge commits.
+   entry lacking it (written before the field existed) is restored from the deletion commit's first parent (`autogit.ParentCommitHash`), the capture commit, since mempro makes no merge commits.
 3. Recompute the restored directory's tree hash and verify it against `tree_hash`. A mismatch
    deletes the partial restore and fails with `ErrArchiveIntegrity`, so a partial thread is never
    written onto the thread registry (SPEC §3.8.3).
@@ -58,4 +58,3 @@ Archived threads are off live recall because the §3.4 scan covers the thread re
 per-thread frontmatter, and an archived thread has neither. `RecoverThread` and `ArchiveThreads`
 are public port operations; no product path calls `ArchiveThreads` outside the rollover (tests do), and such a call is crash-recoverable through the same
 roll-forward (case 8).
-

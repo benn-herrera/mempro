@@ -7,9 +7,9 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/memops"
-	"personant/internal/model"
-	"personant/internal/recall/measure"
+	"mempro/internal/memops"
+	"mempro/internal/model"
+	"mempro/internal/recall/measure"
 )
 
 // dummyRecallerFactory is a non-nil Scenario.Recaller stand-in for the mode

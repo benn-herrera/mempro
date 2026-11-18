@@ -156,10 +156,10 @@ func TestParseTurnTrailer(t *testing.T) {
 		name, msg, want string
 	}{
 		{"absent", "checkpoint: session-close\n", ""},
-		{"present", "turn t7: ok\n\nPersonant-Turn: t7\n", "t7"},
-		{"last-wins", "Personant-Turn: t1\n\nPersonant-Turn: t2\n", "t2"},
-		{"indented", "subject\n\n  Personant-Turn: t3\n", "t3"},
-		{"prefix-not-line", "notPersonant-Turn: t9\n", ""},
+		{"present", "turn t7: ok\n\nMempro-Turn: t7\n", "t7"},
+		{"last-wins", "mempro-Turn: t1\n\nMempro-Turn: t2\n", "t2"},
+		{"indented", "subject\n\n  mempro-Turn: t3\n", "t3"},
+		{"prefix-not-line", "notMempro-Turn: t9\n", ""},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {

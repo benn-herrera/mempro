@@ -1,5 +1,5 @@
 // Package sim is a deterministic, seeded synthetic-workload generator
-// for the Personant scenario harness (spec §9.1, §9.4).
+// for the mempro scenario harness (spec §9.1, §9.4).
 //
 // GenerateWorkload turns a WorkloadConfig into a scenarios.Scenario: a
 // stream of synthetic turns modelling a user moving among a handful of
@@ -81,15 +81,15 @@ import (
 	"strings"
 	"time"
 
-	"personant/internal/dedup"
-	pnlog "personant/internal/log"
-	"personant/internal/memops"
-	"personant/internal/model"
-	"personant/internal/prompt"
-	"personant/internal/recall/scoring"
-	"personant/internal/scenarios"
-	"personant/internal/turn"
-	"personant/internal/workset"
+	"mempro/internal/dedup"
+	pnlog "mempro/internal/log"
+	"mempro/internal/memops"
+	"mempro/internal/model"
+	"mempro/internal/prompt"
+	"mempro/internal/recall/scoring"
+	"mempro/internal/scenarios"
+	"mempro/internal/turn"
+	"mempro/internal/workset"
 )
 
 // simRecallThreshold is the minimum symbolic-Jaccard score for the

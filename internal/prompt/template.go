@@ -25,7 +25,7 @@ type SystemPromptElements struct {
 // systemPromptPreamble is the orientation block that opens every prompt.
 // Kept short — the substantive instruction is the topic-tag directive that
 // follows it.
-const systemPromptPreamble = `You are personant — a research-assistant runtime with persistent working
+const systemPromptPreamble = `You are mempro — a research-assistant runtime with persistent working
 memory across projects. The information below is your working context for
 the current turn.`
 

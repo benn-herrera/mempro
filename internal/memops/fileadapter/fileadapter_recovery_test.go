@@ -9,9 +9,9 @@ import (
 	"slices"
 	"testing"
 
-	"personant/internal/autogit"
-	"personant/internal/memops"
-	"personant/internal/store"
+	"mempro/internal/autogit"
+	"mempro/internal/memops"
+	"mempro/internal/store"
 )
 
 // Tests for the crash-stability port surface: JournalTurn's scope-open

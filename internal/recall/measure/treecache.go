@@ -7,7 +7,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"personant/internal/recall/scoring"
+	"mempro/internal/recall/scoring"
 )
 
 // The #111 Inc C persisted summary-tree sidecar. It lives beside the .vec in

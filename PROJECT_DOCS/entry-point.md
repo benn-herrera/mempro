@@ -1,4 +1,4 @@
-# THESIS – Personant
+# THESIS – mempro
 
 Why this project has the shape it has
 
@@ -8,9 +8,9 @@ This thesis does not:
 - Put forth project mechanisms, coding languages, or code structure – that belongs to ARCHITECTURE
 - Dictate project-specific process – that belongs to CONVENTIONS
 
-## Personant in plain terms
+## mempro in plain terms
 
-Personant is a memory system for a coding agent running under opencode. It keeps a durable record
+mempro is a memory system for a coding agent running under opencode. It keeps a durable record
 of the agent's work, organized by the problem being worked on, and for every model request it
 decides what of that record the model sees. A model makes only narrow judgments, requested through
 the host; deterministic code writes everything that is kept.
@@ -21,10 +21,10 @@ standard piece gets the standard answer and attention goes to the new ones.
 
 ## The building blocks
 
-Each row is a standard pattern at the size Personant needs. The last column names the larger
+Each row is a standard pattern at the size mempro needs. The last column names the larger
 system the piece resembles and is not — the direction work on it must not drift.
 
-| Personant piece | The standard pattern | It is not |
+| mempro piece | The standard pattern | It is not |
 |---|---|---|
 | The opencode plugin | A host plugin: a stateless adapter that forwards to a local service and applies its answers | A harness, UI or agent runtime, or a second writer of memory |
 | The memory service | A single-writer local process | A network server, multi-tenant service or database server |
@@ -55,11 +55,11 @@ piece toward its "is not" column is out of scope, however natural the next step 
 Two things, and only these:
 
 1. **Every request is composed, not replayed.** The standard assistant sends an accumulating
-   session transcript and compacts it when it grows too long. Personant replaces both: each
+   session transcript and compacts it when it grows too long. mempro replaces both: each
    request is assembled afresh from memory, so nothing depends on a session's length and nothing
    is lost to compaction.
 2. **Work is organized by problem, not by session.** The standard unit is the conversation.
-   Personant's unit is the problem being worked on: its record outlives the session it started in,
+   mempro's unit is the problem being worked on: its record outlives the session it started in,
    rests when work on it stops, and stays findable afterwards.
 
 The effect they produce together: one continuous career — work picks up across sessions and

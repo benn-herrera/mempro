@@ -1,6 +1,6 @@
-# opencode integration options for Personant's memory system
+# opencode integration options for mempro's memory system
 
-**Question.** What is the least invasive way to put Personant's memory system (THESIS.md; ACTIVE_DESIGN.md
+**Question.** What is the least invasive way to put mempro's memory system (THESIS.md; ACTIVE_DESIGN.md
 "Boundary") under opencode? The candidates are compared against what that memory system has to do at runtime.
 
 **Errata** (later measurement, `OPENCODE_PREPROBE_RESULTS.md` §2):
@@ -9,7 +9,7 @@
 - The provider config key is `providers`, not `provider.<id>` (§2.6).
 
 **Sources.** opencode release tag **v2.2.2**, commit `098aa7fd6e02b03d6fc410f0b052038c7d4c5e81`, at
-`../opencode`. opencode paths are repo-relative to that clone. Personant documents are cited by file and section.
+`../opencode`. opencode paths are repo-relative to that clone. mempro documents are cited by file and section.
 OPENCODE_SERVER_SURVEY.md was used only to find things; every opencode claim below was checked in source at the
 cited lines.
 
@@ -40,7 +40,7 @@ established fact. "Unverified" means the source did not settle it.
 
 ## 1. Requirements: what the memory system must do at runtime
 
-Most of these come from designs written before the move to opencode, when Personant owned the whole harness. The
+Most of these come from designs written before the move to opencode, when mempro owned the whole harness. The
 table keeps the memory and context behaviours and drops the harness mechanics. R13 is new: it follows from
 opencode owning session storage.
 
@@ -313,7 +313,7 @@ are partially met (§3).
    timeouts, usage)? Only a spike settles this; it matters only if the in-band tag protocol (R7) is kept.
 3. **Hook defects.** What happens to the session step, and what the user sees, when a session hook dies.
 4. **Several opencode server processes on one memory service.** For example, one per TUI launch
-   (OPENCODE_TUI_LAUNCH.md). Personant's crash and durability designs assume a single writer.
+   (OPENCODE_TUI_LAUNCH.md). mempro's crash and durability designs assume a single writer.
 5. **Missed events.** Whether `event.subscribe` delivers events published while the plugin was reloading. The
    source suggests a live bus with no replay (unverified). Recovery would read stored messages instead.
 6. **Bun built-ins from plugin code.** Whether `node:net`, unix sockets and child-process spawning are available,

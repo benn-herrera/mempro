@@ -6,13 +6,13 @@ import (
 	"path/filepath"
 )
 
-// PersonantPaths holds the canonical layout of $PERSONANT_HOME.
+// MemproPaths holds the canonical layout of $MEMPRO_HOME.
 // See v0.1-SPEC.md §2.1.
 //
 // The struct is value-based; every field is an absolute path. Paths are
-// computed but not created — `personant init` is the scaffolder.
-type PersonantPaths struct {
-	Home          string // $PERSONANT_HOME (default ~/.personant)
+// computed but not created — `mempro init` is the scaffolder.
+type MemproPaths struct {
+	Home          string // $MEMPRO_HOME (default ~/.mempro)
 	Spine         string // Home/spine.jsonl                  (canonical)
 	Symbols       string // Home/symbols.jsonl                (derived)
 	ThreadsDir    string // Home/threads/                     (canonical: thr_<id>.md)
@@ -38,20 +38,20 @@ type PersonantPaths struct {
 }
 
 // EnvHome is the environment variable that overrides the default home.
-const EnvHome = "PERSONANT_HOME"
+const EnvHome = "MEMPRO_HOME"
 
 // DefaultHomeName is the directory name used under $HOME when EnvHome is unset.
-const DefaultHomeName = ".personant"
+const DefaultHomeName = ".mempro"
 
-// PathsForHome returns a PersonantPaths rooted at an explicit home directory.
-// Used by tests and by `personant init --home <dir>` to bypass environment
+// PathsForHome returns a MemproPaths rooted at an explicit home directory.
+// Used by tests and by `mempro init --home <dir>` to bypass environment
 // resolution.
-func PathsForHome(home string) PersonantPaths {
+func PathsForHome(home string) MemproPaths {
 	return makePaths(home)
 }
 
-func makePaths(home string) PersonantPaths {
-	return PersonantPaths{
+func makePaths(home string) MemproPaths {
+	return MemproPaths{
 		Home:          home,
 		Spine:         filepath.Join(home, spineFileName),
 		Symbols:       filepath.Join(home, "symbols.jsonl"),
@@ -83,21 +83,21 @@ func IsDir(path string) bool {
 	return err == nil && stat.IsDir()
 }
 
-// ResolvePaths returns the canonical PersonantPaths for this process.
+// ResolvePaths returns the canonical MemproPaths for this process.
 //
 // Resolution order:
-//  1. $PERSONANT_HOME if set and non-empty.
-//  2. $HOME/.personant otherwise.
+//  1. $MEMPRO_HOME if set and non-empty.
+//  2. $HOME/.mempro otherwise.
 //
 // Path validity (existence, scaffold completeness) is not checked here —
-// callers that require an initialized home should consult `personant init`
-// or `personant verify`.
-func ResolvePaths() (PersonantPaths, error) {
+// callers that require an initialized home should consult `mempro init`
+// or `mempro verify`.
+func ResolvePaths() (MemproPaths, error) {
 	home := os.Getenv(EnvHome)
 	if home == "" {
 		userHome, err := os.UserHomeDir()
 		if err != nil {
-			return PersonantPaths{}, fmt.Errorf("resolve user home: %w", err)
+			return MemproPaths{}, fmt.Errorf("resolve user home: %w", err)
 		}
 		home = filepath.Join(userHome, DefaultHomeName)
 	}

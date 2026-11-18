@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"personant/internal/crashpoint"
+	"mempro/internal/crashpoint"
 )
 
 // TestWriteFileAtomicUsesDeterministicTemp asserts the write routes through a

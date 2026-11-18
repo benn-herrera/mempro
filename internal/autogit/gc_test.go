@@ -7,13 +7,13 @@ import (
 	"path/filepath"
 	"testing"
 
-	"personant/internal/store"
+	"mempro/internal/store"
 )
 
 // looseObjectCount counts loose object files under .git/objects — every
 // two-hex-char fanout directory's entries. Packfiles live under
 // .git/objects/pack and the loose/info dirs are excluded.
-func looseObjectCount(t *testing.T, paths store.PersonantPaths) int {
+func looseObjectCount(t *testing.T, paths store.MemproPaths) int {
 	t.Helper()
 	objRoot := filepath.Join(paths.Home, ".git", "objects")
 	dirents, err := os.ReadDir(objRoot)
@@ -39,7 +39,7 @@ func looseObjectCount(t *testing.T, paths store.PersonantPaths) int {
 }
 
 // packFileCount counts *.pack files under .git/objects/pack.
-func packFileCount(t *testing.T, paths store.PersonantPaths) int {
+func packFileCount(t *testing.T, paths store.MemproPaths) int {
 	t.Helper()
 	packs, err := filepath.Glob(filepath.Join(paths.Home, ".git", "objects", "pack", "*.pack"))
 	if err != nil {
@@ -52,7 +52,7 @@ func packFileCount(t *testing.T, paths store.PersonantPaths) int {
 // each, producing loose objects (blob + tree + commit per commit) for GC to
 // pack. Each call uses a distinct prefix so repeated calls within one test
 // always dirty the tree (never a clean-tree empty commit).
-func makeCommits(t *testing.T, paths store.PersonantPaths, prefix string, n int) {
+func makeCommits(t *testing.T, paths store.MemproPaths, prefix string, n int) {
 	t.Helper()
 	for i := 0; i < n; i++ {
 		f := filepath.Join(paths.Home, fmt.Sprintf("gcfile_%s_%d.md", prefix, i))

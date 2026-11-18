@@ -7,11 +7,11 @@ import (
 
 	"github.com/go-git/go-git/v5"
 
-	"personant/internal/autogit"
-	"personant/internal/crashpoint"
-	"personant/internal/memops"
-	"personant/internal/recovery"
-	"personant/internal/store"
+	"mempro/internal/autogit"
+	"mempro/internal/crashpoint"
+	"mempro/internal/memops"
+	"mempro/internal/recovery"
+	"mempro/internal/store"
 )
 
 // Crash-stability port surface (#94, SPEC §4.5.8): Reconcile /

@@ -183,7 +183,7 @@ Gitignored, under the substrate home, mirroring the thread layout so a thread's 
 (but never inside the git-tracked part of) its directory:
 
 ```
-$PERSONANT_HOME/
+$MEMPRO_HOME/
   .recall-cache/                 # gitignored; operational, never canonical
     threads/
       thr_<id>.vec               # one file per thread: coarse vector + chunk vectors

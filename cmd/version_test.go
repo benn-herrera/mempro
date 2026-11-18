@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"personant/internal/store"
-	"personant/internal/version"
+	"mempro/internal/store"
+	"mempro/internal/version"
 )
 
 // Versioning CLI surface (SPEC §9.1): `--version` / `version`, and the
@@ -17,7 +17,7 @@ import (
 // override.
 
 // writeHomeFormat stamps a raw format revision onto an existing home,
-// standing in for "a home a newer personant wrote".
+// standing in for "a home a newer mempro wrote".
 func writeHomeFormat(t *testing.T, home string, format int) {
 	t.Helper()
 	paths := store.PathsForHome(home)
@@ -26,9 +26,9 @@ func writeHomeFormat(t *testing.T, home string, format int) {
 	}
 }
 
-// TestVersionFlagPrintsShortFormOnly: `personant --version` prints
+// TestVersionFlagPrintsShortFormOnly: `mempro --version` prints
 // version.Short() and nothing else — cobra's default template would wrap
-// it in a second "personant version X" line.
+// it in a second "mempro version X" line.
 func TestVersionFlagPrintsShortFormOnly(t *testing.T) {
 	out := runCLI(t, t.TempDir(), "--version")
 	if out != version.Short()+"\n" {
@@ -102,7 +102,7 @@ func TestGateRefusesNewerHome(t *testing.T) {
 		{"init", "--quiet"},
 	} {
 		err := execCLI(home, args...)
-		if err == nil || !strings.Contains(err.Error(), "newer personant") {
+		if err == nil || !strings.Contains(err.Error(), "newer mempro") {
 			t.Errorf("%v on a newer home = %v, want the newer-home refusal", args, err)
 		}
 	}

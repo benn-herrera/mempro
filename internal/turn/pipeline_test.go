@@ -10,12 +10,12 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/autogit"
-	"personant/internal/memops"
-	"personant/internal/memops/fileadapter"
-	"personant/internal/model"
-	"personant/internal/recovery"
-	"personant/internal/store"
+	"mempro/internal/autogit"
+	"mempro/internal/memops"
+	"mempro/internal/memops/fileadapter"
+	"mempro/internal/model"
+	"mempro/internal/recovery"
+	"mempro/internal/store"
 )
 
 // Crash-stability turn-pipeline tests (#94, Wave R3): journal-before-
@@ -291,7 +291,7 @@ func TestPipeline_CommitFailureLeavesMarkerThenRecovers(t *testing.T) {
 }
 
 // TestPipeline_TrailerAndInfo asserts the per-turn commit carries the
-// Personant-Turn trailer matching TurnInfo.TurnID, and CommitDuration is
+// mempro-Turn trailer matching TurnInfo.TurnID, and CommitDuration is
 // a real measurement.
 func TestPipeline_TrailerAndInfo(t *testing.T) {
 	paths, meta := newTestHome(t)

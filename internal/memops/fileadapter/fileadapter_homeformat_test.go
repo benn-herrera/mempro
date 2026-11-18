@@ -6,9 +6,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"personant/internal/memops"
-	"personant/internal/store"
-	"personant/internal/version"
+	"mempro/internal/memops"
+	"mempro/internal/store"
+	"mempro/internal/version"
 )
 
 func TestHomeFormat_ScaffoldedByInit(t *testing.T) {

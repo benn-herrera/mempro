@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"personant/internal/memops"
+	"mempro/internal/memops"
 )
 
 // makeSpine is a helper that constructs a SpineRecord with the fields

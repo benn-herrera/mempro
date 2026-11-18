@@ -15,7 +15,7 @@
 //	V4 format-shield V0 with a markdown-wrap warning added to the directive
 //
 // Live-gating follows the house convention (internal/testsupport): the
-// test ALWAYS COMPILES, skips without PERSONANT_LIVE_TESTS, and under the
+// test ALWAYS COMPILES, skips without MEMPRO_LIVE_TESTS, and under the
 // opt-in an unreachable/misconfigured endpoint is a FAILURE, not a skip.
 //
 // The probe is RESUMABLE: every completed call is appended to
@@ -30,8 +30,8 @@
 // Overridable knobs for the cheap sanity pass (config-problem guard
 // before committing hours of wall-clock):
 //
-//	PERSONANT_PROBE_N=3 PERSONANT_PROBE_VARIANTS=V0 \
-//	  PERSONANT_LIVE_TESTS=1 make test-run PKG=./internal/prompt RUN=TestElicitationProbe
+//	MEMPRO_PROBE_N=3 MEMPRO_PROBE_VARIANTS=V0 \
+//	  MEMPRO_LIVE_TESTS=1 make test-run PKG=./internal/prompt RUN=TestElicitationProbe
 package prompt_test
 
 import (
@@ -48,12 +48,12 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/clock"
-	"personant/internal/memops"
-	"personant/internal/model"
-	"personant/internal/prompt"
-	"personant/internal/testsupport"
-	"personant/internal/workset"
+	"mempro/internal/clock"
+	"mempro/internal/memops"
+	"mempro/internal/model"
+	"mempro/internal/prompt"
+	"mempro/internal/testsupport"
+	"mempro/internal/workset"
 )
 
 const (
@@ -63,7 +63,7 @@ const (
 	probeSeed = 20260715
 
 	// probeN is the number of fixtures (= calls per variant). Overridable
-	// down for a sanity pass via PERSONANT_PROBE_N.
+	// down for a sanity pass via MEMPRO_PROBE_N.
 	probeN = 50
 
 	// probeChatModel is the reaper-served chat model under test — the
@@ -238,7 +238,7 @@ func bodyText(f corpusFragment) string {
 
 // buildFixtures constructs n deterministic fixtures. Each fixture uses its
 // own rng seeded probeSeed+index, so fixture i is identical regardless of
-// n (PERSONANT_PROBE_N sanity subsets stay comparable with the full run).
+// n (MEMPRO_PROBE_N sanity subsets stay comparable with the full run).
 func buildFixtures(t *testing.T, articles []corpusArticle, n int) []probeFixture {
 	t.Helper()
 	fixtures := make([]probeFixture, 0, n)
@@ -740,7 +740,7 @@ func envIntDefault(t *testing.T, name string, def int) int {
 }
 
 func selectedVariants(t *testing.T) []string {
-	v := os.Getenv("PERSONANT_PROBE_VARIANTS")
+	v := os.Getenv("MEMPRO_PROBE_VARIANTS")
 	if v == "" {
 		return probeVariantNames
 	}
@@ -752,7 +752,7 @@ func selectedVariants(t *testing.T) []string {
 	for _, name := range strings.Split(v, ",") {
 		name = strings.ToUpper(strings.TrimSpace(name))
 		if !valid[name] {
-			t.Fatalf("PERSONANT_PROBE_VARIANTS contains unknown variant %q (valid: %v)", name, probeVariantNames)
+			t.Fatalf("MEMPRO_PROBE_VARIANTS contains unknown variant %q (valid: %v)", name, probeVariantNames)
 		}
 		out = append(out, name)
 	}
@@ -764,7 +764,7 @@ func selectedVariants(t *testing.T) []string {
 func TestElicitationProbe_Live(t *testing.T) {
 	testsupport.RequireLive(t)
 
-	n := envIntDefault(t, "PERSONANT_PROBE_N", probeN)
+	n := envIntDefault(t, "MEMPRO_PROBE_N", probeN)
 	variants := selectedVariants(t)
 
 	articles := loadCorpus(t)

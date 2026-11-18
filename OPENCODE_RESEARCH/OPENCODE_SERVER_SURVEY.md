@@ -1,17 +1,17 @@
 # opencode server survey (reference for a Go re-implementation)
 
 **Surveyed:** opencode release tag **v2.2.2**, commit `098aa7fd6e02b03d6fc410f0b052038c7d4c5e81`
-(local clone `../opencode`). All paths are repo-relative to that clone unless prefixed `personant:`.
+(local clone `../opencode`). All paths are repo-relative to that clone unless prefixed `mempro:`.
 Claims not confirmed in source are marked *unverified*.
 
 **Erratum** (later measurement, `OPENCODE_PREPROBE_RESULTS.md` §2): nothing publishes the
 `session.status` and `session.idle` events listed below.
 
-**Provenance.** Section 1 was read directly. Sections 2 to 4 and the personant inventory were
+**Provenance.** Section 1 was read directly. Sections 2 to 4 and the mempro inventory were
 compiled by research sub-agents. For files that changed between an earlier commit and v2.2.2, they
 re-checked their claims against v2.2.2. Their key citations were spot-checked against the code:
 subagent depth, permission `evaluate`, `Permission.Reply`, agent defaults, ID format, retry
-schedule, `session_part`, event persistence, personant `Client` and tool loop. Line numbers in
+schedule, `session_part`, event persistence, mempro `Client` and tool loop. Line numbers in
 sections 2 to 4 that were not spot-checked carry the sub-agents' readings.
 
 **Package map (v2 architecture).**
@@ -892,28 +892,28 @@ equivalent as parts; they are folded into the fields above.
 - **Children:** subagent sessions have `parentID`, listed via `GET /api/session?parentID=<id>`. `parentID=null` lists roots (`packages/schema/src/session.ts:79-89`).
 - **Delete:** deleting a session cascades to its children.
 
-### 4.8 Personant's existing implementation compared
+### 4.8 mempro's existing implementation compared
 
-**Personant facts** (sub-agent inventory; spot-checked items are marked ✓):
+**mempro facts** (sub-agent inventory; spot-checked items are marked ✓):
 
-| Area | Personant | Citation |
+| Area | mempro | Citation |
 |---|---|---|
-| LLM wire | OpenAI-compatible `chat/completions` only (SSE streaming, `models`, `embeddings`). No Anthropic Messages, no OpenAI Responses | personant:`internal/model/http_client.go:69,164` ✓ |
-| Client abstraction | `Client{Consult, ConsultStream, ListModels}`. `Message` is `{Role, Content string, ToolCalls, ToolCallID}`: text-only, no content parts | personant:`internal/model/client.go:30-34` ✓, `:120-125` |
-| Streaming | `StreamReader.Next() Chunk{Content, Reasoning, ToolCalls, FinishReason, Usage}`; tool-call fragments merged by index | personant:`internal/model/http_stream.go:162-231` |
-| Retries | None on LLM calls; 5-minute hard timeout | personant:`internal/model/http_client.go:41-50,129-135` |
-| Usage | prompt/completion/reasoning/cached tokens plus oMLX telemetry; **no cost accounting** | personant:`internal/model/client.go:232-281` |
-| Reasoning | Parsed for display only; never persisted or replayed | personant:`internal/model/http_stream.go:353-358` |
-| Model catalog | None; the model is named in config and checked against `/models` | personant:`internal/chat/chat.go:607-635` |
-| Config | TOML (`providers.toml`, `config.toml`) under `$PERSONANT_HOME` | personant:`internal/memops/memops_model.go:336-563` |
-| Sessions | No session entity. In-memory `turn.State.History` (user/assistant text pairs, capped at 20, tool messages dropped after the turn), **not restored across launches** | personant:`internal/turn/turn.go:90-520` |
-| Persistence | Memory **threads**: markdown with frontmatter plus JSONL, in a git-committed home dir. This is memory, not transcript storage | personant:`internal/store/paths.go:56-82` |
-| Tool loop | In-memory loop, at most 4 tool rounds per turn | personant:`internal/turn/toolloop.go:79` ✓ |
-| Tools | `Tool{Spec, Handler, Tier, Mutates}`; mutating tools refused; only web tools registered | personant:`internal/tools/registry.go:43-69,127-148` ✓ |
-| Permissions, agents, subagents, forks, compaction | None (thread-closure summaries exist, but no transcript compaction) | personant:`internal/curator/curator.go:30-90` |
-| Server / event bus | **None.** No `net.Listen` or `ListenAndServe` in `internal/` or `cmd/` ✓. UI is fed by in-process callbacks | personant:`internal/turn/turn.go:80-87` |
+| LLM wire | OpenAI-compatible `chat/completions` only (SSE streaming, `models`, `embeddings`). No Anthropic Messages, no OpenAI Responses | mempro:`internal/model/http_client.go:69,164` ✓ |
+| Client abstraction | `Client{Consult, ConsultStream, ListModels}`. `Message` is `{Role, Content string, ToolCalls, ToolCallID}`: text-only, no content parts | mempro:`internal/model/client.go:30-34` ✓, `:120-125` |
+| Streaming | `StreamReader.Next() Chunk{Content, Reasoning, ToolCalls, FinishReason, Usage}`; tool-call fragments merged by index | mempro:`internal/model/http_stream.go:162-231` |
+| Retries | None on LLM calls; 5-minute hard timeout | mempro:`internal/model/http_client.go:41-50,129-135` |
+| Usage | prompt/completion/reasoning/cached tokens plus oMLX telemetry; **no cost accounting** | mempro:`internal/model/client.go:232-281` |
+| Reasoning | Parsed for display only; never persisted or replayed | mempro:`internal/model/http_stream.go:353-358` |
+| Model catalog | None; the model is named in config and checked against `/models` | mempro:`internal/chat/chat.go:607-635` |
+| Config | TOML (`providers.toml`, `config.toml`) under `$MEMPRO_HOME` | mempro:`internal/memops/memops_model.go:336-563` |
+| Sessions | No session entity. In-memory `turn.State.History` (user/assistant text pairs, capped at 20, tool messages dropped after the turn), **not restored across launches** | mempro:`internal/turn/turn.go:90-520` |
+| Persistence | Memory **threads**: markdown with frontmatter plus JSONL, in a git-committed home dir. This is memory, not transcript storage | mempro:`internal/store/paths.go:56-82` |
+| Tool loop | In-memory loop, at most 4 tool rounds per turn | mempro:`internal/turn/toolloop.go:79` ✓ |
+| Tools | `Tool{Spec, Handler, Tier, Mutates}`; mutating tools refused; only web tools registered | mempro:`internal/tools/registry.go:43-69,127-148` ✓ |
+| Permissions, agents, subagents, forks, compaction | None (thread-closure summaries exist, but no transcript compaction) | mempro:`internal/curator/curator.go:30-90` |
+| Server / event bus | **None.** No `net.Listen` or `ListenAndServe` in `internal/` or `cmd/` ✓. UI is fed by in-process callbacks | mempro:`internal/turn/turn.go:80-87` |
 
-**What opencode has that personant lacks:**
+**What opencode has that mempro lacks:**
 - The HTTP/SSE server and its whole route surface.
 - Durable session, message and inbox storage with event-sourced projections.
 - A typed assistant content model (text, reasoning, tool parts with a state machine).
@@ -925,13 +925,13 @@ equivalent as parts; they are folded into the fields above.
 - Config, agent, command, skill and instruction loading.
 
 **Structural compatibility:**
-- **Incompatible:** personant's turn model. Its history is in-memory text pairs, its tool loop runs inside one turn, and memory and transcript are coupled in `turn.State`. opencode requires each step to be one stream call over reloaded durable history, with no in-memory tool loop (`AGENTS.md` "Session Core").
-- **Partly compatible:** personant's streaming client is close to one opencode protocol adapter (openai-chat). It already handles SSE parsing, tool-call fragment merging, and reasoning and usage extraction. It lacks cost, retries, content parts and other protocols.
+- **Incompatible:** mempro's turn model. Its history is in-memory text pairs, its tool loop runs inside one turn, and memory and transcript are coupled in `turn.State`. opencode requires each step to be one stream call over reloaded durable history, with no in-memory tool loop (`AGENTS.md` "Session Core").
+- **Partly compatible:** mempro's streaming client is close to one opencode protocol adapter (openai-chat). It already handles SSE parsing, tool-call fragment merging, and reasoning and usage extraction. It lacks cost, retries, content parts and other protocols.
 
 **Recommendation (judgment, not established fact):**
-- **Replace personant's session and turn layer** with a Go implementation of opencode's v2 session design: the inbox, step-per-stream runner, durable events and projections, and the message and part schema. The TUI's data layer folds those exact events and shapes, so any other model would need a translation layer as large as the port itself.
+- **Replace mempro's session and turn layer** with a Go implementation of opencode's v2 session design: the inbox, step-per-stream runner, durable events and projections, and the message and part schema. The TUI's data layer folds those exact events and shapes, so any other model would need a translation layer as large as the port itself.
 - **Keep `internal/model` as the seed of one protocol adapter** (openai-chat, which also serves oMLX), extended with retries, cost and content parts. Add other protocols only as needed.
-- Personant's memory system (threads, working set, recall) has no opencode counterpart. It should attach through opencode's own extension points: instruction entries and system-prompt instructions, synthetic messages, and plugin-style hooks on prompt and context. It should not stay fused into the turn loop.
+- mempro's memory system (threads, working set, recall) has no opencode counterpart. It should attach through opencode's own extension points: instruction entries and system-prompt instructions, synthetic messages, and plugin-style hooks on prompt and context. It should not stay fused into the turn loop.
 
 ---
 

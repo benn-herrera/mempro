@@ -15,7 +15,7 @@ import (
 	"sort"
 	"strings"
 
-	"personant/internal/memops"
+	"mempro/internal/memops"
 )
 
 // ErrNoTopicTag is returned by Parse when no valid topic tag is present in

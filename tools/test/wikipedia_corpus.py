@@ -48,8 +48,8 @@ API_ENDPOINT = "https://en.wikipedia.org/w/api.php"
 # Wikipedia asks API clients to identify themselves; an anonymous or
 # generic UA risks being throttled or blocked.
 USER_AGENT = (
-    "personant-recall-corpus/0.1 "
-    "(https://github.com/personant; recall-fidelity test corpus miner)"
+    "mempro-recall-corpus/0.1 "
+    "(https://github.com/mempro; recall-fidelity test corpus miner)"
 )
 
 # Section headings that carry no topical content — dropped during

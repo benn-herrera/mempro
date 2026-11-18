@@ -1,4 +1,4 @@
-// Package version carries personant's version identity: the substrate
+// Package version carries mempro's version identity: the substrate
 // semver line, the home's on-disk format revision, and the build stamp
 // Go's toolchain embeds.
 //
@@ -6,7 +6,7 @@
 //
 //   - Substrate — the runtime + the MemoryOps port. Semver.
 //   - CurrentHomeFormat — the canonical on-disk layout revision of
-//     $PERSONANT_HOME. A plain integer, deliberately NOT semver: an
+//     $MEMPRO_HOME. A plain integer, deliberately NOT semver: an
 //     on-disk layout is either readable by this binary or it is not, so
 //     there is nothing for a three-part version to express.
 //
@@ -116,7 +116,7 @@ func (b Build) CommitLabel() string {
 
 // Short returns the one-line version identity, e.g.
 //
-//	personant 0.1.0 (commit abc1234, home format 1)
+//	mempro 0.1.0 (commit abc1234, home format 1)
 //
 // The commit clause is omitted entirely when the binary is unstamped.
 func Short() string { return shortForm(ReadBuild()) }
@@ -136,7 +136,7 @@ func shortForm(b Build) string {
 		parts = append(parts, "commit "+b.CommitLabel())
 	}
 	parts = append(parts, fmt.Sprintf("home format %d", CurrentHomeFormat))
-	return fmt.Sprintf("personant %s (%s)", Substrate, strings.Join(parts, ", "))
+	return fmt.Sprintf("mempro %s (%s)", Substrate, strings.Join(parts, ", "))
 }
 
 func longForm(b Build) string {

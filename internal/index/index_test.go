@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"personant/internal/memops"
-	"personant/internal/store"
+	"mempro/internal/memops"
+	"mempro/internal/store"
 )
 
 // hasGit skips the test if git isn't on PATH (Init's git step requires it).
@@ -19,9 +19,9 @@ func hasGit(t *testing.T) {
 	}
 }
 
-// initFreshHome scaffolds a personant home with store.Init and returns
+// initFreshHome scaffolds a mempro home with store.Init and returns
 // the resulting paths.
-func initFreshHome(t *testing.T) store.PersonantPaths {
+func initFreshHome(t *testing.T) store.MemproPaths {
 	t.Helper()
 	hasGit(t)
 	home := t.TempDir()
@@ -33,7 +33,7 @@ func initFreshHome(t *testing.T) store.PersonantPaths {
 }
 
 // writeSpine writes the given spine records via store.WriteSpine.
-func writeSpine(t *testing.T, paths store.PersonantPaths, recs []memops.SpineRecord) {
+func writeSpine(t *testing.T, paths store.MemproPaths, recs []memops.SpineRecord) {
 	t.Helper()
 	if err := store.WriteSpine(paths.Spine, recs); err != nil {
 		t.Fatalf("WriteSpine: %v", err)

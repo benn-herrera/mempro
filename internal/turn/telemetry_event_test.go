@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/memops/fileadapter"
-	"personant/internal/model"
+	"mempro/internal/memops/fileadapter"
+	"mempro/internal/model"
 )
 
 // The provider's extended inference-telemetry block is a NON-STANDARD

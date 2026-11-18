@@ -16,8 +16,8 @@ repository.
 - **Watermark.** `derived-watermark` (gitignored) holds the turn repository HEAD hash the derived
   files were last built from. Turn repository HEAD equal to the watermark, with the store working
   tree clean against that HEAD, means derived files are fresh: the O(1) clean-open certificate.
-- **Trailers.** Every turn-repository commit carries `Personant-Turn: <id>`, read as the head turn
-  id; every history-repository commit carries `Personant-Day: <N>`, read as the head day number.
+- **Trailers.** Every turn-repository commit carries `mempro-Turn: <id>`, read as the head turn
+  id; every history-repository commit carries `mempro-Day: <N>`, read as the head day number.
   The head turn id discriminates the torn-turn cases (4, 5, 6); the head day number drives
   new-day detection and the day-commit guard. The head day number is undefined only for a bare,
   never-committed history repository.
@@ -25,4 +25,3 @@ repository.
   first, before any turn-repository read. A failure to open a corrupt or partial `.git-daily`
   classifies as half-created and is never a propagated error, so a corrupt turn repository is
   recreated from the store working tree and never wedges an open.
-

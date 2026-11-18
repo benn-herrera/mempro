@@ -10,8 +10,8 @@ import (
 	"strings"
 	"testing"
 
-	"personant/internal/metrics"
-	"personant/internal/store"
+	"mempro/internal/metrics"
+	"mempro/internal/store"
 )
 
 // readCounter writes the run's metrics blob to a temp file and returns the

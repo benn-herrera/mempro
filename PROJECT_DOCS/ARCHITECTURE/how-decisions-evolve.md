@@ -1,6 +1,6 @@
 ## How decisions evolve
 
-Personant evolves by:
+mempro evolves by:
 
 1. **Calibration scenarios** — parameter sweeps over canonical workloads; metrics matrices identify
    operating points.
@@ -16,4 +16,3 @@ Personant evolves by:
 - **Deterministic-pass coverage** — per-project regex curation needs.
 
 ---
-

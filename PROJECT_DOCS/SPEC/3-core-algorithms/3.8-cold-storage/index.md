@@ -1,7 +1,7 @@
 ### 3.8 Cold storage
 
 Closed threads are moved to **cold storage** — archived out of the thread registry under thread
-registry size pressure and restored with `personant archive recover`; an archived thread's bytes are kept in the
+registry size pressure and restored with `mempro archive recover`; an archived thread's bytes are kept in the
 history repository. **Size pressure** is the registry holding more records than
 an upper bound; archival then drains the coldest closed threads until the registry is down to a
 lower bound, the **low-water mark**.

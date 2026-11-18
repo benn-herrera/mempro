@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"personant/internal/model"
+	"mempro/internal/model"
 )
 
 // chunkReader replays a scripted chunk sequence as a model.StreamReader.

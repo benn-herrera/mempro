@@ -7,7 +7,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"personant/internal/memops"
+	"mempro/internal/memops"
 )
 
 var verifyFlagQuiet bool
@@ -15,10 +15,10 @@ var verifyFlagQuiet bool
 var verifyCmd = &cobra.Command{
 	Use:   "verify",
 	Short: "validate canonical state (schema, cross-refs, index drift)",
-	Long: `Walk $PERSONANT_HOME and report schema violations
+	Long: `Walk $MEMPRO_HOME and report schema violations
 (spec §2.2 spine record limits, §2.5.1 project meta), missing
 cross-references, and derived-file drift (delegated to
-` + "`personant index check`" + `). Read-only — never writes a file.
+` + "`mempro index check`" + `). Read-only — never writes a file.
 
 Output ordering is stable: errors first, warnings second, drift third,
 followed by a one-line summary. Exits 1 if any error or drift entry is

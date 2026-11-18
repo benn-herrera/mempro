@@ -7,7 +7,7 @@ A turn is written to the turn repository in three ordered steps:
 2. Append the response record (kind `response`, fsync) before any authoritative write. A
    journal-append failure aborts the turn before any authoritative write.
 3. At turn close, `CommitTurn` commits the turn's scoped write set to the turn repository with the
-   `Personant-Turn: <id>` trailer, then truncates the journal; the truncate is the scope release.
+   `mempro-Turn: <id>` trailer, then truncates the journal; the truncate is the scope release.
    A commit failure leaves the journal non-empty and fails loudly into recovery.
 
 Staging is scoped to the turn's recorded write set (`spine.jsonl`, touched thread directories, the
@@ -28,4 +28,3 @@ turn's content, which is the ≤1-turn bar. A torn final line is skipped by the 
 On a torn turn the journal bytes are written to a recovery artifact and reported in the event log
 (`recovery.journal-recovered`). They are never auto-replayed into the authoritative files, because a
 turn's derivation (tag parse, symbol extraction, engagement) is not replayable.
-

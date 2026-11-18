@@ -13,15 +13,15 @@ import (
 
 	"github.com/go-git/go-git/v5"
 
-	"personant/internal/autogit"
-	"personant/internal/clock"
-	"personant/internal/crashpoint"
-	"personant/internal/eventlog"
-	"personant/internal/index"
-	"personant/internal/memops"
-	"personant/internal/recovery"
-	"personant/internal/store"
-	"personant/internal/verify"
+	"mempro/internal/autogit"
+	"mempro/internal/clock"
+	"mempro/internal/crashpoint"
+	"mempro/internal/eventlog"
+	"mempro/internal/index"
+	"mempro/internal/memops"
+	"mempro/internal/recovery"
+	"mempro/internal/store"
+	"mempro/internal/verify"
 )
 
 // The day barrier (#94 R3b §2) — homed HERE, in the adapter (F4): it
@@ -41,7 +41,7 @@ import (
 //	    (worktree only, byte-preserving, idempotent; lands in B2)
 //	B1c prune each thread's tracked-file store to its retention set
 //	    (worktree only, idempotent; lands in B2)
-//	B2  day-commit worktree → PRIMARY (`Personant-Day: N`,
+//	B2  day-commit worktree → PRIMARY (`mempro-Day: N`,
 //	    AllowEmptyCommits — F3; spine-integrity gate on the staged tree
 //	    BEFORE the mint, structural errors only — F5/F1: a spine-broken
 //	    day-commit can never land), guarded by the one-day-commit-per-day
@@ -49,7 +49,7 @@ import (
 //	B3  rebuild derived from the now-committed worktree (absorbs
 //	    overnight hand-edits and B1's removals — F5)
 //	B4  nuke .git-daily
-//	B5  re-init daily + Personant-Turn-less baseline commit → H_d
+//	B5  re-init daily + mempro-Turn-less baseline commit → H_d
 //	B6  stamp watermark = H_d; assert derived-fresh (the
 //	    once-a-day index.Check, moved off B2 per F5); clear marker
 //
@@ -76,7 +76,7 @@ var (
 
 // MaybeDayBarrier is the new-day poll (§2.1). Detection: the barrier
 // fires when the current clock day (the single-clock day index) exceeds
-// HEADDAY — the Personant-Day trailer of primary HEAD. The poll seals
+// HEADDAY — the mempro-Day trailer of primary HEAD. The poll seals
 // only COMPLETED days; its target is the most recent completed day
 // (cur-1), so after sealing it the only unsatisfiable target advances
 // with the clock and re-fire is impossible (the one-day-commit guard
@@ -97,7 +97,7 @@ var (
 // (first-ever open, pre-Reconcile) → no fire; Reconcile's morning-init
 // always precedes this poll in the open sequence.
 // Detection vs. idempotence guard — deliberately NOT conflated (§4):
-// detection reads the Personant-Day trailer off HEAD regardless of
+// detection reads the mempro-Day trailer off HEAD regardless of
 // commit shape; the no-re-fire GUARD is the stricter day-commit-shape
 // predicate for the target day. A trailered-but-non-day-shape HEAD (an
 // adopt, a repair) advances HEADDAY for detection but must NOT suppress
@@ -568,7 +568,7 @@ func (a *FileAdapter) spineQuarantineRepair(ctx context.Context, findings []memo
 // directory.
 type repairUnit struct {
 	rel      string
-	checkout func(ctx context.Context, paths store.PersonantPaths, which autogit.Repo, commitHash, rel string, pre, post autogit.GitCheckFlags) error
+	checkout func(ctx context.Context, paths store.MemproPaths, which autogit.Repo, commitHash, rel string, pre, post autogit.GitCheckFlags) error
 }
 
 // trackedStoreThread returns the thread whose tracked-file store holds rel:
@@ -1049,12 +1049,12 @@ func (a *FileAdapter) completeArchivalBatch(ctx context.Context, day int) error 
 // so quarantined bytes survive any later operation and are never
 // committed.
 type barrierQuarantine struct {
-	paths store.PersonantPaths
+	paths store.MemproPaths
 	dir   string
 	moved []string
 }
 
-func newBarrierQuarantine(paths store.PersonantPaths) *barrierQuarantine {
+func newBarrierQuarantine(paths store.MemproPaths) *barrierQuarantine {
 	stamp := clock.Timeline().UTC().Format("20060102T150405.000000000Z") + "-barrier"
 	return &barrierQuarantine{paths: paths, dir: filepath.Join(paths.RecoveryDir, "quarantine", stamp)}
 }
@@ -1090,7 +1090,7 @@ func (q *barrierQuarantine) quarantineAndRemove(rel string) (bool, error) {
 // primaryObjectBytes sums the on-disk size of primary's object store —
 // the day_commit_bytes gauge's before/after read. Best-effort: an
 // unreadable entry contributes zero.
-func primaryObjectBytes(paths store.PersonantPaths) int64 {
+func primaryObjectBytes(paths store.MemproPaths) int64 {
 	var total int64
 	root := filepath.Join(paths.Home, ".git", "objects")
 	_ = filepath.WalkDir(root, func(p string, d fs.DirEntry, err error) error {

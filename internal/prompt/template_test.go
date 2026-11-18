@@ -98,7 +98,7 @@ func TestBuildSystemPromptPartialLayers(t *testing.T) {
 
 func TestBuildSystemPromptStartsWithPreamble(t *testing.T) {
 	got := BuildSystemPrompt(SystemPromptElements{})
-	if !strings.HasPrefix(got, "You are personant") {
+	if !strings.HasPrefix(got, "You are mempro") {
 		t.Errorf("prompt should start with orientation preamble, got prefix: %q", firstN(got, 60))
 	}
 }

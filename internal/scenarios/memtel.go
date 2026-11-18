@@ -10,8 +10,8 @@ import (
 	"sync"
 	"time"
 
-	"personant/internal/clock"
-	pnlog "personant/internal/log"
+	"mempro/internal/clock"
+	pnlog "mempro/internal/log"
 )
 
 // memSampleEveryNSteps is the per-step memory-sample cadence. A 6 m sim

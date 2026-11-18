@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"personant/internal/prompt"
-	"personant/internal/scenarios"
+	"mempro/internal/prompt"
+	"mempro/internal/scenarios"
 )
 
 // Within-thread wander tuning (§3.2). A fraction of normal threads

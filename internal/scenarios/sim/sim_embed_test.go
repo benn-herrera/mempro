@@ -29,11 +29,11 @@ import (
 	"fmt"
 	"testing"
 
-	"personant/internal/memops"
-	"personant/internal/model"
-	"personant/internal/recall/measure"
-	"personant/internal/scenarios"
-	"personant/internal/testsupport"
+	"mempro/internal/memops"
+	"mempro/internal/model"
+	"mempro/internal/recall/measure"
+	"mempro/internal/scenarios"
+	"mempro/internal/testsupport"
 )
 
 // mockEmbedderRecaller is the Scenario.Recaller factory for the head-to-head

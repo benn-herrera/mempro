@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"personant/internal/version"
+	"mempro/internal/version"
 )
 
 // Home on-disk format gating (SPEC §9.1).
@@ -23,7 +23,7 @@ import (
 // cannot interpret. Read the stamp, gate, then reconcile.
 
 var (
-	// ErrHomeFormatNewer reports a home written by a NEWER personant than
+	// ErrHomeFormatNewer reports a home written by a NEWER mempro than
 	// this binary. Refusal is the default; `allowNewer` overrides it.
 	ErrHomeFormatNewer = errors.New("home format is newer than this binary understands")
 
@@ -62,7 +62,7 @@ type HomeFormatDecision struct {
 	// when no migration ran. The caller logs it.
 	MigratedFrom int
 
-	// NewerAccepted reports that the home was written by a NEWER personant
+	// NewerAccepted reports that the home was written by a NEWER mempro
 	// and `allowNewer` let it through. The caller must emit a loud warning
 	// and an event-log entry — this is a knowingly-unsafe open, not a
 	// normal one.
@@ -107,7 +107,7 @@ func GateHomeFormat(found bool, onDisk, current int, allowNewer bool) (HomeForma
 	case onDisk > current:
 		if !allowNewer {
 			return HomeFormatDecision{}, fmt.Errorf(
-				"memops: home format %d, this personant understands %d: the home was written by a newer personant — upgrade personant, or re-run with the allow-newer override to open it anyway (at your own risk): %w",
+				"memops: home format %d, this mempro understands %d: the home was written by a newer mempro — upgrade mempro, or re-run with the allow-newer override to open it anyway (at your own risk): %w",
 				onDisk, current, ErrHomeFormatNewer)
 		}
 		d.NewerAccepted = true
@@ -118,7 +118,7 @@ func GateHomeFormat(found bool, onDisk, current int, allowNewer bool) (HomeForma
 			next, ok := nextHomeFormat(pos)
 			if !ok || next > current {
 				return HomeFormatDecision{}, fmt.Errorf(
-					"memops: home format %d, this personant writes %d, no migration step from format %d: %w",
+					"memops: home format %d, this mempro writes %d, no migration step from format %d: %w",
 					onDisk, current, pos, ErrHomeFormatNoMigration)
 			}
 			pos = next

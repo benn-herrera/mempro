@@ -1,4 +1,4 @@
-# opencode v2.2.3: what reaches the model, and how Personant can tell
+# opencode v2.2.3: what reaches the model, and how mempro can tell
 
 Scope: everything opencode puts in a primary model request, as the plugin's `session.context` hook sees it, for
 an unmodified opencode v2.2.3 (clone at tag `v2.2.3`). Citations are repo-relative to `packages/` of that clone.
@@ -12,7 +12,7 @@ Sections 1–4 are facts from source. Section 5 is judgment. Items not confirmed
   (`core/src/session/runner/llm.ts:272-282`).
 - Hooks run in registration order and mutate in place (`core/src/plugin/hooks.ts:88-95`). Boot order is internal
   `pre` plugins, then package plugins, then internal `post` plugins (`core/src/plugin/supervisor.ts:98-102`;
-  `core/src/plugin/internal.ts:224-284`). No `post` plugin registers a `context` hook (source search). So Personant's
+  `core/src/plugin/internal.ts:224-284`). No `post` plugin registers a `context` hook (source search). So mempro's
   hook sees the output of every built-in `context` hook. That activation is sequential in list order is
   **unverified** in code; OPENCODE_PROBE_RESULTS.md §6 (one composed system message, hash-exact, at the mock) agrees.
 - After the hook, opencode still rewrites the messages (`model-request.ts:309`; see P1–P2), and the wire adapter
@@ -123,7 +123,7 @@ lowered, `to-llm-message.ts:155-220`); snapshots; todos (no injection exists, se
 
 The hook may rename or remove tools. Tools it invents are dropped (`model-request.ts:277-285`).
 
-### 1.6 Rewrites after the hook (Personant's output is still changed)
+### 1.6 Rewrites after the hook (mempro's output is still changed)
 
 | # | Content | Built at |
 |---|---|---|
@@ -203,7 +203,7 @@ The `session.prompt` hook sees only M1–M4 (`prompt.ts:42-53`). Synthetic admis
 | A2 | Edit from read output | The edit description tells the model to copy exact text from Read output (`edit.ts:222`). **No read-before-edit check exists**: edit only needs a unique exact `oldString` (`edit.ts:233-296`) | match check: code | The model guesses `oldString`. Edits fail with `Could not find oldString …` (safe; costs round trips) |
 | A3 | Todo tracking | "Send the full list on every call; it replaces the previous one" (`todowrite.txt`). The list exists only in the last `todowrite` call input; the result is a count summary (R7) | model | The list and its progress are lost. The model rebuilds it, or overwrites the user-visible list |
 | A4 | Question answers | Answers exist only in R6 text (and tool metadata) | model | The user's choices are lost. The model asks again or proceeds without them |
-| A5 | Plan mode | M14/H1 reminder. Edit denial outside `~/.opencode/plan` is a permission rule (`plan.ts:33-53`) | edit block: code; awareness: model | H1 re-adds the reminder only when the **pre-Personant** input lacks it. The stored M14 usually satisfies that, so if Personant drops it the model is not told it is in Plan mode. Edits still fail, now as errors |
+| A5 | Plan mode | M14/H1 reminder. Edit denial outside `~/.opencode/plan` is a permission rule (`plan.ts:33-53`) | edit block: code; awareness: model | H1 re-adds the reminder only when the **pre-mempro** input lacks it. The stored M14 usually satisfies that, so if mempro drops it the model is not told it is in Plan mode. Edits still fail, now as errors |
 | A6 | Leaving Plan mode | The "NO LONGER in Plan mode" reminder supersedes the earlier one | model | If the enter reminder survives in recall and the leave reminder does not, the model keeps refusing edits |
 | A7 | Subagent continuation | R5/M11 carry `sessionID`; continuing a child needs that ID. The direct-child check is in code (`subagent.ts:171-174`) | model (ID); code (check) | The model cannot continue or reference the child, and may redo its work |
 | A8 | Background work | R4/R5 tell the model "DO NOT poll; you will be notified". The notice (M10/M11/M12) arrives later as one synthetic message | wake-up: code (`llm.ts:172-182`); result: model | If the notice is not composed into the request it wakes, the result is lost. The model was told not to poll for it |
@@ -217,7 +217,7 @@ The `session.prompt` hook sees only M1–M4 (`prompt.ts:42-53`). Synthetic admis
 | A16 | Revert | Committed revert deletes rows (`projector.ts:877-894`); files restored from snapshots | code (files, rows) | Memory derived from reverted turns stays unless the service retracts it on `session.revert.committed` (`core/src/session/revert.ts:77`). Plan reminders can be stripped (`plan.ts:55-56`) |
 | A17 | `options.maxTokens` | Fitted to opencode's estimate of **its own** history (`model-request.ts:89-98, 268-273`) | code | With a smaller composed request the limit is too low. The hook may reset it |
 | A18 | Auto-compaction | Triggered by provider-measured usage of the composed request plus a char estimate of stored rows since then (`compaction.ts:422-431`) | code | A small composed request keeps it from firing (consistent with OPENCODE_INTEGRATION_OPTIONS.md §2.7) |
-| A19 | Goal loop | Judge and progress checks read **stored** history (`goal.ts:91-102, 123`). H2 is re-added when the objective is missing from the pre-Personant input | code | Unaffected by composition. H2 lands in Personant's input only when stored history lacks the objective |
+| A19 | Goal loop | Judge and progress checks read **stored** history (`goal.ts:91-102, 123`). H2 is re-added when the objective is missing from the pre-mempro input | code | Unaffected by composition. H2 lands in mempro's input only when stored history lacks the objective |
 
 Likely to break under budgeted composition, in order: A9, A10, A8, A3, A5/A6, A4, A7, A1. These all fail without
 an error. A2 fails loudly, and A13/A16-files/A19 are held in code.
@@ -246,7 +246,7 @@ an error. A2 fails loudly, and A13/A16-files/A19 are held in code.
 **Least intrusive no-op.** No hook can refuse admission or cancel a manual compaction, so some stored compaction
 always lands (or a failure, when there is nothing to compact). The minimal footprint:
 
-- Answer `session.compaction` with `result: {summary}`, with no model call. Personant's probe already does this
+- Answer `session.compaction` with `result: {summary}`, with no model call. mempro's probe already does this
   (OPENCODE_PROBE_RESULTS.md §6).
 - The model-visible effect is nil if the composer never forwards M19. What remains is opencode-side: stored history
   is bounded, a compaction row appears in the TUI, and the S4 baseline is refreshed to current values (M6 updates
@@ -255,7 +255,7 @@ always lands (or a failure, when there is nothing to compact). The minimal footp
   compacted range, so the whole range is kept as `<recent-context>` text (`history.ts:231-265`). Whether that is
   useful depends on whether the composer reads opencode history at all.
 - The hook event has no `reason` field (`plugin/src/effect/session.ts:43-51`). To tell a user `/compact` from
-  Personant's own checkpoint compactions or auto ones, subscribe to `session.compaction.started{reason, inputID}`
+  mempro's own checkpoint compactions or auto ones, subscribe to `session.compaction.started{reason, inputID}`
   (`llm.ts:101-104`; `compaction.ts:316`), or track the IDs of compactions the plugin itself enqueued.
 - `compaction.auto:false` in config removes auto and overflow compactions (`compaction.ts:296`). Manual ones remain.
 
@@ -271,18 +271,18 @@ always lands (or a failure, when there is nothing to compact). The minimal footp
   - Key memory on project/user, not `sessionID`.
   - On `session.created` with no `parentID` and no fork, continue the working set rather than start one. Forks arrive
     as `session.forked` (OPENCODE_INTEGRATION_OPTIONS.md §2.3).
-  - Personant composes from its own working set, and the new session's opencode history is empty. So the only loss is
+  - mempro composes from its own working set, and the new session's opencode history is empty. So the only loss is
     opencode's live-turn tail, which the composer owns anyway.
   - Overriding the slash command from a TUI plugin is **unverified**.
 
-## 5. Candidate Personant handling (judgment, not fact)
+## 5. Candidate mempro handling (judgment, not fact)
 
 Classes: **E** always-on directive layer; **A1** project-scoped; **T** transient task-class (staged, GC'd unless a
 decision cites it); **R** recall-backed (persisted, re-fetched by tag); **L** live-turn only; **D** drop.
 
 | # | Injection | Class | Reasoning |
 |---|---|---|---|
-| S1/S2 | Agent/default/family prompt | E (replace with Personant's composed system text) | Infrastructural; THESIS "behavior is sculpted" |
+| S1/S2 | Agent/default/family prompt | E (replace with mempro's composed system text) | Infrastructural; THESIS "behavior is sculpted" |
 | S3 | Model identity | D or E (one line) | Small. Only useful if the model must name itself |
 | S4-I5 | AGENTS.md (global + project) | global → E; project → A1 | Behavior vs project conventions |
 | S4-I1/I2/I4 | Code Mode catalog, MCP guidance, skill list | E (rendered only while those tools are exposed) | Tied to the tool surface |
@@ -304,7 +304,7 @@ decision cites it); **R** recall-backed (persisted, re-fetched by tag); **L** li
 | M15/H2 | Goal kickoff/continuation/reminder | L; objective E while the goal is active | A19 code-held |
 | M17 | cwd change | E (env re-render) | Same as I7 |
 | M18 | Effort marker | D | Cache artefact |
-| M19 | Compaction checkpoint | D | Personant's memory replaces it (§4.1) |
+| M19 | Compaction checkpoint | D | mempro's memory replaces it (§4.1) |
 | M20 | Assistant text | decision-class delta; L tail | — |
 | M20 tool calls | — | L; `todowrite` input → R (latest list) | A3 |
 | R1/R2 | Truncated outputs | T, with the marker pointer kept in L | A1 |
@@ -317,6 +317,6 @@ decision cites it); **R** recall-backed (persisted, re-fetched by tag); **L** li
 ## 6. Unverified
 
 - That plugin activation order equals hook registration order in all reload cases. The plugin dir is file-watched,
-  and a reload could re-register Personant's hooks after others (OPENCODE_PREPROBE_RESULTS.md §6 item 11).
+  and a reload could re-register mempro's hooks after others (OPENCODE_PREPROBE_RESULTS.md §6 item 11).
 - Lowering of system-role messages and effort markers on non-openai-chat routes.
 - Whether a TUI plugin can replace or disable the `/compact` or `/clear` slash commands.

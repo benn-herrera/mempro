@@ -1,5 +1,5 @@
 // Package autogit is the policy-aware autonomic git surface for
-// personant's home tree (~/.personant/.git/).
+// mempro's home tree (~/.mempro/.git/).
 //
 // Two distinct validation concerns:
 //
@@ -47,11 +47,11 @@ import (
 	"github.com/go-git/go-git/v5/storage"
 	"github.com/go-git/go-git/v5/storage/filesystem"
 
-	"personant/internal/index"
-	pnlog "personant/internal/log"
-	"personant/internal/memops"
-	"personant/internal/store"
-	"personant/internal/verify"
+	"mempro/internal/index"
+	pnlog "mempro/internal/log"
+	"mempro/internal/memops"
+	"mempro/internal/store"
+	"mempro/internal/verify"
 )
 
 // GitCheckFlags is the bitmask of systemic validation checks runnable
@@ -93,7 +93,7 @@ var ErrPostOpVerification = errors.New("autogit: post-op verification failed")
 // Commit. Empty commits are rejected by go-git with ErrEmptyCommit;
 // callers that want bookkeeping commits must stage something first (the
 // barrier's day-commit uses CommitAllowEmpty instead — F3).
-func Commit(ctx context.Context, paths store.PersonantPaths, which Repo, msg string, preFlags, postFlags GitCheckFlags) error {
+func Commit(ctx context.Context, paths store.MemproPaths, which Repo, msg string, preFlags, postFlags GitCheckFlags) error {
 	_, err := commitInternal(ctx, paths, which, msg, preFlags, postFlags, false)
 	return err
 }
@@ -105,7 +105,7 @@ func Commit(ctx context.Context, paths store.PersonantPaths, which Repo, msg str
 // semantics as Commit. On a post-flag failure the commit has already been
 // written, so the hash is returned alongside the wrapped error so the
 // caller can still reference it.
-func CommitWithHash(ctx context.Context, paths store.PersonantPaths, which Repo, msg string, preFlags, postFlags GitCheckFlags) (string, error) {
+func CommitWithHash(ctx context.Context, paths store.MemproPaths, which Repo, msg string, preFlags, postFlags GitCheckFlags) (string, error) {
 	return commitInternal(ctx, paths, which, msg, preFlags, postFlags, false)
 }
 
@@ -114,11 +114,11 @@ func CommitWithHash(ctx context.Context, paths store.PersonantPaths, which Repo,
 // baseline must mint a commit even when the tree is unchanged, so
 // HEADDAY is always defined and an empty day still seals. Every other
 // caller keeps the reject-empty default.
-func CommitAllowEmpty(ctx context.Context, paths store.PersonantPaths, which Repo, msg string, preFlags, postFlags GitCheckFlags) (string, error) {
+func CommitAllowEmpty(ctx context.Context, paths store.MemproPaths, which Repo, msg string, preFlags, postFlags GitCheckFlags) (string, error) {
 	return commitInternal(ctx, paths, which, msg, preFlags, postFlags, true)
 }
 
-func commitInternal(ctx context.Context, paths store.PersonantPaths, which Repo, msg string, preFlags, postFlags GitCheckFlags, allowEmpty bool) (string, error) {
+func commitInternal(ctx context.Context, paths store.MemproPaths, which Repo, msg string, preFlags, postFlags GitCheckFlags, allowEmpty bool) (string, error) {
 	if err := ctx.Err(); err != nil {
 		return "", fmt.Errorf("autogit.Commit: %w", err)
 	}
@@ -145,12 +145,12 @@ func commitInternal(ctx context.Context, paths store.PersonantPaths, which Repo,
 }
 
 // ParentCommitHash returns the first-parent hash of the given commit. The
-// personant substrate has linear, single-parent history, so the first
+// mempro substrate has linear, single-parent history, so the first
 // parent is THE parent (Q3): an archived thread's bytes live in the
 // deletion commit's parent, and recovery restores the subtree from there.
 // Returns an error if the commit has no parent (a root commit cannot have
 // archived a thread).
-func ParentCommitHash(ctx context.Context, paths store.PersonantPaths, which Repo, commitHash string) (string, error) {
+func ParentCommitHash(ctx context.Context, paths store.MemproPaths, which Repo, commitHash string) (string, error) {
 	if err := ctx.Err(); err != nil {
 		return "", fmt.Errorf("autogit.ParentCommitHash: %w", err)
 	}
@@ -176,7 +176,7 @@ func ParentCommitHash(ctx context.Context, paths store.PersonantPaths, which Rep
 // committed tree (TreeHashAt) at the point where HEAD IS the capture
 // commit (the deletion commit's parent-to-be) — gitignore-safe and
 // mode-faithful, unlike hashing the worktree.
-func HeadHash(ctx context.Context, paths store.PersonantPaths, which Repo) (string, error) {
+func HeadHash(ctx context.Context, paths store.MemproPaths, which Repo) (string, error) {
 	if err := ctx.Err(); err != nil {
 		return "", fmt.Errorf("autogit.HeadHash: %w", err)
 	}
@@ -198,7 +198,7 @@ func HeadHash(ctx context.Context, paths store.PersonantPaths, which Repo) (stri
 // patterns, which is treated as "."). Each named path is staged
 // individually so a typo in one pattern surfaces as an error rather
 // than silently dropping that file.
-func Add(ctx context.Context, paths store.PersonantPaths, which Repo, patterns ...string) error {
+func Add(ctx context.Context, paths store.MemproPaths, which Repo, patterns ...string) error {
 	if err := ctx.Err(); err != nil {
 		return fmt.Errorf("autogit.Add: %w", err)
 	}
@@ -240,7 +240,7 @@ func Add(ctx context.Context, paths store.PersonantPaths, which Repo, patterns .
 // only after successful writes). Directories are NOT accepted: a
 // directory add re-triggers the full status walk this function exists
 // to avoid; callers record file-level paths.
-func AddPaths(ctx context.Context, paths store.PersonantPaths, which Repo, rels []string) error {
+func AddPaths(ctx context.Context, paths store.MemproPaths, which Repo, rels []string) error {
 	if err := ctx.Err(); err != nil {
 		return fmt.Errorf("autogit.AddPaths: %w", err)
 	}
@@ -303,7 +303,7 @@ func (s *bufferedIndexStorer) SetIndex(idx *gitindex.Index) error {
 // gc (#94 R3-addendum item 4) and the daily_loose_object_count gauge /
 // re-baseline knob (R3b §6.2-6.3). Pack files and other bookkeeping are
 // not counted. A missing objects dir counts as zero.
-func LooseObjectCount(paths store.PersonantPaths, which Repo) (int, error) {
+func LooseObjectCount(paths store.MemproPaths, which Repo) (int, error) {
 	var objectsDir string
 	switch which {
 	case Primary:
@@ -338,7 +338,7 @@ func LooseObjectCount(paths store.PersonantPaths, which Repo) (int, error) {
 // IndexEntryCount returns the number of entries in the selected repo's
 // index — the tracked-file count that every per-turn staging and commit
 // walks. A missing index counts as zero.
-func IndexEntryCount(paths store.PersonantPaths, which Repo) (int, error) {
+func IndexEntryCount(paths store.MemproPaths, which Repo) (int, error) {
 	repo, err := openRepo(paths, which)
 	if err != nil {
 		return 0, fmt.Errorf("autogit.IndexEntryCount: open %s repo: %w", which, err)
@@ -360,7 +360,7 @@ func IndexEntryCount(paths store.PersonantPaths, which Repo) (int, error) {
 // of the restored blob hash — build a purpose-specific wrapper that
 // composes Checkout with its own post-checkout verification. Do not
 // extend GitCheckFlags for that.
-func Checkout(ctx context.Context, paths store.PersonantPaths, which Repo, commitHash, filePath string, preFlags, postFlags GitCheckFlags) error {
+func Checkout(ctx context.Context, paths store.MemproPaths, which Repo, commitHash, filePath string, preFlags, postFlags GitCheckFlags) error {
 	if err := ctx.Err(); err != nil {
 		return fmt.Errorf("autogit.Checkout: %w", err)
 	}
@@ -434,7 +434,7 @@ func Checkout(ctx context.Context, paths store.PersonantPaths, which Repo, commi
 // doc and the Checkout doc above, integrity verification of the restored
 // subtree (tree-hash compare) is the caller's purpose-specific wrapper
 // composing CheckoutTree + VerifyTreeHash — NOT a new GitCheckFlag.
-func CheckoutTree(ctx context.Context, paths store.PersonantPaths, which Repo, commitHash, dirPath string, preFlags, postFlags GitCheckFlags) error {
+func CheckoutTree(ctx context.Context, paths store.MemproPaths, which Repo, commitHash, dirPath string, preFlags, postFlags GitCheckFlags) error {
 	if err := ctx.Err(); err != nil {
 		return fmt.Errorf("autogit.CheckoutTree: %w", err)
 	}
@@ -521,7 +521,7 @@ func CheckoutTree(ctx context.Context, paths store.PersonantPaths, which Repo, c
 // byte-diff fallback needed for capture. (WorktreeTreeHash below handles
 // the verify side, where the restored directory is on disk, not yet in a
 // commit.)
-func TreeHashAt(ctx context.Context, paths store.PersonantPaths, which Repo, commitHash, dirPath string) (string, error) {
+func TreeHashAt(ctx context.Context, paths store.MemproPaths, which Repo, commitHash, dirPath string) (string, error) {
 	if err := ctx.Err(); err != nil {
 		return "", fmt.Errorf("autogit.TreeHashAt: %w", err)
 	}
@@ -560,10 +560,10 @@ func TreeHashAt(ctx context.Context, paths store.PersonantPaths, which Repo, com
 // This is the verify primitive (E3): after
 // recovery restores a subtree to disk, the caller re-hashes it here and
 // compares against the stored tree hash. Symlinks and submodules are not
-// part of a personant thread directory (thread.md + turns/ + folio.jsonl +
+// part of a mempro thread directory (thread.md + turns/ + folio.jsonl +
 // files.jsonl + files/), so only regular files and directories are handled; an
 // unexpected non-regular entry is an error rather than a silent skip.
-func WorktreeTreeHash(paths store.PersonantPaths, dirPath string) (string, error) {
+func WorktreeTreeHash(paths store.MemproPaths, dirPath string) (string, error) {
 	if dirPath == "" {
 		return "", errors.New("autogit.WorktreeTreeHash: dirPath is empty")
 	}
@@ -626,7 +626,7 @@ func hashDirTree(dir string) (plumbing.Hash, error) {
 // caller can abort the recovery and surface a distinct integrity failure.
 // This is the purpose-specific verification wrapper the package doc
 // mandates — NOT a GitCheckFlag.
-func VerifyTreeHash(paths store.PersonantPaths, dirPath, want string) error {
+func VerifyTreeHash(paths store.MemproPaths, dirPath, want string) error {
 	got, err := WorktreeTreeHash(paths, dirPath)
 	if err != nil {
 		return fmt.Errorf("autogit.VerifyTreeHash: %w", err)
@@ -642,7 +642,7 @@ func VerifyTreeHash(paths store.PersonantPaths, dirPath, want string) error {
 // git-tags-lifecycle convention. No validation policy: tagging is
 // metadata-only and cannot leave the substrate in an inconsistent
 // state.
-func Tag(ctx context.Context, paths store.PersonantPaths, which Repo, name, commitHash string) error {
+func Tag(ctx context.Context, paths store.MemproPaths, which Repo, name, commitHash string) error {
 	if err := ctx.Err(); err != nil {
 		return fmt.Errorf("autogit.Tag: %w", err)
 	}
@@ -672,7 +672,7 @@ func Tag(ctx context.Context, paths store.PersonantPaths, which Repo, name, comm
 // GC runs an offline garbage-collection pass over the home tree, packing
 // reachable loose objects and pruning unreachable ones — the substrate op
 // behind consolidation. It is a pure
-// space optimization: a personant session writes one loose object per
+// space optimization: a mempro session writes one loose object per
 // commit and never packs during the session, so the loose-object pile
 // grows unbounded until a gc folds it into a packfile. The triad runs in
 // order:
@@ -693,7 +693,7 @@ func Tag(ctx context.Context, paths store.PersonantPaths, which Repo, name, comm
 // unexpected repack/prune error propagates; the caller (Consolidate) must
 // also treat any returned error as non-fatal — a consolidation that cannot
 // gc must not abort the run.
-func GC(ctx context.Context, paths store.PersonantPaths, which Repo) error {
+func GC(ctx context.Context, paths store.MemproPaths, which Repo) error {
 	if err := ctx.Err(); err != nil {
 		return fmt.Errorf("autogit.GC: %w", err)
 	}
@@ -751,7 +751,7 @@ func GC(ctx context.Context, paths store.PersonantPaths, which Repo) error {
 // CheckDerivedFresh always wins over a CheckSpineIntegrity failure
 // when both would fire on the same call, so tests and forensic logs
 // see stable output.
-func applyFlags(ctx context.Context, paths store.PersonantPaths, flags GitCheckFlags) error {
+func applyFlags(ctx context.Context, paths store.MemproPaths, flags GitCheckFlags) error {
 	if flags == 0 {
 		return nil
 	}
@@ -776,7 +776,7 @@ func applyFlags(ctx context.Context, paths store.PersonantPaths, flags GitCheckF
 // runCheck dispatches a single flag to its check function. Kept as a
 // switch (not a map) so the compiler enforces total coverage as flags
 // are added.
-func runCheck(paths store.PersonantPaths, flag GitCheckFlags) error {
+func runCheck(paths store.MemproPaths, flag GitCheckFlags) error {
 	switch flag {
 	case CheckDerivedFresh:
 		res, err := index.Check(paths, index.Options{Quiet: true})

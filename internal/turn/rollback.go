@@ -4,7 +4,7 @@ import (
 	"maps"
 	"slices"
 
-	"personant/internal/model"
+	"mempro/internal/model"
 )
 
 // sessionState is a snapshot of State's SESSION-VOLATILE fields — the

@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"personant/internal/memops"
-	"personant/internal/store"
+	"mempro/internal/memops"
+	"mempro/internal/store"
 )
 
 // handcraftedQueriesPath is the derived query artifact for the

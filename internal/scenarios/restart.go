@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"testing"
 
-	"personant/internal/crashpoint"
-	"personant/internal/memops"
-	"personant/internal/memops/fileadapter"
-	"personant/internal/recovery"
-	"personant/internal/store"
-	"personant/internal/turn"
+	"mempro/internal/crashpoint"
+	"mempro/internal/memops"
+	"mempro/internal/memops/fileadapter"
+	"mempro/internal/recovery"
+	"mempro/internal/store"
+	"mempro/internal/turn"
 )
 
 // RestartWithCrash is the crash-injection sibling of the clean-relaunch
@@ -32,7 +32,7 @@ import (
 // outcome, so a Reconcile error is fatal. The two persistent-verify-failure
 // fixtures (§2.7 (i)/(j)) whose designed terminal is refuse-to-open drive
 // Reconcile directly and assert the error themselves.
-func RestartWithCrash(t testing.TB, paths store.PersonantPaths, point string, drive func(), opts ...crashpoint.ArmOption) memops.RecoveryReport {
+func RestartWithCrash(t testing.TB, paths store.MemproPaths, point string, drive func(), opts ...crashpoint.ArmOption) memops.RecoveryReport {
 	t.Helper()
 	func() {
 		disarm := crashpoint.Arm(point, opts...)
@@ -67,7 +67,7 @@ type TurnOracle struct {
 
 // SnapshotTurnOracle captures the pre-crash canonical state a crash matrix
 // scenario measures loss against. Cheap: one spine read.
-func SnapshotTurnOracle(t testing.TB, paths store.PersonantPaths) TurnOracle {
+func SnapshotTurnOracle(t testing.TB, paths store.MemproPaths) TurnOracle {
 	t.Helper()
 	recs, err := store.ReadSpine(paths.Spine)
 	if err != nil {
@@ -101,7 +101,7 @@ func SnapshotTurnOracle(t testing.TB, paths store.PersonantPaths) TurnOracle {
 //
 // It reuses the invariant functions verbatim (single source of truth) via a
 // minimal validator Harness bound to the recovered paths.
-func AssertPostRecovery(t testing.TB, paths store.PersonantPaths, ops memops.MemoryOps, oracle *TurnOracle) {
+func AssertPostRecovery(t testing.TB, paths store.MemproPaths, ops memops.MemoryOps, oracle *TurnOracle) {
 	t.Helper()
 	h := &Harness{T: t, Paths: paths, Ops: ops}
 	invariants := []struct {

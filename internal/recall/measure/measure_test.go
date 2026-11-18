@@ -4,17 +4,17 @@ import (
 	"context"
 	"testing"
 
-	"personant/internal/memops"
-	"personant/internal/memops/fileadapter"
-	"personant/internal/model"
-	"personant/internal/recall/measure"
-	"personant/internal/store"
+	"mempro/internal/memops"
+	"mempro/internal/memops/fileadapter"
+	"mempro/internal/model"
+	"mempro/internal/recall/measure"
+	"mempro/internal/store"
 )
 
-// newRecallHome initialises an isolated personant home and returns a
+// newRecallHome initialises an isolated mempro home and returns a
 // fileadapter over it. External test package (measure_test) so it may
 // import the fileadapter, which itself depends on recall/scoring.
-func newRecallHome(t *testing.T) (store.PersonantPaths, *fileadapter.FileAdapter) {
+func newRecallHome(t *testing.T) (store.MemproPaths, *fileadapter.FileAdapter) {
 	t.Helper()
 	paths := store.PathsForHome(t.TempDir())
 	if err := store.Init(paths, store.InitOptions{Quiet: true}); err != nil {
@@ -25,7 +25,7 @@ func newRecallHome(t *testing.T) (store.PersonantPaths, *fileadapter.FileAdapter
 
 // seedThread writes a spine record + thread file with the given
 // anchors and body.
-func seedThread(t *testing.T, paths store.PersonantPaths, id string, anchors []string, body string) {
+func seedThread(t *testing.T, paths store.MemproPaths, id string, anchors []string, body string) {
 	t.Helper()
 	ts := "2026-04-01T00:00:00Z"
 	rec := memops.SpineRecord{

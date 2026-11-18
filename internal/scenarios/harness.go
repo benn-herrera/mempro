@@ -34,14 +34,14 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/clock"
-	"personant/internal/index"
-	"personant/internal/memops"
-	"personant/internal/metrics"
-	"personant/internal/model"
-	"personant/internal/recall/measure"
-	"personant/internal/store"
-	"personant/internal/turn"
+	"mempro/internal/clock"
+	"mempro/internal/index"
+	"mempro/internal/memops"
+	"mempro/internal/metrics"
+	"mempro/internal/model"
+	"mempro/internal/recall/measure"
+	"mempro/internal/store"
+	"mempro/internal/turn"
 )
 
 // threadIndexer is the narrow optional interface a Recaller may satisfy to
@@ -702,7 +702,7 @@ type Harness struct {
 	// invariant validators can inspect canonical state without going
 	// through the port. Application code goes through Ops; invariants
 	// are test-side substrate validators and stay on store.* access.
-	Paths   store.PersonantPaths
+	Paths   store.MemproPaths
 	Ops     memops.MemoryOps
 	Project memops.ProjectMeta
 	Mock    *model.MockClient
@@ -894,10 +894,10 @@ func (h *Harness) SwitchProject(targetID string) error {
 // package's exported entry points. They live here so the invariants
 // can call them without leaking the index package's option surface
 // into invariant signatures.
-func indexRebuild(paths store.PersonantPaths) error {
+func indexRebuild(paths store.MemproPaths) error {
 	return index.Rebuild(paths, index.Options{Quiet: true})
 }
 
-func indexCheck(paths store.PersonantPaths) (memops.CheckResult, error) {
+func indexCheck(paths store.MemproPaths) (memops.CheckResult, error) {
 	return index.Check(paths, index.Options{Quiet: true})
 }

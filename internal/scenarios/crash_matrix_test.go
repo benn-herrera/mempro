@@ -36,13 +36,13 @@ import (
 
 	"github.com/go-git/go-git/v5/plumbing/object"
 
-	"personant/internal/autogit"
-	"personant/internal/crashpoint"
-	"personant/internal/dedup"
-	"personant/internal/memops"
-	"personant/internal/memops/fileadapter"
-	"personant/internal/store"
-	"personant/internal/turn"
+	"mempro/internal/autogit"
+	"mempro/internal/crashpoint"
+	"mempro/internal/dedup"
+	"mempro/internal/memops"
+	"mempro/internal/memops/fileadapter"
+	"mempro/internal/store"
+	"mempro/internal/turn"
 )
 
 // crashScenarioCoverage maps each registered crashpoint to the crash
@@ -329,7 +329,7 @@ func TestCrashMatrix_WTurnFileEvents(t *testing.T) {
 // index, files under files/, and loose excerpts, keyed by home-relative
 // path, as read returns them. Candidates come from both the worktree and
 // daily HEAD; a path read reports absent is left out.
-func threadStoreAndExcerpts(t *testing.T, paths store.PersonantPaths, id string, read func(rel string) (string, bool)) map[string]string {
+func threadStoreAndExcerpts(t *testing.T, paths store.MemproPaths, id string, read func(rel string) (string, bool)) map[string]string {
 	t.Helper()
 	rels := map[string]bool{store.TrackedIndexRel(id): true}
 	dir := store.ThreadDir(paths, id)
@@ -353,14 +353,14 @@ func threadStoreAndExcerpts(t *testing.T, paths store.PersonantPaths, id string,
 	return out
 }
 
-func worktreeFile(paths store.PersonantPaths) func(string) (string, bool) {
+func worktreeFile(paths store.MemproPaths) func(string) (string, bool) {
 	return func(rel string) (string, bool) {
 		data, err := os.ReadFile(filepath.Join(paths.Home, filepath.FromSlash(rel)))
 		return string(data), err == nil
 	}
 }
 
-func dailyHeadTree(t *testing.T, paths store.PersonantPaths) *object.Tree {
+func dailyHeadTree(t *testing.T, paths store.MemproPaths) *object.Tree {
 	t.Helper()
 	repo, err := autogit.Open(paths, autogit.Daily)
 	if err != nil {
@@ -381,7 +381,7 @@ func dailyHeadTree(t *testing.T, paths store.PersonantPaths) *object.Tree {
 	return tree
 }
 
-func dailyHeadFile(t *testing.T, paths store.PersonantPaths) func(string) (string, bool) {
+func dailyHeadFile(t *testing.T, paths store.MemproPaths) func(string) (string, bool) {
 	tree := dailyHeadTree(t, paths)
 	return func(rel string) (string, bool) {
 		f, err := tree.File(rel)
@@ -398,7 +398,7 @@ func dailyHeadFile(t *testing.T, paths store.PersonantPaths) func(string) (strin
 
 // dailyHeadPaths lists the files of daily HEAD whose path starts with
 // prefix.
-func dailyHeadPaths(t *testing.T, paths store.PersonantPaths, prefix string) []string {
+func dailyHeadPaths(t *testing.T, paths store.MemproPaths, prefix string) []string {
 	t.Helper()
 	var out []string
 	err := dailyHeadTree(t, paths).Files().ForEach(func(f *object.File) error {

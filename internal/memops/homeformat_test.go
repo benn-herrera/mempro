@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"personant/internal/version"
+	"mempro/internal/version"
 )
 
 func TestGateHomeFormat(t *testing.T) {
@@ -182,7 +182,7 @@ func TestGateHomeFormatNewerErrorNamesBothNumbers(t *testing.T) {
 		t.Fatal("expected refusal")
 	}
 	msg := err.Error()
-	for _, want := range []string{"7", "3", "newer personant"} {
+	for _, want := range []string{"7", "3", "newer mempro"} {
 		if !strings.Contains(msg, want) {
 			t.Errorf("refusal message %q does not mention %q", msg, want)
 		}

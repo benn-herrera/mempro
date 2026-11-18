@@ -13,7 +13,7 @@ import (
 )
 
 // userAgent is the User-Agent header value sent with every request.
-const userAgent = "personant/0.1"
+const userAgent = "mempro/0.1"
 
 // HTTPClient is a thin OpenAI-compatible chat-completions client.
 //

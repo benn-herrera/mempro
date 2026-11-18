@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/clock"
+	"mempro/internal/clock"
 )
 
 func TestJournalAppendScanTruncate(t *testing.T) {

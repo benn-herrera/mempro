@@ -4,7 +4,7 @@ import (
 	"sort"
 	"testing"
 
-	"personant/internal/memops"
+	"mempro/internal/memops"
 )
 
 func TestCoalesceUnion(t *testing.T) {

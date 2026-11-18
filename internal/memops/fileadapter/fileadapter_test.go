@@ -17,10 +17,10 @@ import (
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
 
-	"personant/internal/autogit"
-	"personant/internal/clock"
-	"personant/internal/memops"
-	"personant/internal/store"
+	"mempro/internal/autogit"
+	"mempro/internal/clock"
+	"mempro/internal/memops"
+	"mempro/internal/store"
 )
 
 // pinClock freezes clock.Timeline at a fixed instant for the duration of the

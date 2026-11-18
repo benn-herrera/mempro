@@ -9,8 +9,8 @@ import (
 	"sync"
 	"time"
 
-	"personant/internal/clock"
-	"personant/internal/prompt"
+	"mempro/internal/clock"
+	"mempro/internal/prompt"
 )
 
 // MockClient implements Client without crossing the network. Two backing

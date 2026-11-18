@@ -10,13 +10,13 @@ import (
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
 
-	"personant/internal/store"
+	"mempro/internal/store"
 )
 
-// scaffoldHome stands up a fresh PERSONANT_HOME under t.TempDir() and
+// scaffoldHome stands up a fresh MEMPRO_HOME under t.TempDir() and
 // returns the resolved paths. The home is left in the clean post-init
 // state (initial commit landed; spine empty; derived files fresh).
-func scaffoldHome(t *testing.T) store.PersonantPaths {
+func scaffoldHome(t *testing.T) store.MemproPaths {
 	t.Helper()
 	home := t.TempDir()
 	paths := store.PathsForHome(home)
@@ -28,7 +28,7 @@ func scaffoldHome(t *testing.T) store.PersonantPaths {
 
 // repoHead returns the current HEAD commit hash for paths.Home. Used to
 // assert "commit happened" vs "commit did not happen".
-func repoHead(t *testing.T, paths store.PersonantPaths) plumbing.Hash {
+func repoHead(t *testing.T, paths store.MemproPaths) plumbing.Hash {
 	t.Helper()
 	repo, err := git.PlainOpen(paths.Home)
 	if err != nil {

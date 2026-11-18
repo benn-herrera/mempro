@@ -1,5 +1,5 @@
 // Package memops defines the conceptual memory-operations port that the
-// personant application layer uses to talk to its substrate.
+// mempro application layer uses to talk to its substrate.
 //
 // # Port-and-adapter boundary
 //
@@ -35,8 +35,8 @@
 // The design rationale and the connection to the transient-data
 // lifecycle and recall-fidelity workstreams live in two memory entries:
 //
-//   - project_personant_memory_ops_abstraction_queued.md
-//   - project_personant_transient_data_lifecycle.md
+//   - project_mempro_memory_ops_abstraction_queued.md
+//   - project_mempro_transient_data_lifecycle.md
 //
 // In particular: every delta-emit operation carries a RetentionClass so
 // the interface is forward-compatible with the transient-data lifecycle
@@ -56,7 +56,7 @@
 //   - Normalize / DominantSource (pure functions that do not depend on
 //     substrate state — they live in package memops alongside the domain
 //     model, not on the MemoryOps port).
-//   - PersonantPaths in any signature (paths are the adapter's secret;
+//   - MemproPaths in any signature (paths are the adapter's secret;
 //     application code does not see them).
 //
 // # Data-model types

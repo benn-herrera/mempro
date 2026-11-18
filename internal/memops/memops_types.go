@@ -13,7 +13,7 @@ package memops
 
 // RetentionClass classifies a context-modification delta for the
 // transient-data lifecycle (sister memory entry
-// project_personant_transient_data_lifecycle.md). The field on Delta
+// project_mempro_transient_data_lifecycle.md). The field on Delta
 // captures the §3.0.1 source-based *provisional* class:
 //
 //   - RetentionTask: tool.result / user.shell-capture style content,
@@ -174,7 +174,7 @@ type RecallCandidate struct {
 // ---------- Working set ----------
 
 // WorksetInput carries the per-turn inputs for ComposeWorkingSet.
-// Promoted from workset.State minus the PersonantPaths field (paths
+// Promoted from workset.State minus the MemproPaths field (paths
 // are the adapter's secret).
 //
 // ActiveThreads / DormantThreads are ordered: index 0 is the most

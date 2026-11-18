@@ -6,10 +6,10 @@
 // returns zero values immediately — no endpoint touch — so the deterministic
 // mock acceptance gate never reaches any live code here and never skips. When
 // a toggle is on, the usable-endpoint guard runs against the `reaper` endpoint
-// from internal/testsupport (base URL overridable via PERSONANT_REAPER_URL),
+// from internal/testsupport (base URL overridable via MEMPRO_REAPER_URL),
 // so live mode invoked with nothing reachable is a LOUD failure, not a skip.
 //
-// NEVER reads/writes/operates in ~/.personant.
+// NEVER reads/writes/operates in ~/.mempro.
 
 package sim
 
@@ -19,13 +19,13 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/clock"
-	"personant/internal/log"
-	"personant/internal/memops"
-	"personant/internal/model"
-	"personant/internal/recall/measure"
-	"personant/internal/scenarios"
-	"personant/internal/testsupport"
+	"mempro/internal/clock"
+	"mempro/internal/log"
+	"mempro/internal/memops"
+	"mempro/internal/model"
+	"mempro/internal/recall/measure"
+	"mempro/internal/scenarios"
+	"mempro/internal/testsupport"
 )
 
 // Live-mode runtime toggles, read by TestSim. Independent —
@@ -46,7 +46,7 @@ var (
 //
 // When a toggle is on it runs the usable-endpoint guard against the testsupport
 // `reaper` endpoint (FAIL-not-skip on an unreachable endpoint; override the
-// URL with PERSONANT_REAPER_URL). For embedding it
+// URL with MEMPRO_REAPER_URL). For embedding it
 // builds a recaller factory installing the real §3.4 embedder (the harness
 // Prepares its index and keeps it current via the per-thread-creation
 // AddThread seam); mock inference is unchanged, so the recall oracle stays
@@ -353,7 +353,7 @@ func probeLiveEndpoint(t *testing.T, url string) {
 	t.Helper()
 	if err := pingLiveEndpoint(context.Background(), url); err != nil {
 		t.Fatalf("sim-live: endpoint %s unreachable (GET /models failed: %v). "+
-			"Bring the endpoint up or point PERSONANT_REAPER_URL at a reachable one.", url, err)
+			"Bring the endpoint up or point MEMPRO_REAPER_URL at a reachable one.", url, err)
 	}
 	log.Info("sim-live: at=%s — endpoint %s usable; installing the selected live element(s)",
 		clock.Profiling().Format(time.RFC3339), url)

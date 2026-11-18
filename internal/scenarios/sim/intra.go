@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"strings"
 
-	"personant/internal/prompt"
-	"personant/internal/recall/scoring"
-	"personant/internal/scenarios"
-	"personant/internal/store"
-	"personant/internal/turn"
+	"mempro/internal/prompt"
+	"mempro/internal/recall/scoring"
+	"mempro/internal/scenarios"
+	"mempro/internal/store"
+	"mempro/internal/turn"
 )
 
 // Candidate-A long-running-thread + intra-thread probe tuning (§9.1/§8.2,

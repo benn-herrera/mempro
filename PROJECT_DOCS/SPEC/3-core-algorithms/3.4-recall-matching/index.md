@@ -4,7 +4,7 @@
 > MUST be locatable by recall at every stage of its lifecycle — creation, recent-excerpt-window
 > residency, scroll-out and durable storage, and later summarization and closing
 > ([§3.5](../3.5-closing-a-thread/index.md)). **The ONLY content that may be unfindable is transient data deliberately discarded** per
-> [§3.10](../3.10-transient-data-lifecycle/index.md) (uncited task-class symbols / raw task-bytes expired at window close, [§3.10.5](../3.10-transient-data-lifecycle/3.10.5-window-close-expiry.md)–[§3.10.6](../3.10-transient-data-lifecycle/3.10.6-what-stays-transient.md)), and two stated limits: archived threads, which are off live recall and restored with `personant archive recover` ([§3.8.4](../3.8-cold-storage/3.8.4-recall-treatment-of-archived-threads-off-recall.md)), and the accepted embed-failure residual (below).
+> [§3.10](../3.10-transient-data-lifecycle/index.md) (uncited task-class symbols / raw task-bytes expired at window close, [§3.10.5](../3.10-transient-data-lifecycle/3.10.5-window-close-expiry.md)–[§3.10.6](../3.10-transient-data-lifecycle/3.10.6-what-stays-transient.md)), and two stated limits: archived threads, which are off live recall and restored with `mempro archive recover` ([§3.8.4](../3.8-cold-storage/3.8.4-recall-treatment-of-archived-threads-off-recall.md)), and the accepted embed-failure residual (below).
 >
 > "Locatable" is **mechanism-agnostic**: findable by *some* recall path — symbolic, embedding
 > similarity, summary tree (a hierarchy of summaries over a long thread's excerpts), or the
@@ -44,7 +44,7 @@ Symbolic (Jaccard) is never a pre-filter for the embedding scan (under realistic
 would discard most genuine matches).
 
 Embedding recall (signal 2) is **opt-in**: enabled when `config.toml` pins an `[embedding]`
-provider/model ([§8.2.2](../../8-bootstrap-and-lifecycle/8.2-configuration-sources-and-precedence/8.2.2-personant-settings-config-personant-config-toml.md)). With no embedding model configured, recall runs symbolic-only — never a
+provider/model ([§8.2.2](../../8-bootstrap-and-lifecycle/8.2-configuration-sources-and-precedence/8.2.2-mempro-settings-config-mempro-config-toml.md)). With no embedding model configured, recall runs symbolic-only — never a
 hard failure.
 
 Contents:

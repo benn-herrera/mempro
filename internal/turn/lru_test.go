@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"personant/internal/memops/fileadapter"
-	"personant/internal/model"
+	"mempro/internal/memops/fileadapter"
+	"mempro/internal/model"
 )
 
 // §5.5 mid-turn reprompt cross-project hole.

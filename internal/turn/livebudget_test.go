@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	"personant/internal/memops"
-	"personant/internal/model"
+	"mempro/internal/memops"
+	"mempro/internal/model"
 )
 
 // budgetWithLiveTurn returns a Budget whose LiveTurnReserve is exactly r

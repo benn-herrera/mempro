@@ -1,4 +1,4 @@
-# ARCHITECTURE – personant
+# ARCHITECTURE – mempro
 
 The ARCHITECTURE now lives in the `PROJECT_DOCS/` tree: start at [PROJECT_DOCS/ARCHITECTURE/entry-point.md](PROJECT_DOCS/ARCHITECTURE/entry-point.md).
 

@@ -9,17 +9,17 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"personant/internal/eventlog"
-	"personant/internal/log"
-	"personant/internal/memops"
-	"personant/internal/memops/fileadapter"
-	"personant/internal/store"
-	"personant/internal/version"
+	"mempro/internal/eventlog"
+	"mempro/internal/log"
+	"mempro/internal/memops"
+	"mempro/internal/memops/fileadapter"
+	"mempro/internal/store"
+	"mempro/internal/version"
 )
 
 // flagHome backs the shared --home persistent flag declared on rootCmd.
 // All subcommands inherit it; resolvePaths consults it before falling
-// back to $PERSONANT_HOME / ~/.personant resolution.
+// back to $MEMPRO_HOME / ~/.mempro resolution.
 var flagHome string
 
 // flagAllowNewerHome backs --allow-newer-home: the explicit override that
@@ -30,17 +30,17 @@ var flagHome string
 var flagAllowNewerHome bool
 
 var rootCmd = &cobra.Command{
-	Use:   "personant",
+	Use:   "mempro",
 	Short: "a persistent-context ai agent",
-	Long: `Personant is a single-user agent runtime with persistent working
+	Long: `mempro is a single-user agent runtime with persistent working
 memory across projects. Subcommands handle scaffolding, indexing and
 verification.`,
 	SilenceUsage: true,
 }
 
 // resolvePaths honors --home for tests; otherwise uses the standard
-// $PERSONANT_HOME / ~/.personant resolution.
-func resolvePaths() (store.PersonantPaths, error) {
+// $MEMPRO_HOME / ~/.mempro resolution.
+func resolvePaths() (store.MemproPaths, error) {
 	if flagHome != "" {
 		return store.PathsForHome(flagHome), nil
 	}
@@ -50,8 +50,8 @@ func resolvePaths() (store.PersonantPaths, error) {
 // checkHomeFormat reads the home's on-disk format revision and runs the
 // SPEC §9.1 gate over it. READ-ONLY: it never stamps and never logs.
 //
-// It is the whole gate for `personant init` — which must refuse to
-// scaffold over a home written by a newer personant, but must not stamp,
+// It is the whole gate for `mempro init` — which must refuse to
+// scaffold over a home written by a newer mempro, but must not stamp,
 // because the home may not exist yet and store.Init already owns the
 // write-if-missing of version.toml — and the read half of openHome.
 func checkHomeFormat(ctx context.Context, ops memops.MemoryOps) (memops.HomeFormatDecision, error) {
@@ -86,7 +86,7 @@ func openHome() (*fileadapter.FileAdapter, error) {
 
 	// Greenfield: no home on disk yet. There is no layout to adopt forward
 	// and no event log to append to — writing either here would scaffold,
-	// and scaffolding belongs to `personant init`. The gate above still ran; an absent stamp cannot be newer than this
+	// and scaffolding belongs to `mempro init`. The gate above still ran; an absent stamp cannot be newer than this
 	// binary, so nothing is waved through.
 	if _, serr := os.Stat(paths.Home); errors.Is(serr, os.ErrNotExist) {
 		return ops, nil
@@ -119,15 +119,15 @@ func openHome() (*fileadapter.FileAdapter, error) {
 }
 
 // warnNewerHomeAccepted records a knowingly-unsafe open: --allow-newer-home
-// waved through a home written by a newer personant. It leaves a trace in
+// waved through a home written by a newer mempro. It leaves a trace in
 // both places someone reads afterward — the terminal now, and the event
 // log later — because a silent override is indistinguishable from a
 // normal open when the corruption surfaces days later.
-func warnNewerHomeAccepted(paths store.PersonantPaths, onDisk int) {
+func warnNewerHomeAccepted(paths store.MemproPaths, onDisk int) {
 	fmt.Fprintf(os.Stderr,
-		"WARNING: --allow-newer-home opened a home at format %d with a personant that writes %d.\n"+
+		"WARNING: --allow-newer-home opened a home at format %d with a mempro that writes %d.\n"+
 			"         This binary does not understand the newer layout; writing to it can CORRUPT it.\n"+
-			"         Upgrade personant instead unless you know exactly why you are doing this.\n",
+			"         Upgrade mempro instead unless you know exactly why you are doing this.\n",
 		onDisk, version.CurrentHomeFormat)
 	if err := eventlog.Log(paths, memops.LogCategorySystem, "home-format-override",
 		fmt.Sprintf("on-disk=%d binary=%d", onDisk, version.CurrentHomeFormat)); err != nil {
@@ -145,7 +145,7 @@ func warnNewerHomeAccepted(paths store.PersonantPaths, onDisk int) {
 // A Reconcile failure refuses the verb; the recovery marker is left behind so a retry converges. On a
 // home that was never initialized Reconcile fails to resolve HEAD — that
 // refusal is honest too (nothing to operate on); verbs do NOT scaffold
-// (`personant init` owns that).
+// (`mempro init` owns that).
 //
 // A non-routine reconcile prints one terse stderr note; the full detail
 // is in the event log.
@@ -166,12 +166,12 @@ func reconciledOps() (*fileadapter.FileAdapter, error) {
 }
 
 func init() {
-	rootCmd.PersistentFlags().StringVar(&flagHome, "home", "", "override $PERSONANT_HOME for this invocation (testing)")
+	rootCmd.PersistentFlags().StringVar(&flagHome, "home", "", "override $MEMPRO_HOME for this invocation (testing)")
 	rootCmd.PersistentFlags().BoolVar(&flagAllowNewerHome, "allow-newer-home", false,
 		"open a home whose on-disk format is newer than this binary writes (SPEC §9.1); risks corrupting it")
 
-	// `personant --version` prints exactly version.Short() and nothing
-	// else. Cobra's default template wraps it in its own "personant version
+	// `mempro --version` prints exactly version.Short() and nothing
+	// else. Cobra's default template wraps it in its own "mempro version
 	// X" line, which would render the string twice over.
 	rootCmd.Version = version.Short()
 	rootCmd.SetVersionTemplate("{{.Version}}\n")

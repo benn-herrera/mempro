@@ -5,10 +5,10 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/memops"
-	"personant/internal/model"
-	"personant/internal/recall/measure"
-	"personant/internal/store"
+	"mempro/internal/memops"
+	"mempro/internal/model"
+	"mempro/internal/recall/measure"
+	"mempro/internal/store"
 )
 
 // flushAndWait enqueues a re-index of threadID at the given dispatch
@@ -43,7 +43,7 @@ func flushAndWait(t *testing.T, svc *measure.Service, threadID string, dispatchT
 // seedThreadTurns seeds a thread whose body is laid down as distinct
 // per-turn excerpts (one block per "## Turn" heading), so the fine tier
 // has multiple chunks to retrieve from.
-func seedThreadTurns(t *testing.T, paths store.PersonantPaths, id string, anchors []string, body string) {
+func seedThreadTurns(t *testing.T, paths store.MemproPaths, id string, anchors []string, body string) {
 	t.Helper()
 	seedThread(t, paths, id, anchors, body)
 }

@@ -3,7 +3,7 @@
 **Source design:** MAD three-model debate (fable/opus/gemini), full structural convergence
 2026-07-17 — `mad-design/crash-stability/SOLUTION.md` (local-only, gitignored audit artifact; this
 plan excerpts every load-bearing decision so the repo is self-sufficient). Arbitration rulings (both
-closed): journal = **JSONL**, flat top-level `$PERSONANT_HOME/turn-journal.jsonl`,
+closed): journal = **JSONL**, flat top-level `$MEMPRO_HOME/turn-journal.jsonl`,
 operational/gitignored; legacy unstamped archive cells take the **general adopt-forward repair
 path** (no special case; population expected-empty under release sequencing).
 
@@ -31,7 +31,7 @@ keep-commits) and primary stays a single small pack forever (~365 commits/year).
 property: THE WORKTREE IS THE TRUTH and the daily DB is disposable scaffolding — every barrier crash
 window recovers by "commit worktree to primary if not yet committed; recreate daily"; no ordering
 can lose bytes. Barrier sequence: (1) archival batch against primary (if pressure), (2) day commit
-worktree → primary (`Personant-Day` trailer), (3) rm -rf .git-daily, (4) re-init daily + initial
+worktree → primary (`mempro-Day` trailer), (3) rm -rf .git-daily, (4) re-init daily + initial
 commit of current state. R3b design pass covers: autogit dual-handle op-scoping (turn ops → daily;
 barrier/archival → primary); recovery-observable mapping across two repos (daily-missing = normal
 morning, NOT a crash signature; op=barrier marker cells); derived- watermark re-anchoring (primary
@@ -41,8 +41,8 @@ caps loose-object drift, trading intraday git archaeology the event log already 
 
 **Shared contracts fixed here (R2/R3 both consume; single source; amended by the R3-addendum —
 per-turn durability-protocol cost reduction):**
-- Commit trailer `Personant-Turn: <turn-id>` on per-turn commits — recovery reads HEADTURN from it.
-- Marker file `$PERSONANT_HOME/op-in-progress.json` (gitignored; survives reset): **batch ops only**
+- Commit trailer `mempro-Turn: <turn-id>` on per-turn commits — recovery reads HEADTURN from it.
+- Marker file `$MEMPRO_HOME/op-in-progress.json` (gitignored; survives reset): **batch ops only**
   — `{op: archival|sleep|recovery, turn?, orig?}`. The per-turn marker is FOLDED INTO THE JOURNAL: a
   NON-EMPTY `turn-journal.jsonl` IS the in-flight-turn signal, its first record carrying the turn id
   (`store.JournalOwner`); the first append's existing fsync makes the signal durable for free.
@@ -65,7 +65,7 @@ per-turn durability-protocol cost reduction):**
 - Sleep-cycle gc fires on the day-off cadence AND on a loose-object count threshold
   (`gcLooseObjectThreshold`, checked every `gcCheckEveryCommits` per-turn commits — R3-addendum item
   4).
-- Derived watermark `$PERSONANT_HOME/derived-watermark` (gitignored): built-from-commit hash;
+- Derived watermark `$MEMPRO_HOME/derived-watermark` (gitignored): built-from-commit hash;
   written only by the regeneration path.
 - Kill-point seam: named deterministic hooks (`crashpoint.At(name)`, test-armed, production no-op)
   registered at every point the R4 matrix kills; a mechanical coverage gate fails the suite if a
@@ -126,7 +126,7 @@ asserts: full invariant suite + a STRENGTHENED `VerifyThreadMetaMatchesSpine` (s
 pre-crash oracle + exact journal-byte recovery + recall-completeness consistency + idempotent second
 reconcile. Mechanical coverage gate: registered-point-without-scenario fails the suite. Suite-budget
 rule: the matrix is unit-grade (synthetic homes, no sim rungs) and must stay inside the 30m
-checkpoint budget; a mid-run-crash SIM rung joins as opt-in (`PERSONANT_SLOW_SIM_TESTS`) with a 1d
+checkpoint budget; a mid-run-crash SIM rung joins as opt-in (`MEMPRO_SLOW_SIM_TESTS`) with a 1d
 default-suite variant only if it fits the budget. *Opus coder; wave checkpoint.*
 
 ## Wave R5 — SPEC §4.5.8 rewrite + doc sync — DONE (docs-only, this pass)

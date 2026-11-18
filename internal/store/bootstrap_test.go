@@ -6,12 +6,12 @@ import (
 	"strings"
 	"testing"
 
-	"personant/internal/memops"
+	"mempro/internal/memops"
 )
 
-// bootstrapPaths returns a PersonantPaths rooted at t.TempDir() with the
+// bootstrapPaths returns a MemproPaths rooted at t.TempDir() with the
 // projects/ subtree present.
-func bootstrapPaths(t *testing.T) PersonantPaths {
+func bootstrapPaths(t *testing.T) MemproPaths {
 	t.Helper()
 	paths := PathsForHome(t.TempDir())
 	if err := os.MkdirAll(paths.ProjectsDir, 0o755); err != nil {

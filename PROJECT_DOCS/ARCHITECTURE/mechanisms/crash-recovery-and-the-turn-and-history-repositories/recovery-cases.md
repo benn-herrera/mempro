@@ -17,7 +17,7 @@ repository. An archive entry awaiting back-fill is an entry of the "Archive inde
 | 9 back-fill repair | archive entry awaiting back-fill (any case, post-normalization) | locate the deletion commit (the child of the entry's `parent_commit_hash`, by tree comparison) and back-fill its hash; unlocatable ⇒ `recovery.unrepairable`, the entry stays refused, never guessed |
 | 10 consolidation | `op=sleep` marker | clear the marker; the memory service self-heals (gc and rebuild are idempotent) |
 | 11 recovery re-entry | `op=recovery` (crash during recovery) | re-run under the original marker; every phase is idempotent, so it converges |
-| 12 legacy adopt | dirty, no watermark ever | greenfield or legacy: verify-gated adopt-commit to the history repository (`Personant-Day` trailer), back-fill repair, full rebuild, then turn-repository init (see "Day rollover") |
+| 12 legacy adopt | dirty, no watermark ever | greenfield or legacy: verify-gated adopt-commit to the history repository (`mempro-Day` trailer), back-fill repair, full rebuild, then turn-repository init (see "Day rollover") |
 
 Turn- and history-repository rows:
 
@@ -29,4 +29,3 @@ Turn- and history-repository rows:
 
 An orthogonal heal runs on every path, before classification: an additive event-log tail-heal (last
 byte ≠ `\n` ⇒ append one `\n`, never truncate).
-

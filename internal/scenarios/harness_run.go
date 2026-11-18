@@ -13,13 +13,13 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/clock"
-	pnlog "personant/internal/log"
-	"personant/internal/memops"
-	"personant/internal/model"
-	"personant/internal/recall/measure"
-	"personant/internal/store"
-	"personant/internal/turn"
+	"mempro/internal/clock"
+	pnlog "mempro/internal/log"
+	"mempro/internal/memops"
+	"mempro/internal/model"
+	"mempro/internal/recall/measure"
+	"mempro/internal/store"
+	"mempro/internal/turn"
 )
 
 // RunScenario is the harness entry point. Sets up an isolated home,
@@ -1180,7 +1180,7 @@ func newSpineIDs(pre, post []memops.SpineRecord) []string {
 // history_symbols length observed. Cheap (handful of file reads); used
 // by the final-gauge phase to make the cap-and-evict scenario's
 // behavior visible in metrics.
-func peakHistorySymbols(paths store.PersonantPaths) int {
+func peakHistorySymbols(paths store.MemproPaths) int {
 	recs, err := store.ReadSpine(paths.Spine)
 	if err != nil {
 		return 0

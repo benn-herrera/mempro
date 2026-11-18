@@ -1,5 +1,5 @@
-// Package verify implements `personant verify` — a read-only structural
-// validation pass over the canonical state in $PERSONANT_HOME (spec
+// Package verify implements `mempro verify` — a read-only structural
+// validation pass over the canonical state in $MEMPRO_HOME (spec
 // §2.1, §2.2, §2.5.1). It checks SpineRecord and ProjectMeta hard
 // limits, cross-references between them, and delegates derived-file
 // drift detection to internal/index.Check.
@@ -23,9 +23,9 @@ import (
 	"strings"
 	"time"
 
-	"personant/internal/index"
-	"personant/internal/memops"
-	"personant/internal/store"
+	"mempro/internal/index"
+	"mempro/internal/memops"
+	"mempro/internal/store"
 )
 
 // VerifyOptions configures Verify. A nil Logger is silent; Quiet
@@ -48,7 +48,7 @@ const defaultEntryMaxChars = 200
 // failure that prevented validation from completing (e.g. spine.jsonl
 // failed to read at all). A malformed-but-readable record produces an
 // Error finding, not a returned error.
-func Verify(paths store.PersonantPaths, opts VerifyOptions) (memops.VerifyReport, error) {
+func Verify(paths store.MemproPaths, opts VerifyOptions) (memops.VerifyReport, error) {
 	// opts.Logger is reserved for per-step progress reporting; nothing
 	// in the v0.1 implementation emits through it. Findings flow back
 	// through VerifyReport so the cobra layer owns presentation order.
@@ -208,7 +208,7 @@ func checkSpine(report *memops.VerifyReport, spine []memops.SpineRecord, entryMa
 // code landable. The recency-windowed turns/ directory is structural;
 // checkThreads does not read excerpt files (checkFolios reads folios and,
 // for names held in both tiers only, those loose excerpts).
-func checkThreads(report *memops.VerifyReport, paths store.PersonantPaths, spine []memops.SpineRecord) {
+func checkThreads(report *memops.VerifyReport, paths store.MemproPaths, spine []memops.SpineRecord) {
 	for i, rec := range spine {
 		if rec.ID == "" {
 			continue // already flagged by checkSpine
@@ -240,7 +240,7 @@ func checkThreads(report *memops.VerifyReport, paths store.PersonantPaths, spine
 // A malformed line, lines out of (number, name) order and a repeated name
 // are errors; a name held in both tiers is a warning, either an unfinished
 // settle (identical bytes) or a conflict (the reader uses the loose copy).
-func checkFolios(report *memops.VerifyReport, paths store.PersonantPaths, spine []memops.SpineRecord) {
+func checkFolios(report *memops.VerifyReport, paths store.MemproPaths, spine []memops.SpineRecord) {
 	for _, rec := range spine {
 		if rec.ID == "" {
 			continue // already flagged by checkSpine
@@ -268,7 +268,7 @@ func checkFolios(report *memops.VerifyReport, paths store.PersonantPaths, spine 
 // must match its file. A missing or corrupt file's finding has that file as
 // its Path; a size mismatch's has the index, since the hash-checked blob is
 // right and the record is wrong.
-func checkTrackedFiles(report *memops.VerifyReport, paths store.PersonantPaths, spine []memops.SpineRecord) {
+func checkTrackedFiles(report *memops.VerifyReport, paths store.MemproPaths, spine []memops.SpineRecord) {
 	for _, rec := range spine {
 		if rec.ID == "" {
 			continue // already flagged by checkSpine
@@ -353,7 +353,7 @@ func compareFolioNames(a, b string) int {
 
 // checkFolioDuplicates warns about each name held in both tiers. The loose
 // file is read only for those names.
-func checkFolioDuplicates(report *memops.VerifyReport, paths store.PersonantPaths, id, loc string, lines []store.FolioLine) {
+func checkFolioDuplicates(report *memops.VerifyReport, paths store.MemproPaths, id, loc string, lines []store.FolioLine) {
 	entries, err := store.ListExcerptEntries(paths, id)
 	if err != nil {
 		report.Errors = append(report.Errors, memops.VerifyFinding{Path: loc,

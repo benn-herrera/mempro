@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/memops/fileadapter"
-	"personant/internal/model"
+	"mempro/internal/memops/fileadapter"
+	"mempro/internal/model"
 )
 
 // TestRunWithInfoSurfacesPromptTokens drives one turn through a mock model

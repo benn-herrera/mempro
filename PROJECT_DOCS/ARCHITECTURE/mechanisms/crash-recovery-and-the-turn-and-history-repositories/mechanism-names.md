@@ -44,7 +44,7 @@ history repository or advancing the day; recovery routes an `op=rebaseline` cras
 turn-repository init. The mid-day arming trigger is not wired (ROADMAP.md).
 Packing: `MemoryOps.Consolidate` (go-git `RepackObjects` + `Prune`) packs both repositories. After every `gcCheckEveryCommits` (64) turn-repository commits the adapter reads the turn
 repository's loose-object count and runs `Consolidate` at `gcLooseObjectThreshold` (5000); the simulation's day off (the harness's `SleepCycle` step) also runs it. Packing is safe at any time because archived blobs stay reachable through the deletion
-commit's parent and Personant never rewrites the history repository's commits (the turn repository
+commit's parent and mempro never rewrites the history repository's commits (the turn repository
 is disposable). No aggressive repack (`git gc --aggressive`) is scheduled. Session checkpoint commits target the turn repository with a full `Add(".")` staging
 pass. The open sequence runs `memops.GateHomeFormat` before Reconcile;
 `version.UnversionedHomeFormat` is pinned at 1 forever and is never an alias of
@@ -56,4 +56,3 @@ revision 2 adds optional excerpt bundles, revision 3 the tracked-file store, who
 `historical_remote_urls` and `historical_root_paths` from `meta.json`), the caller writes the format revision before
 Reconcile, and a crash between that write and the log leaves a current-revision store directory that
 needs nothing further.
-

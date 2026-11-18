@@ -1,8 +1,8 @@
 # Major Topic Here
 
 ## Issues 
-* [Issue Title](https://github.com/ave-veritas-et-enodatio/personant/issues)
-* [Issue Title](https://github.com/ave-veritas-et-enodatio/personant/issues)
+* [Issue Title](https://github.com/benn-herrera/mempro/issues)
+* [Issue Title](https://github.com/benn-herrera/mempro/issues)
 
 ## Change Notes
 

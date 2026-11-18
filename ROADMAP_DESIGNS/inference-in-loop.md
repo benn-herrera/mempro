@@ -37,14 +37,14 @@ The two toggles are INDEPENDENT (either/both/neither). They map onto seams that 
 ## 2. Config source + provider selection (reqs 2–4)
 
 - Live mode uses the `reaper` endpoint from `internal/testsupport` (`ReaperURL()`, overridable with
-  `PERSONANT_REAPER_URL`; placeholder key `ReaperAPIKey`). NEVER touch `~/.personant` (no read, no
+  `MEMPRO_REAPER_URL`; placeholder key `ReaperAPIKey`). NEVER touch `~/.mempro` (no read, no
   write, no operate).
 - Models come from `internal/testsupport` too: `ReaperChatModel` for chat, `ReaperEmbeddingModel`
   at native dimensions for embedding. `NewHTTPClient(url, key)` /
   `NewHTTPEmbedder(url, key, model, dims)`.
 - **Usable-endpoint definition:** the endpoint is reachable (cheap `GET /models` probe).
 - **FAIL (not skip) with a helpful message** when the endpoint is unreachable, naming the URL and
-  `PERSONANT_REAPER_URL`. Asking for live with nothing live = loud failure.
+  `MEMPRO_REAPER_URL`. Asking for live with nothing live = loud failure.
 
 ## 3. Gating (runtime flags on a single TestSim — NOT build tags)
 
@@ -135,7 +135,7 @@ memory.
 ## 8. Invariants / non-negotiables
 
 - Mock-deterministic acceptance gate untouched; live is never the gate.
-- Never read/write/operate in `~/.personant`; never read `apiKeyFile` targets into agent context.
+- Never read/write/operate in `~/.mempro`; never read `apiKeyFile` targets into agent context.
 - No provider/endpoint info in version-controlled files (config lives in gitignored
   `test/rundata/`).
 - `just test` stays mock-only and green by DEFAULT; the live path always compiles (no build tag) but

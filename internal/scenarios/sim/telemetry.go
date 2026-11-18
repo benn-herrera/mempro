@@ -8,8 +8,8 @@ import (
 	"sort"
 	"time"
 
-	"personant/internal/scenarios"
-	"personant/internal/store"
+	"mempro/internal/scenarios"
+	"mempro/internal/store"
 )
 
 // Within-session interleaving telemetry (SPEC §9.1 "too coherent" concern).

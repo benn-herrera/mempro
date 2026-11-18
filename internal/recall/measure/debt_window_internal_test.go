@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"testing"
 
-	"personant/internal/memops"
-	"personant/internal/memops/fileadapter"
-	"personant/internal/model"
-	"personant/internal/recall/scoring"
-	"personant/internal/store"
+	"mempro/internal/memops"
+	"mempro/internal/memops/fileadapter"
+	"mempro/internal/model"
+	"mempro/internal/recall/scoring"
+	"mempro/internal/store"
 )
 
 // TestRecall_DebtWindowCompleteness is the SPEC §3.4 recall-completeness

@@ -10,7 +10,7 @@ import (
 	"sort"
 	"strconv"
 
-	"personant/internal/memops"
+	"mempro/internal/memops"
 )
 
 // DefaultProjectID re-exports memops.DefaultProjectID so substrate code
@@ -33,7 +33,7 @@ const ProjectMetaFileName = "meta.json"
 //
 // For any other project, a missing directory or meta.json yields
 // memops.ErrProjectNotFound (wrapped with the project id in the message).
-func LoadProjectMeta(paths PersonantPaths, projectID string) (memops.ProjectMeta, error) {
+func LoadProjectMeta(paths MemproPaths, projectID string) (memops.ProjectMeta, error) {
 	metaPath := filepath.Join(paths.ProjectsDir, projectID, ProjectMetaFileName)
 	data, err := os.ReadFile(metaPath)
 	if err != nil {
@@ -55,7 +55,7 @@ func LoadProjectMeta(paths PersonantPaths, projectID string) (memops.ProjectMeta
 // SaveProjectMeta writes projects/<id>/meta.json. Creates the project
 // directory if it does not exist. Atomic: encode to a temp file in the
 // project directory, fsync, rename.
-func SaveProjectMeta(paths PersonantPaths, meta memops.ProjectMeta) error {
+func SaveProjectMeta(paths MemproPaths, meta memops.ProjectMeta) error {
 	if meta.ID == "" {
 		return errors.New("save project meta: ID is empty")
 	}
@@ -85,7 +85,7 @@ func SaveProjectMeta(paths PersonantPaths, meta memops.ProjectMeta) error {
 // has no on-disk record until something writes one). Subdirectories whose
 // names do not match ProjectIDPattern (and that are not prj_default) are
 // skipped silently.
-func ListProjects(paths PersonantPaths) ([]memops.ProjectMeta, error) {
+func ListProjects(paths MemproPaths) ([]memops.ProjectMeta, error) {
 	entries, err := os.ReadDir(paths.ProjectsDir)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
@@ -126,7 +126,7 @@ func ListProjects(paths PersonantPaths) ([]memops.ProjectMeta, error) {
 // is the caller's responsibility.
 //
 // Returns (zero, false, nil) if no match is found.
-func FindProjectByPath(paths PersonantPaths, absPath string) (memops.ProjectMeta, bool, error) {
+func FindProjectByPath(paths MemproPaths, absPath string) (memops.ProjectMeta, bool, error) {
 	if absPath == "" {
 		return memops.ProjectMeta{}, false, nil
 	}

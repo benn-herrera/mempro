@@ -18,8 +18,8 @@ import (
 	"path/filepath"
 	"sort"
 
-	"personant/internal/memops"
-	"personant/internal/store"
+	"mempro/internal/memops"
+	"mempro/internal/store"
 )
 
 func sortSymbolsLexical(rs []store.SymbolRecord) {

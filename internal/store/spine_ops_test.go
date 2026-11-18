@@ -4,13 +4,13 @@ import (
 	"errors"
 	"testing"
 
-	"personant/internal/memops"
+	"mempro/internal/memops"
 )
 
-// spineFixturePaths returns a PersonantPaths rooted at t.TempDir() with an
+// spineFixturePaths returns a MemproPaths rooted at t.TempDir() with an
 // empty (but existing) spine.jsonl. The minimal subset needed by the
 // spine-ops functions; the broader scaffold from Init is not required.
-func spineFixturePaths(t *testing.T) PersonantPaths {
+func spineFixturePaths(t *testing.T) MemproPaths {
 	t.Helper()
 	paths := PathsForHome(t.TempDir())
 	if err := touchEmpty(paths.Spine); err != nil {

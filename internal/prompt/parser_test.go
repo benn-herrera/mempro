@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"personant/internal/memops"
+	"mempro/internal/memops"
 )
 
 func TestParseHappyPath(t *testing.T) {

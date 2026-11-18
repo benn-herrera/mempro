@@ -6,8 +6,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"personant/internal/memops/fileadapter"
-	"personant/internal/version"
+	"mempro/internal/memops/fileadapter"
+	"mempro/internal/version"
 )
 
 var versionCmd = &cobra.Command{
@@ -15,10 +15,10 @@ var versionCmd = &cobra.Command{
 	Short: "print version identity and the home's on-disk format",
 	Long: `Print this binary's identity — substrate version, the
 on-disk format it writes, the build stamp, the Go toolchain — plus the
-resolved $PERSONANT_HOME and the format stamp actually found there.
+resolved $MEMPRO_HOME and the format stamp actually found there.
 
 Deliberately ungated: this is the diagnostic you run precisely WHEN the
-home is absent, unreadable, or written by a newer personant. It never runs
+home is absent, unreadable, or written by a newer mempro. It never runs
 the SPEC §9.1 format gate, never reconciles, and never fails on a broken
 home — a home it cannot read is reported as such and the command still
 exits 0.`,

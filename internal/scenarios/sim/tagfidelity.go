@@ -54,11 +54,11 @@ import (
 	"strings"
 	"time"
 
-	pnlog "personant/internal/log"
-	"personant/internal/memops"
-	"personant/internal/prompt"
-	"personant/internal/scenarios"
-	"personant/internal/store"
+	pnlog "mempro/internal/log"
+	"mempro/internal/memops"
+	"mempro/internal/prompt"
+	"mempro/internal/scenarios"
+	"mempro/internal/store"
 )
 
 // tagFidelityRankK is the near-top rank band for the residue rank adjudication
@@ -608,7 +608,7 @@ func buildObservedTurns(logsDir string) (out map[string][]observedTurn, degraded
 // buildLiveThreads reads the post-run spine + frontmatter into the grader's
 // live-thread set: each thread's symbol set (spine anchors ∪ history_symbols)
 // and a representative text (anchors + summary + description) for embedding.
-func buildLiveThreads(paths store.PersonantPaths) []liveThread {
+func buildLiveThreads(paths store.MemproPaths) []liveThread {
 	recs, err := store.ReadSpine(paths.Spine)
 	if err != nil {
 		return nil
@@ -675,7 +675,7 @@ func buildLiveThreads(paths store.PersonantPaths) []liveThread {
 // pass, per turn) is not in the event log; the frontmatter carries the same two
 // sets accumulated per thread. A true per-turn series would need a one-line
 // runtime log hook (see the A2 report).
-func anchorEmissionOverlap(paths store.PersonantPaths) (float64, int, int) {
+func anchorEmissionOverlap(paths store.MemproPaths) (float64, int, int) {
 	fms, err := store.LoadAllThreadFrontmatter(paths, nil)
 	if err != nil {
 		return 0, 0, 0

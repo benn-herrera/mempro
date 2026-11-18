@@ -6,7 +6,7 @@ opencode server; the plugin, loaded by opencode, calls back into the test proces
 
 - The workload generator emits steps to the driver, which calls opencode's HTTP API.
 - opencode's plugin calls the memory service in the test process over HTTP + JSON.
-- opencode's provider `personant-mock` (the mock provider in the harness's isolated opencode config) calls the mock model endpoint, also in the test process,
+- opencode's provider `mempro-mock` (the mock provider in the harness's isolated opencode config) calls the mock model endpoint, also in the test process,
   over the OpenAI-compatible wire.
 
 Because the memory service runs inside the test process, the harness keeps direct access to the
@@ -45,4 +45,3 @@ named for keeping; the rest of the opencode driver and executor is undecided.
 **Open:** whether the §9.1 acceptance criterion needs an opencode-in-loop run configuration.
 
 ---
-

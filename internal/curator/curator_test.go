@@ -5,8 +5,8 @@ import (
 	"errors"
 	"testing"
 
-	"personant/internal/memops"
-	"personant/internal/model"
+	"mempro/internal/memops"
+	"mempro/internal/model"
 )
 
 // stubClient is a minimal model.Client for exercising the consult fallback

@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"personant/internal/memops"
+	"mempro/internal/memops"
 )
 
 // defaultBudget returns a baseline budget for tests that don't care.

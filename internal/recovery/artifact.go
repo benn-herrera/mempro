@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
-	"personant/internal/memops"
-	"personant/internal/store"
+	"mempro/internal/memops"
+	"mempro/internal/store"
 )
 
 // Preserve+surface of journaled turn content (SOLUTION principle 7).
@@ -35,7 +35,7 @@ import (
 // truncate them away, the RAW journal is quarantined — "recovery never
 // deletes" (package doc), and even a single fsync-unacked torn first
 // append is cheap to keep. An absent or empty journal is a true no-op.
-func preserveJournalContent(paths store.PersonantPaths, rep *memops.RecoveryReport, turnID string, records []store.JournalRecord, q *quarantine) error {
+func preserveJournalContent(paths store.MemproPaths, rep *memops.RecoveryReport, turnID string, records []store.JournalRecord, q *quarantine) error {
 	if len(records) == 0 {
 		return quarantineTornJournal(paths, q)
 	}
@@ -66,7 +66,7 @@ func preserveJournalContent(paths store.PersonantPaths, rep *memops.RecoveryRepo
 // stays in place for the truncate, and the quarantine copy is recorded
 // in the report and the recovery.quarantined event like every other
 // non-lossy action.
-func quarantineTornJournal(paths store.PersonantPaths, q *quarantine) error {
+func quarantineTornJournal(paths store.MemproPaths, q *quarantine) error {
 	info, err := os.Stat(paths.TurnJournal)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
@@ -94,7 +94,7 @@ func quarantineTornJournal(paths store.PersonantPaths, q *quarantine) error {
 // hash-suffixed artifact name.
 func renderArtifact(turnID string, records []store.JournalRecord) string {
 	var b strings.Builder
-	fmt.Fprintf(&b, "# personant — recovered turn %s\n\n", turnID)
+	fmt.Fprintf(&b, "# mempro — recovered turn %s\n\n", turnID)
 	b.WriteString("Content journaled before an unclean shutdown. It was rolled back from\n")
 	b.WriteString("canonical memory and is preserved here only — it has NOT been replayed.\n")
 	b.WriteString("Re-supply it through a normal turn if still wanted.\n")

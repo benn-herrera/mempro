@@ -69,9 +69,9 @@ type Marker struct {
 // and op=turn never uses the marker file: the non-empty turn journal is
 // the in-flight-turn signal, so a per-turn marker write here would be a
 // regression to the folded-away protocol).
-func WriteMarker(paths PersonantPaths, m Marker) error {
+func WriteMarker(paths MemproPaths, m Marker) error {
 	if paths.OpMarker == "" {
-		return errors.New("store: WriteMarker: PersonantPaths.OpMarker is empty")
+		return errors.New("store: WriteMarker: MemproPaths.OpMarker is empty")
 	}
 	if _, ok := validOpKinds[m.Op]; !ok {
 		return fmt.Errorf("store: WriteMarker: unknown op %q", m.Op)
@@ -98,9 +98,9 @@ func WriteMarker(paths PersonantPaths, m Marker) error {
 // Read tolerance: an op=turn marker file (written by pre-addendum code,
 // never by WriteMarker now) still parses — recovery honors it as the
 // legacy turn signal and clears it, so an old home reconciles cleanly.
-func ReadMarker(paths PersonantPaths) (m Marker, present bool, err error) {
+func ReadMarker(paths MemproPaths) (m Marker, present bool, err error) {
 	if paths.OpMarker == "" {
-		return Marker{}, false, errors.New("store: ReadMarker: PersonantPaths.OpMarker is empty")
+		return Marker{}, false, errors.New("store: ReadMarker: MemproPaths.OpMarker is empty")
 	}
 	data, rerr := os.ReadFile(paths.OpMarker)
 	if rerr != nil {
@@ -121,9 +121,9 @@ func ReadMarker(paths PersonantPaths) (m Marker, present bool, err error) {
 // ClearMarker removes op-in-progress.json. Clearing an absent marker is a
 // no-op (the post-condition — no marker present — already holds), so it
 // returns nil.
-func ClearMarker(paths PersonantPaths) error {
+func ClearMarker(paths MemproPaths) error {
 	if paths.OpMarker == "" {
-		return errors.New("store: ClearMarker: PersonantPaths.OpMarker is empty")
+		return errors.New("store: ClearMarker: MemproPaths.OpMarker is empty")
 	}
 	if err := os.Remove(paths.OpMarker); err != nil && !errors.Is(err, os.ErrNotExist) {
 		return fmt.Errorf("store: ClearMarker: %w", err)

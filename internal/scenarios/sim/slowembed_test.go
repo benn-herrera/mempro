@@ -28,12 +28,12 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/memops"
-	"personant/internal/memops/fileadapter"
-	"personant/internal/model"
-	"personant/internal/recall/measure"
-	"personant/internal/store"
-	"personant/internal/turn"
+	"mempro/internal/memops"
+	"mempro/internal/memops/fileadapter"
+	"mempro/internal/model"
+	"mempro/internal/recall/measure"
+	"mempro/internal/store"
+	"mempro/internal/turn"
 )
 
 // slowEmbedder wraps a model.Embedder and blocks multi-text (flush) batches on a
@@ -173,7 +173,7 @@ func TestSimSlowEmbedder_DeadZoneWidenedBand(t *testing.T) {
 // (turns 1..turns), planting probeToken in probeTurn only, and returns the
 // excerpt text by turn. Mirrors measure's seedDeadZoneThread using the public
 // store API (that helper is package-private to measure's test).
-func seedSlowEmbedThread(t *testing.T, paths store.PersonantPaths, threadID string, turns, probeTurn int, probeToken string) map[int]string {
+func seedSlowEmbedThread(t *testing.T, paths store.MemproPaths, threadID string, turns, probeTurn int, probeToken string) map[int]string {
 	t.Helper()
 	ts := "2026-07-01T00:00:00Z"
 	meta := memops.ThreadMeta{

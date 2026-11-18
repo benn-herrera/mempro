@@ -21,7 +21,7 @@ service-run open, after startup recovery, and before each turn. It runs under an
    `files.json`. Store working tree only and idempotent; the deletions land in the day-commit
    step's commit.
 5. **Day-commit step:** commit the store working tree to the history repository with
-   `Personant-Day: N`, staging everything including overnight hand-edits. The staged tree is
+   `mempro-Day: N`, staging everything including overnight hand-edits. The staged tree is
    validated for thread registry integrity before the commit is minted (history-writer rule). The
    step is guarded by the day-commit guard, and an empty day still produces exactly one trailered
    day-commit, so the head day number is always defined.
@@ -115,7 +115,7 @@ turn repository's per-turn state via the watermark, and a markerless hand-edit s
 (case 3) until the next full staging pass.
 
 **Greenfield and legacy.** A greenfield store (no watermark, no turn repository) takes the case 12
-verify-gated adopt-commit to the history repository, with `Personant-Day: <current day>` as the
+verify-gated adopt-commit to the history repository, with `mempro-Day: <current day>` as the
 sole bootstrap carve-out, then back-fill repair, a full rebuild and a
 fresh turn-repository baseline. An `op=turn` marker file left by an older binary is honored and
 cleared. A missing turn repository on an existing store directory is the legacy-upgrade shape and
@@ -123,4 +123,3 @@ stays absent through init (`store.Init` creates `.git-daily`, the turn repositor
 a fresh history repository), so case 12's adopt gate and the benign-morning row (turn-repository init with
 no adopt commit) discriminate correctly. Legacy archive entries awaiting back-fill take the general
 adopt-forward repair path, with no special case.
-

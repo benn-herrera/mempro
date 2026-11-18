@@ -1,4 +1,4 @@
-# ARCHITECTURE – Personant
+# ARCHITECTURE – mempro
 
 How this project's implementation meets requirements designated by SPEC
 
@@ -38,7 +38,7 @@ Contents:
 - [Storage and record formats](storage-and-record-formats/index.md)
   - [Store directory layout](storage-and-record-formats/store-directory-layout.md)
   - [Thread registry record (`spine.jsonl`)](storage-and-record-formats/thread-registry-record-spine-jsonl/index.md)
-    - [Constraints enforced by `personant verify`](storage-and-record-formats/thread-registry-record-spine-jsonl/constraints-enforced-by-personant-verify.md)
+    - [Constraints enforced by `mempro verify`](storage-and-record-formats/thread-registry-record-spine-jsonl/constraints-enforced-by-mempro-verify.md)
   - [Thread directory (`threads/thr_<id>/`)](storage-and-record-formats/thread-directory-threads-thr-id.md)
   - [Symbol index (`symbols.jsonl`)](storage-and-record-formats/symbol-index-symbols-jsonl.md)
   - [Project metadata](storage-and-record-formats/project-metadata.md)

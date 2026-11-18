@@ -8,12 +8,12 @@ import (
 	"strings"
 	"time"
 
-	"personant/internal/autogit"
-	"personant/internal/dedup"
-	"personant/internal/memops"
-	"personant/internal/store"
-	"personant/internal/verify"
-	"personant/internal/workset"
+	"mempro/internal/autogit"
+	"mempro/internal/dedup"
+	"mempro/internal/memops"
+	"mempro/internal/store"
+	"mempro/internal/verify"
+	"mempro/internal/workset"
 )
 
 // InvariantCheck is one validator. Returns nil on pass, a structured
@@ -563,7 +563,7 @@ func VerifyActiveSetInActiveProject(h *Harness) error {
 // layerBPlanThreads loads the Layer B threads, ids capped at bTopK, in
 // Layer B order, as composition does: a thread whose frontmatter does not
 // load is not in Layer B, and one whose index does not read has no entries.
-func layerBPlanThreads(paths store.PersonantPaths, ids []string, bTopK int) []dedup.PlanThread {
+func layerBPlanThreads(paths store.MemproPaths, ids []string, bTopK int) []dedup.PlanThread {
 	if bTopK > 0 && len(ids) > bTopK {
 		ids = ids[:bTopK]
 	}

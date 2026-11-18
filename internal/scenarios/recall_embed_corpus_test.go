@@ -23,8 +23,8 @@ import (
 	"strings"
 	"testing"
 
-	"personant/internal/metrics"
-	"personant/internal/testsupport"
+	"mempro/internal/metrics"
+	"mempro/internal/testsupport"
 )
 
 var embeddingsPath = filepath.Join("testdata", "recall_madlibs", "embeddings.json")

@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"personant/internal/memops/fileadapter"
-	"personant/internal/recall/scoring"
-	"personant/internal/store"
+	"mempro/internal/memops/fileadapter"
+	"mempro/internal/recall/scoring"
+	"mempro/internal/store"
 )
 
 // TestClassifyW1Divergence locks in the #111 §7.1 diagnostic classifier: it
@@ -147,7 +147,7 @@ func TestEmitW1Diag_ReturnsClassItBumps(t *testing.T) {
 // under the home's logs/ directory — the substrate the recall.W1-diag line is
 // written to. A live run greps these for `recall.W1-diag`; this test reads
 // them the same way.
-func readRecallLog(t *testing.T, paths store.PersonantPaths) string {
+func readRecallLog(t *testing.T, paths store.MemproPaths) string {
 	t.Helper()
 	entries, err := os.ReadDir(paths.LogsDir)
 	if err != nil {

@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"personant/internal/model"
+	"mempro/internal/model"
 )
 
 // TestCaptureTagMissWritesRawBody drives stepCaptureTagMiss directly with a

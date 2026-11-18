@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/model"
-	"personant/internal/recall/measure"
-	"personant/internal/store"
+	"mempro/internal/model"
+	"mempro/internal/recall/measure"
+	"mempro/internal/store"
 )
 
 // countingEmbedder wraps the deterministic MockEmbedder and counts the

@@ -5,9 +5,9 @@ import (
 	"errors"
 	"testing"
 
-	"personant/internal/autogit"
-	"personant/internal/memops"
-	"personant/internal/store"
+	"mempro/internal/autogit"
+	"mempro/internal/memops"
+	"mempro/internal/store"
 )
 
 // headHash is a test helper returning the current HEAD commit hash.

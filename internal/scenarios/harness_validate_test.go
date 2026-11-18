@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/model"
+	"mempro/internal/model"
 )
 
 // TestScenarioValidate covers the #9 run-start config gate: each contradictory

@@ -24,10 +24,10 @@ import (
 	"path/filepath"
 	"slices"
 
-	"personant/internal/dedup"
-	"personant/internal/memops"
-	"personant/internal/store"
-	"personant/internal/workset"
+	"mempro/internal/dedup"
+	"mempro/internal/memops"
+	"mempro/internal/store"
+	"mempro/internal/workset"
 )
 
 // ComposeWorkingSet builds the layer-by-layer working-set content for
@@ -215,7 +215,7 @@ func (a *FileAdapter) loadOtherProjectDigests(activeID string, logf func(string,
 // loadProjectDigest reads <Home>/projects/<id>/digest.json. A missing
 // digest is a warning, not an error — the project simply contributes
 // no A2 line. ok=false signals "skip this project."
-func loadProjectDigest(paths store.PersonantPaths, id string, logf func(string, ...any)) (memops.ProjectDigest, bool) {
+func loadProjectDigest(paths store.MemproPaths, id string, logf func(string, ...any)) (memops.ProjectDigest, bool) {
 	digestPath := filepath.Join(paths.ProjectsDir, id, "digest.json")
 	data, err := os.ReadFile(digestPath)
 	if err != nil {

@@ -13,13 +13,13 @@ import (
 	"strings"
 	"time"
 
-	"personant/internal/clock"
-	"personant/internal/crashpoint"
-	"personant/internal/curator"
-	"personant/internal/memops"
-	"personant/internal/model"
-	"personant/internal/prompt"
-	"personant/internal/recall/measure"
+	"mempro/internal/clock"
+	"mempro/internal/crashpoint"
+	"mempro/internal/curator"
+	"mempro/internal/memops"
+	"mempro/internal/model"
+	"mempro/internal/prompt"
+	"mempro/internal/recall/measure"
 )
 
 // Crashpoints for the R4 W-TURN matrix (#94 R3): the turn pipeline's own
@@ -938,7 +938,7 @@ func RunWithInfo(ctx context.Context, state *State, preEvents []Delta, userInput
 	// cannot tell a working system from a broken one. The brackets make
 	// the line unmistakably not model output.
 	if strings.TrimSpace(body) == "" {
-		fmt.Fprint(out, "\n[personant: the model returned no reply text this turn]\n")
+		fmt.Fprint(out, "\n[mempro: the model returned no reply text this turn]\n")
 	}
 
 	// Crash-stability (#94 R3): journal the response — durably, BEFORE any
@@ -1044,7 +1044,7 @@ func RunWithInfo(ctx context.Context, state *State, preEvents []Delta, userInput
 	// Step 5c: CommitTurn — the per-turn durability recovery point. Every
 	// turn commits: the turn's canonical writes (content + any §3.5
 	// structural changes from 5b) land in ONE commit carrying the
-	// Personant-Turn trailer, and the journal truncates (the scope
+	// mempro-Turn trailer, and the journal truncates (the scope
 	// release). Structural changes ride this commit — the reason string
 	// still reports their counts forensically. Nothing in production calls
 	// Checkpoint; the clean-stop checkpoint belongs to the plugin route's

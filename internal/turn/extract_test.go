@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"personant/internal/memops"
-	"personant/internal/memops/fileadapter"
+	"mempro/internal/memops"
+	"mempro/internal/memops/fileadapter"
 )
 
 // extractCoalesce is a thin helper that drives deterministicExtract on

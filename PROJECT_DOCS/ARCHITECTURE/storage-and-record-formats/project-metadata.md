@@ -21,7 +21,7 @@ interface ProjectPattern { name: string; regex: string /* RE2 */; category: Symb
 `prj_default` is reserved for threads created when no project directory was given: empty
 `current_root_path`, `name: default`. Fields not listed here are ignored on read.
 
-**`projects/prj_<n>/digest.json`** ([derived], regenerated with the other derived files: at the day rollover, archival, restore and `personant index rebuild`; other-projects slot content):
+**`projects/prj_<n>/digest.json`** ([derived], regenerated with the other derived files: at the day rollover, archival, restore and `mempro index rebuild`; other-projects slot content):
 
 ```typescript
 interface ProjectDigest {
@@ -33,4 +33,3 @@ interface ProjectDigest {
   byte_size: number;          // should be ≤ cross-project.digest-per-project-bytes
 }
 ```
-

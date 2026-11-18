@@ -12,13 +12,13 @@ import (
 	"strings"
 	"testing"
 
-	"personant/internal/crashpoint"
-	"personant/internal/memops"
+	"mempro/internal/crashpoint"
+	"mempro/internal/memops"
 )
 
 const folioTestThread = "thr_1"
 
-func writeLooseExcerpt(t *testing.T, paths PersonantPaths, name, content string) {
+func writeLooseExcerpt(t *testing.T, paths MemproPaths, name, content string) {
 	t.Helper()
 	dir := ThreadTurnsDir(paths, folioTestThread)
 	if err := os.MkdirAll(dir, 0o755); err != nil {
@@ -30,7 +30,7 @@ func writeLooseExcerpt(t *testing.T, paths PersonantPaths, name, content string)
 }
 
 // excerptTiers returns the thread's loose files and folio lines as name → bytes.
-func excerptTiers(t *testing.T, paths PersonantPaths) (loose, folio map[string]string) {
+func excerptTiers(t *testing.T, paths MemproPaths) (loose, folio map[string]string) {
 	t.Helper()
 	loose, folio = map[string]string{}, map[string]string{}
 	entries, err := os.ReadDir(ThreadTurnsDir(paths, folioTestThread))
@@ -56,7 +56,7 @@ func excerptTiers(t *testing.T, paths PersonantPaths) (loose, folio map[string]s
 
 // assertEachReadableOnce checks that every name in want is held by at least
 // one tier, every held copy has want's bytes, and no other name is held.
-func assertEachReadableOnce(t *testing.T, paths PersonantPaths, want map[string]string) {
+func assertEachReadableOnce(t *testing.T, paths MemproPaths, want map[string]string) {
 	t.Helper()
 	loose, folio := excerptTiers(t, paths)
 	for name, content := range want {
@@ -87,7 +87,7 @@ type readerView struct {
 	Debt, WideDebt   []memops.ThreadExcerpt
 }
 
-func readThroughReaders(t *testing.T, paths PersonantPaths) readerView {
+func readThroughReaders(t *testing.T, paths MemproPaths) readerView {
 	t.Helper()
 	var v readerView
 	var err error
@@ -116,7 +116,7 @@ func assertSameReads(t *testing.T, stage string, got, want readerView) {
 	}
 }
 
-func excerptNumbers(t *testing.T, paths PersonantPaths) []int {
+func excerptNumbers(t *testing.T, paths MemproPaths) []int {
 	t.Helper()
 	entries, err := ListExcerptEntries(paths, folioTestThread)
 	if err != nil {

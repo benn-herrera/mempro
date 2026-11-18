@@ -1,7 +1,7 @@
 package index
 
-// Top-level entry points for `personant index rebuild` and
-// `personant index check`. The two share the same build pipeline; check
+// Top-level entry points for `mempro index rebuild` and
+// `mempro index check`. The two share the same build pipeline; check
 // is rebuild-with-no-writes plus a per-file comparison against what is
 // currently on disk.
 
@@ -14,8 +14,8 @@ import (
 	"sort"
 	"sync"
 
-	"personant/internal/memops"
-	"personant/internal/store"
+	"mempro/internal/memops"
+	"mempro/internal/store"
 )
 
 // rebuildFaultInjector, when installed, is applied to the symbol set every
@@ -72,7 +72,7 @@ type Options struct {
 // digest.json) atomically from spine.jsonl. Returns the first error
 // encountered. Successful return means every derived file is in sync
 // with the canonical spine at the moment of return.
-func Rebuild(paths store.PersonantPaths, opts Options) error {
+func Rebuild(paths store.MemproPaths, opts Options) error {
 	logf, warnf := loggers(opts)
 
 	plan, err := buildPlan(paths, warnf)
@@ -119,7 +119,7 @@ func Rebuild(paths store.PersonantPaths, opts Options) error {
 //     reported as drift, per the conservative removal policy. (The
 //     directory exists; its digest is left in place.) [OPEN: revisit
 //     once we have empirical evidence on stale-digest frequency.]
-func Check(paths store.PersonantPaths, opts Options) (memops.CheckResult, error) {
+func Check(paths store.MemproPaths, opts Options) (memops.CheckResult, error) {
 	_, warnf := loggers(opts)
 
 	plan, err := buildPlan(paths, warnf)
@@ -187,7 +187,7 @@ type plan struct {
 	digests map[string]memops.ProjectDigest
 }
 
-func buildPlan(paths store.PersonantPaths, warnf func(format string, args ...any)) (plan, error) {
+func buildPlan(paths store.MemproPaths, warnf func(format string, args ...any)) (plan, error) {
 	spine, err := store.ReadSpine(paths.Spine)
 	if err != nil {
 		return plan{}, fmt.Errorf("read spine: %w", err)

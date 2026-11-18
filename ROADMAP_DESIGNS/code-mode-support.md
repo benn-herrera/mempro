@@ -1,6 +1,6 @@
 # Code Mode support
 
-**Status:** deferred. Personant's server starts with opencode's `execute` tool denied — a configuration opencode itself
+**Status:** deferred. mempro's server starts with opencode's `execute` tool denied — a configuration opencode itself
 supports, in which the tools otherwise reached only through Code Mode are exposed to the model directly. This plan is
 what supporting `execute` would take, if that is ever chosen. It applies only to the server-port route
 ([OPENCODE_SERVER_REPLACEMENT.md](OPENCODE_SERVER_REPLACEMENT.md)); under plugin integration opencode's own server runs

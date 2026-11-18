@@ -1,4 +1,4 @@
-# CONVENTIONS – Personant
+# CONVENTIONS – mempro
 
 Project-specific process and house rules
 

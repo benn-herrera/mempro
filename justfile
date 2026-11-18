@@ -62,11 +62,11 @@ RECALL_MADLIBS_DATA := "internal/scenarios/testdata/recall_madlibs"
 # exactly a compile check. It runs first so the broadest check fails
 # fastest; the linked binary follows, nearly free off the build cache.
 #
-# Compile bin/personant — the cheapest edit-gate check.
+# Compile bin/mempro — the cheapest edit-gate check.
 build:
     @mkdir -p {{ BINDIR }}
     go build {{ GOPKGS }}
-    go build -o {{ BINDIR }}/personant ./cmd
+    go build -o {{ BINDIR }}/mempro ./cmd
 
 # Canonically format every Go source root in place.
 fmt:
@@ -155,13 +155,13 @@ recall-embed-data: recall-corpus-sweep-data
     python3 tools/test/embed_corpus.py
 
 # The tests ALWAYS COMPILE (part of the normal `just test` compile);
-# EXECUTION is opt-in via PERSONANT_CORPUS_TESTS (without it they skip, so
+# EXECUTION is opt-in via MEMPRO_CORPUS_TESTS (without it they skip, so
 # they are not part of `just test`). Run -v to see the per-topic report and
 # the synonym-depth x threshold calibration matrix.
 #
 # Wikipedia corpus recall-fidelity measurement + C.6 calibration sweep (opt-in).
 recall-corpus-test: build recall-madlibs recall-corpus-sweep-data
-    PERSONANT_CORPUS_TESTS=1 go test -run Corpus ./internal/scenarios/... --count=1
+    MEMPRO_CORPUS_TESTS=1 go test -run Corpus ./internal/scenarios/... --count=1
 
 # HEAVYWEIGHT, NETWORKED mining operation — NOT part of `just test` and not
 # a pre-commit step. Fetches ~150 Wikipedia articles (minutes of wall-clock,
@@ -173,16 +173,16 @@ recall-corpus-fetch:
     python3 tools/test/wikipedia_corpus.py
 
 # Runs the opt-in SLOW sim rungs gated by testsupport.RequireSlowSim
-# (PERSONANT_SLOW_SIM_TESTS): the 14d arm of
+# (MEMPRO_SLOW_SIM_TESTS): the 14d arm of
 # TestShadowLayerB_ReverseDivergence, plus the fixed-24h #98 embedding
 # head-to-head machinery rungs. ALWAYS COMPILE (part of the normal `just
 # test` compile) but their wall-clock would blow test's per-package timeout
 # budget, so EXECUTION is opted in here. -timeout 0 disables go test's
 # default ceiling — a runaway here is the user's to Ctrl-C.
 #
-# Run the opt-in SLOW sim rungs (PERSONANT_SLOW_SIM_TESTS).
+# Run the opt-in SLOW sim rungs (MEMPRO_SLOW_SIM_TESTS).
 sim-shadow-slow-test: build recall-madlibs
-    PERSONANT_SLOW_SIM_TESTS=1 go test ./internal/scenarios/sim/ \
+    MEMPRO_SLOW_SIM_TESTS=1 go test ./internal/scenarios/sim/ \
       -run 'TestShadowLayerB_ReverseDivergence|TestSimEmbeddingHeadToHead_Machinery|TestSimNoEmbedder_HeadToHeadAbsent' \
       -count=1 -timeout 0 -v
 
@@ -410,8 +410,8 @@ pprof +args:
 # reflects how much of the codebase the WHOLE suite exercises, not just each
 # package's own tests. The final `total:` line is the headline; `go tool
 # cover -html=cover.out` for a line-by-line view. cover.out is .gitignore'd.
-# Env-gated tests (PERSONANT_LIVE_TESTS, PERSONANT_CORPUS_TESTS,
-# PERSONANT_SLOW_SIM_TESTS) skip unless set in the caller's environment, and
+# Env-gated tests (MEMPRO_LIVE_TESTS, MEMPRO_CORPUS_TESTS,
+# MEMPRO_SLOW_SIM_TESTS) skip unless set in the caller's environment, and
 # the sim runs at its default duration, so those paths are not counted.
 #
 # Aggregate test coverage report across all packages.
@@ -439,7 +439,7 @@ LIVE_INFERENCE := env_var_or_default("LIVE_INFERENCE", "false")
 #   just sim LIVE_EMBEDDING=true LIVE_INFERENCE=true DURATION=1d
 # (env-var form works too: `DURATION=1d just sim`.) A live run uses the
 # `reaper` endpoint from internal/testsupport (override with
-# PERSONANT_REAPER_URL) and FAILS (not skips) if it is unreachable. Embedding-in-loop keeps the
+# MEMPRO_REAPER_URL) and FAILS (not skips) if it is unreachable. Embedding-in-loop keeps the
 # recall oracle valid; inference-in-loop is a SHORT behavior-validation mode
 # (oracle gates relaxed) REFUSED past a 1-sim-day cap — pass DURATION=1d
 # alongside it. SIM_WRAP wraps Darwin runs with caffeinate + taskpolicy
@@ -492,17 +492,17 @@ sim-tokenceiling-rung: build recall-madlibs
 
 # Live-inference tests requiring the `reaper` provider reachable. ALWAYS
 # COMPILE (part of the normal `just test` compile); EXECUTION opts in via
-# PERSONANT_LIVE_TESTS — without it they skip, so bare `just test` compiles
+# MEMPRO_LIVE_TESTS — without it they skip, so bare `just test` compiles
 # and hits no endpoint. Under the opt-in an unreachable/misconfigured
 # endpoint is a FAILURE, not a skip. Override the endpoint with
-# PERSONANT_REAPER_URL.
+# MEMPRO_REAPER_URL.
 #
-# Live reaper-endpoint tests (opt-in via PERSONANT_LIVE_TESTS).
+# Live reaper-endpoint tests (opt-in via MEMPRO_LIVE_TESTS).
 integration-test: build
-    PERSONANT_LIVE_TESTS=1 go test {{ GOPKGS }} --count=1
+    MEMPRO_LIVE_TESTS=1 go test {{ GOPKGS }} --count=1
 
 # Remove the compiled binary.
 clean:
-    rm -f {{ BINDIR }}/personant
+    rm -f {{ BINDIR }}/mempro
 
 import? '.opencode/plugins/devpro/skills/docdicer/tools/runner-snippets/docdicer.just'

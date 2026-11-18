@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"personant/internal/recall/scoring"
+	"mempro/internal/recall/scoring"
 )
 
 // vec is a tiny helper to build a 2-D vector fixture; cosine math is

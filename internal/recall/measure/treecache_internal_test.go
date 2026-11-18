@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"personant/internal/recall/scoring"
+	"mempro/internal/recall/scoring"
 )
 
 // This file is the #111 Inc C internal test surface for the persisted .tree

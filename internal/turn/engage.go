@@ -8,12 +8,12 @@ import (
 	"strings"
 	"time"
 
-	"personant/internal/clock"
-	"personant/internal/crashpoint"
-	"personant/internal/dedup"
-	"personant/internal/memops"
-	"personant/internal/prompt"
-	"personant/internal/store"
+	"mempro/internal/clock"
+	"mempro/internal/crashpoint"
+	"mempro/internal/dedup"
+	"mempro/internal/memops"
+	"mempro/internal/prompt"
+	"mempro/internal/store"
 )
 
 // Topic-tag protocol recovery surface (D6, burn-down 2026-07b A1). When an

@@ -17,10 +17,10 @@ import (
 	"context"
 	"testing"
 
-	"personant/internal/memops/fileadapter"
-	"personant/internal/model"
-	"personant/internal/recall/measure"
-	"personant/internal/testsupport"
+	"mempro/internal/memops/fileadapter"
+	"mempro/internal/model"
+	"mempro/internal/recall/measure"
+	"mempro/internal/testsupport"
 )
 
 // TestEmbeddingRecall_Live builds the Recaller's embedding index over

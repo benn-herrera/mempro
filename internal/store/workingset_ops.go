@@ -21,9 +21,9 @@ type workingSetFile struct {
 // tree (see store.Init's seedGitignore), so the per-turn rewrite does not
 // dirty the substrate's git repo. Atomic: encode to a temp file in the
 // home directory, fsync, rename — the same pattern as SaveProjectMeta.
-func SaveWorkingSet(paths PersonantPaths, activeThreads, dormantThreads []string) error {
+func SaveWorkingSet(paths MemproPaths, activeThreads, dormantThreads []string) error {
 	if paths.Home == "" {
-		return errors.New("save working set: PersonantPaths.Home is empty")
+		return errors.New("save working set: MemproPaths.Home is empty")
 	}
 	var buf bytes.Buffer
 	enc := json.NewEncoder(&buf)
@@ -43,7 +43,7 @@ func SaveWorkingSet(paths PersonantPaths, activeThreads, dormantThreads []string
 // LoadWorkingSet reads <Home>/working-set.json. A nonexistent file yields
 // (nil, nil, nil) — the fresh-launch state. A present but malformed file
 // yields an error.
-func LoadWorkingSet(paths PersonantPaths) (activeThreads, dormantThreads []string, err error) {
+func LoadWorkingSet(paths MemproPaths) (activeThreads, dormantThreads []string, err error) {
 	data, err := os.ReadFile(paths.WorkingSet)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {

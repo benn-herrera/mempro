@@ -56,7 +56,7 @@ type ModelInfo struct {
 //
 // Sampling parameters are always wired on the wire — a zero value for
 // Temperature or MaxTokens is a real value, not a "use server default"
-// sentinel. Use DefaultRequest to construct a Request with personant's
+// sentinel. Use DefaultRequest to construct a Request with mempro's
 // v0.1 defaults pre-filled; only override what you explicitly need.
 type Request struct {
 	Model    string
@@ -85,7 +85,7 @@ type Request struct {
 	ChatTemplateKwargs map[string]any
 }
 
-// DefaultRequest returns a Request prefilled with personant's v0.1
+// DefaultRequest returns a Request prefilled with mempro's v0.1
 // defaults. The caller fills in Model and Messages; everything else is
 // preset:
 //

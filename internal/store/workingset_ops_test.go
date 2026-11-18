@@ -49,7 +49,7 @@ func TestLoadWorkingSetMalformed(t *testing.T) {
 }
 
 func TestSaveWorkingSetRejectsEmptyHome(t *testing.T) {
-	if err := SaveWorkingSet(PersonantPaths{}, nil, nil); err == nil {
+	if err := SaveWorkingSet(MemproPaths{}, nil, nil); err == nil {
 		t.Fatal("expected error for empty Home, got nil")
 	}
 }

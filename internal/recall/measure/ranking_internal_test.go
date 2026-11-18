@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"testing"
 
-	"personant/internal/memops"
-	"personant/internal/memops/fileadapter"
-	"personant/internal/store"
+	"mempro/internal/memops"
+	"mempro/internal/memops/fileadapter"
+	"mempro/internal/store"
 )
 
 // TestRankTier pins the three-tier assignment the Recall ordering relies on

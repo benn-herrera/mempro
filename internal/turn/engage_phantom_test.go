@@ -9,11 +9,11 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/memops"
-	"personant/internal/memops/fileadapter"
-	"personant/internal/model"
-	"personant/internal/prompt"
-	"personant/internal/store"
+	"mempro/internal/memops"
+	"mempro/internal/memops/fileadapter"
+	"mempro/internal/model"
+	"mempro/internal/prompt"
+	"mempro/internal/store"
 )
 
 // A topic tag naming a nonexistent thread
@@ -25,7 +25,7 @@ import (
 // ownership assignment is a runtime decision).
 
 // assertNoThread fails if thrID has a spine record.
-func assertNoThread(t *testing.T, paths store.PersonantPaths, thrID string) {
+func assertNoThread(t *testing.T, paths store.MemproPaths, thrID string) {
 	t.Helper()
 	_, found, err := store.FindSpineRecord(paths, thrID)
 	if err != nil {
@@ -316,7 +316,7 @@ func TestPhantomOwnerFallbackPicksMostRecentValid(t *testing.T) {
 }
 
 // logsContain reports whether any *.log file under LogsDir contains marker.
-func logsContain(t *testing.T, paths store.PersonantPaths, marker string) bool {
+func logsContain(t *testing.T, paths store.MemproPaths, marker string) bool {
 	t.Helper()
 	entries, err := os.ReadDir(paths.LogsDir)
 	if err != nil {
@@ -469,7 +469,7 @@ func TestMostRecentEngagedID_TieBreakLowestID(t *testing.T) {
 
 // stampLastEngagedTurn rewrites thrID's spine record with the given
 // LastEngagedTurn so fallback-(i) recency selection has distinct inputs.
-func stampLastEngagedTurn(t *testing.T, paths store.PersonantPaths, thrID string, lastEngagedTurn int) {
+func stampLastEngagedTurn(t *testing.T, paths store.MemproPaths, thrID string, lastEngagedTurn int) {
 	t.Helper()
 	rec, found, err := store.FindSpineRecord(paths, thrID)
 	if err != nil || !found {

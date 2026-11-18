@@ -13,7 +13,7 @@ structural loss is the bar, full stop. See §9.
 ## 0. The load-bearing property and the invariants that enforce it
 
 > **THE WORKTREE IS THE TRUTH. The daily DB is disposable scaffolding.** No byte of canonical
-> content lives *only* in git. Every canonical byte is a file under `$PERSONANT_HOME`; git is a
+> content lives *only* in git. Every canonical byte is a file under `$MEMPRO_HOME`; git is a
 > recovery-point index over those files. Therefore any DB — daily *or* primary — can be recreated
 > from the worktree, and losing a DB is never losing content.
 
@@ -32,7 +32,7 @@ way of building a wrong system:
   primary HEAD — which lags by up to a full day — silently destroying the entire day's turns. Only
   op=turn recovery resets, and only ever to **daily** HEAD (≤1 turn).
 - **INV-2 (idempotent, guarded day-commit).** The day-commit is guarded by `primary HEAD is a
-  DAY-COMMIT (DayCommitMessage shape match) AND its Personant-Day == target day`; if already
+  DAY-COMMIT (DayCommitMessage shape match) AND its mempro-Day == target day`; if already
   present, it is skipped. The guard is NOT "HEAD carries the trailer" — every primary commit carries
   a trailer (F3), so a trailered-but-non-day-shape HEAD (a roll-forward stamp or an adopt) must NOT
   satisfy it. *Prevents:* barrier re-drive after a crash minting a second day-commit for the same
@@ -77,14 +77,14 @@ career-history length (archival caps the working set) — and clean-open stays *
 
 | Operation | DB | Commit trailer | Integrity flags |
 |-----------|-----|----------------|-----------------|
-| per-turn commit (CommitTurn) | **daily** | `Personant-Turn: <id>` | none (0,0) |
+| per-turn commit (CommitTurn) | **daily** | `mempro-Turn: <id>` | none (0,0) |
 | turn reset (torn-turn recovery) | **daily** | — | n/a |
 | worktree status (turn-scope WT observable) | **daily** | — | n/a |
-| **day-commit** (barrier B2) | **primary** | `Personant-Day: <N>` | `CheckSpineIntegrity` (post) — **derived-fresh is NOT checked here** (F5); the barrier's B3 rebuild + B6 assert own it |
-| archival capture/deletion/stamp (barrier B1) | **primary** | `Personant-Day: <N>` + archival message | existing flags (capture pre = SpineIntegrity; deletion post = Derived\|Spine; stamp post = Spine) |
-| legacy/greenfield adopt-commit (cell 12) | **primary** | `Personant-Day: <current day>` — **the sole bootstrap carve-out** (no marker-day, no prior HEADDAY exists) | verify-gated (structural) |
-| recovery stamp-repair / roll-forward (cell 9, F1) | **primary** | `Personant-Day:` = HEADDAY-at-repair-time (standalone cell-9 stamp-repair — never advances the day) / marker-day (F1 in-flight barrier/archival roll-forward completion) | recovery precedes validity — no flags |
-| mid-session structural (project-create, RecoverThread restore) | **daily** | `Personant-Turn`-less (captured by its own full-sweep Checkpoint commit to daily; folded into the day at the barrier) | none |
+| **day-commit** (barrier B2) | **primary** | `mempro-Day: <N>` | `CheckSpineIntegrity` (post) — **derived-fresh is NOT checked here** (F5); the barrier's B3 rebuild + B6 assert own it |
+| archival capture/deletion/stamp (barrier B1) | **primary** | `mempro-Day: <N>` + archival message | existing flags (capture pre = SpineIntegrity; deletion post = Derived\|Spine; stamp post = Spine) |
+| legacy/greenfield adopt-commit (cell 12) | **primary** | `mempro-Day: <current day>` — **the sole bootstrap carve-out** (no marker-day, no prior HEADDAY exists) | verify-gated (structural) |
+| recovery stamp-repair / roll-forward (cell 9, F1) | **primary** | `mempro-Day:` = HEADDAY-at-repair-time (standalone cell-9 stamp-repair — never advances the day) / marker-day (F1 in-flight barrier/archival roll-forward completion) | recovery precedes validity — no flags |
+| mid-session structural (project-create, RecoverThread restore) | **daily** | `mempro-Turn`-less (captured by its own full-sweep Checkpoint commit to daily; folded into the day at the barrier) | none |
 | Checkpoint — mid-session AND session-close backstop (F2) | **daily** | — | none (belt-and-braces; normally a no-op — daily is already current at close) |
 
 Rationale for daily = no integrity flags, primary = gated: daily is disposable and per-turn cost
@@ -94,11 +94,11 @@ day-commit) plus one `index.Check` (`CheckDerivedFresh`, on the B6 assert after 
 day instead of per turn. This is the payoff that lets per-turn commits be cheap.
 
 **Uniform primary-trailer invariant (F3).** *Every* primary commit — day-commit, all three archival
-commits, adopt-commit, and the recovery stamp/roll-forward commits — carries Personant-Day = the day
+commits, adopt-commit, and the recovery stamp/roll-forward commits — carries mempro-Day = the day
 being sealed or repaired (marker-day for in-flight barrier/archival completion;
 HEADDAY-at-repair-time for standalone stamp-repair; current day only for greenfield adopt
 bootstrap). Every one of these writers already knows the current day (the single-clock day index),
-so the trailer is free to attach. Consequence: **HEADDAY (the `Personant-Day` of primary HEAD) is
+so the trailer is free to attach. Consequence: **HEADDAY (the `mempro-Day` of primary HEAD) is
 ALWAYS defined** for any non-bare primary, and there is no tag fallback anywhere (§4). The empty-day
 case (a barrier that captured nothing) still produces exactly one day-commit, minted with
 `AllowEmptyCommits` (§2.2 B2) — so the invariant "exactly one trailered day-commit per barrier,
@@ -120,7 +120,7 @@ and `recovery/stamp.go`). The dual-handle delta:
   // openRepo opens paths.Home's worktree against the chosen git-dir.
   // Primary → <Home>/.git (git.PlainOpen). Daily → <Home>/.git-daily via
   // filesystem.NewStorage(osfs.New(<Home>/.git-daily)) + git.Open(storer, osfs.New(Home)).
-  func openRepo(paths store.PersonantPaths, which Repo) (*git.Repository, error)
+  func openRepo(paths store.MemproPaths, which Repo) (*git.Repository, error)
   ```
   go-git supports a git-dir divorced from the worktree via `git.Open(storer, worktreeFS)`;
   `.git-daily` is the storer dir, `paths.Home` is the worktree. `PlainOpen`/`PlainInit` are NOT
@@ -150,7 +150,7 @@ resetting the worktree off Primary).
 The day barrier is a normal operation (like archival), fired by the application on **new-day
 detection**, not a recovery-only concept. Detection uses the single-clock day index (`SimDayIndex` /
 `clock.Timeline()` day): the barrier for day *N* fires when the current clock day exceeds HEADDAY
-(the day of primary's HEAD `Personant-Day` trailer). HEADDAY is ⊥ only for a **bare** primary — one
+(the day of primary's HEAD `mempro-Day` trailer). HEADDAY is ⊥ only for a **bare** primary — one
 that has never taken any primary commit (greenfield, before the first barrier) — in which case the
 barrier fires for the first completed day. Under the uniform-trailer invariant (§1.1) every primary
 commit is trailered, so on any non-bare primary HEADDAY is a defined integer read directly off HEAD.
@@ -158,7 +158,7 @@ Checked at session open (after Reconcile) and before each turn. In the sim, `OnS
 trigger; in production, the open-time + pre-turn check.
 
 **The HEADDAY-⊥ wedge is now unreachable (F3).** The prior draft let an empty day produce *no*
-day-commit (a bare `personant-day/N` tag instead), and let some primary commits go un-trailered — so
+day-commit (a bare `mempro-day/N` tag instead), and let some primary commits go un-trailered — so
 HEADDAY could be ⊥ or stale on a primary that had in fact advanced, wedging new-day detection
 (re-fire forever, or fork a second day-commit) and giving recovery a tag-vs-trailer discrimination
 it sometimes got wrong (the D4 tag-recovery gap). With every primary commit trailered and every
@@ -193,13 +193,13 @@ day-commit — core recovery only *detects and re-requests* it (§2.6, F4).
   snapshot) *before* the first `RemoveAll` — this is the F1 batch-membership record (see §2.3 and
   the ordering in the code contradiction note). The **capture commit `Add(".")`s the full current
   worktree into primary**, so after it lands primary already holds the day's cumulative content
-  (this is what makes B4's nuke safe, INV-3). Every B1 commit carries `Personant-Day: N`. Skipped
+  (this is what makes B4's nuke safe, INV-3). Every B1 commit carries `mempro-Day: N`. Skipped
   when spine cardinality is under the low-water mark; then B2 is the sole worktree-capture.
-- **B2.** *Day-commit* worktree → **primary** with `Personant-Day: N`. Stages **everything,
+- **B2.** *Day-commit* worktree → **primary** with `mempro-Day: N`. Stages **everything,
   including any overnight hand-edits** Reconcile deferred (F5). Post-flag **`CheckSpineIntegrity`
   only** — NOT `CheckDerivedFresh` (derived may lag the just-staged hand-edits; B3 rebuilds and B6
   asserts). Guarded (INV-2): if primary HEAD is already a day-commit for N (DayCommitMessage shape
-  match AND its Personant-Day == N), skip (idempotent re-drive). Uses `AllowEmptyCommits` (F3): a
+  match AND its mempro-Day == N), skip (idempotent re-drive). Uses `AllowEmptyCommits` (F3): a
   barrier that captured nothing since B1 still mints one trailered day-commit, so HEADDAY is always
   defined and there is no tag path (§4).
 - **B3.** *Rebuild derived + re-stamp* (F5). Rebuild `symbols.jsonl` / digests from the
@@ -210,7 +210,7 @@ day-commit — core recovery only *detects and re-requests* it (§2.6, F4).
   the final watermark value is set at B6 against the reborn daily.
 - **B4.** `rm -rf .git-daily` (nuke). Idempotent (rm of absent path = no-op).
 - **B5.** *Re-init daily*: `git init .git-daily` + baseline commit of the current worktree
-  (`Personant-Turn`-less baseline) → baseline hash H_d. Because B3 already made derived fresh on
+  (`mempro-Turn`-less baseline) → baseline hash H_d. Because B3 already made derived fresh on
   disk, the baseline captures fresh derived too.
 - **B6.** Stamp watermark = H_d (INV-4); **assert derived-fresh** (`CheckDerivedFresh` — the
   once-a-day `index.Check` moved off B2 per F5); clear marker.
@@ -251,7 +251,7 @@ and safe to re-enter.
 | before B1 | daily intact (all per-turn commits); primary at day N−1 | re-run barrier from B1 | worktree untouched; daily still holds every turn |
 | mid-B1 | see the sub-window table above | complete the batch, then B2–B6 | archived bytes live in the capture commit (the entry's `ParentCommitHash`) |
 | after B1, before B2 | primary holds content (capture/deletion/stamp landed); day-id not yet on a day-commit | run B2–B6 | content already durable in primary |
-| after B2, before B3 | primary day-committed (`Personant-Day: N`); daily still present; derived maybe stale | skip B2 (primary HEAD is day-commit N); do B3–B6 | everything already in primary |
+| after B2, before B3 | primary day-committed (`mempro-Day: N`); daily still present; derived maybe stale | skip B2 (primary HEAD is day-commit N); do B3–B6 | everything already in primary |
 | mid-B3 (rebuild) | day-committed; derived partially rebuilt | re-run B3 (rebuild idempotent); B4–B6 | derived is disposable; worktree unchanged |
 | mid-B4 (nuke partial) | day-committed; `.git-daily` corrupt/partial | `rm -rf` again; B5; B6 | primary complete; daily is disposable |
 | mid-B5 (daily half-created) | primary complete; `.git-daily` exists, no valid HEAD | `rm -rf`; B5 again; B6 | nothing committed to a headless daily; worktree is truth |
@@ -336,7 +336,7 @@ DERIVED) are **evaluated against the correct repo**:
 ### 2.5 daily-missing discrimination (normal morning vs mid-barrier)
 
 This is the deliverable question. **Discriminator: the op=barrier marker, plus primary's
-`Personant-Day` (HEADDAY) trailer vs the current day.**
+`mempro-Day` (HEADDAY) trailer vs the current day.**
 
 | MARKER | DAILY | watermark | classification | action |
 |--------|-------|-----------|----------------|--------|
@@ -499,27 +499,27 @@ the *source* of the hash changes.
 
 | Trailer | Repo | Reader | Meaning at cell eval |
 |---------|------|--------|----------------------|
-| `Personant-Turn: <id>` | **daily** commits | `HeadTurn(…, Daily)` → HEADTURN | torn-turn discrimination (cells 4/5/6): `HEADTURN == marker.Turn` ⇒ committed (cell 5); `<` ⇒ torn/uncommitted (cell 4/6) |
-| `Personant-Day: <N>` | **every** primary commit (day-commit, all archival commits, adopt, recovery repairs) carries it (F3) | `HeadDay(…, Primary)` → HEADDAY | barrier idempotence guard (INV-2); new-day detection; "is this day already permanent?" |
+| `mempro-Turn: <id>` | **daily** commits | `HeadTurn(…, Daily)` → HEADTURN | torn-turn discrimination (cells 4/5/6): `HEADTURN == marker.Turn` ⇒ committed (cell 5); `<` ⇒ torn/uncommitted (cell 4/6) |
+| `mempro-Day: <N>` | **every** primary commit (day-commit, all archival commits, adopt, recovery repairs) carries it (F3) | `HeadDay(…, Primary)` → HEADDAY | barrier idempotence guard (INV-2); new-day detection; "is this day already permanent?" |
 
 - **Recovery predicates per repo.** Turn cells read HEADTURN from **daily**. The barrier / new-day
-  logic reads HEADDAY from **primary**. A daily commit never carries `Personant-Day`; a primary
-  commit never carries `Personant-Turn` (turns don't reach primary except folded into a day-commit's
+  logic reads HEADDAY from **primary**. A daily commit never carries `mempro-Day`; a primary
+  commit never carries `mempro-Turn` (turns don't reach primary except folded into a day-commit's
   tree, not its message).
 - **Primary's HEADTURN-equivalent** is **HEADDAY**: primary has no per-turn identity, so "what is
   HEAD's turn?" has no answer on primary — the analogous question is "what day is HEAD?", answered
-  by `Personant-Day`. Cell evaluation never asks primary for a turn id.
+  by `mempro-Day`. Cell evaluation never asks primary for a turn id.
 - Reuse the existing `TurnTrailerKey`/`ParseTurnTrailer` machinery; add `DayTrailerKey =
-  "Personant-Day"`, `DayCommitMessage(dayID)`, `ParseDayTrailer`, `HeadDay`. `HeadDay(…, Primary)`
+  "mempro-Day"`, `DayCommitMessage(dayID)`, `ParseDayTrailer`, `HeadDay`. `HeadDay(…, Primary)`
   reads the trailer off primary HEAD — **no tag fallback (F3)**. The empty-day case is handled by
   minting an `AllowEmptyCommits` day-commit (§2.2 B2), so a trailer always exists on any non-bare
   primary; HEADDAY is ⊥ only for a bare (never-committed) primary. A day-commit message helper is
   also the natural place to append the batch/archival trailers so every primary commit path is
   trailered uniformly.
 - **Detection vs. idempotence guard must not be conflated.** New-day *detection* reads the
-  `Personant-Day` trailer off HEAD **regardless of commit shape** (`HeadDay` works on any trailered
+  `mempro-Day` trailer off HEAD **regardless of commit shape** (`HeadDay` works on any trailered
   primary commit — day-commit, archival, adopt, or roll-forward). The INV-2 *idempotence guard* is
-  stricter: it fires only on a `DayCommitMessage`-shape HEAD whose `Personant-Day == N`. A
+  stricter: it fires only on a `DayCommitMessage`-shape HEAD whose `mempro-Day == N`. A
   trailered-but-non-day-shape HEAD (e.g. a roll-forward stamp or an adopt) advances HEADDAY for
   detection but does NOT satisfy the guard, so the real day-commit is still minted.
 
@@ -533,13 +533,13 @@ the *source* of the hash changes.
   the recovery debris-sweep quarantine a *live* DB. Add both explicitly to `seedGitignoreBody`
   (primary's `.git/` line is redundant-harmless for primary, load-bearing for daily). This is a
   subtle, critical, easily-missed point — call it out in the SPEC rewrite.
-- **`$PERSONANT_HOME` §2.1 layout table** gains a row: `.git-daily/  — operational, gitignored: the
+- **`$MEMPRO_HOME` §2.1 layout table** gains a row: `.git-daily/  — operational, gitignored: the
   disposable per-turn recovery DB; nuked + reborn each day barrier; never career history.` Contrast
   the existing `.git/` row (primary, permanent).
-- **paths.go:** add `GitDaily string // Home/.git-daily` to `PersonantPaths` and `makePaths`.
+- **paths.go:** add `GitDaily string // Home/.git-daily` to `MemproPaths` and `makePaths`.
 - **Single-spelunking note (for humans + the SPEC):** to inspect *career* history, `git -C
-  ~/.personant log` (primary, day-grain + archival anchors). To inspect *today's* turns, `git
-  --git-dir ~/.personant/.git-daily log` (daily, per-turn, evaporates at the next barrier).
+  ~/.mempro log` (primary, day-grain + archival anchors). To inspect *today's* turns, `git
+  --git-dir ~/.mempro/.git-daily log` (daily, per-turn, evaporates at the next barrier).
   Primary = the résumé; daily = today under the microscope.
 
 ---
@@ -634,8 +634,8 @@ single re-run OR refuses-to-open with the op=barrier marker intact.
   **ALWAYS empty** for barrier fixtures. The new report field `ScopedRestored []string` is non-empty
   **ONLY** on the persistent-failure fixtures (i)/(j) — it names the paths scoped-restored from
   primary HEAD under §2.7 quarantine-and- proceed, and stays empty everywhere else.
-- **Exactly one** `Personant-Day: N` day-commit in primary after recovery (INV-2 — no duplicate
-  day-commit on re-drive); and **HEADDAY == N is defined** with no `personant-day/*` tag present (F3
+- **Exactly one** `mempro-Day: N` day-commit in primary after recovery (INV-2 — no duplicate
+  day-commit on re-drive); and **HEADDAY == N is defined** with no `mempro-day/*` tag present (F3
   — tag path gone).
 - **F1 batch completion:** every batch member is fully archived (off worktree + off spine, in the
   index with a non-empty `CommitHash`, reachable in exactly one deletion commit) — never
@@ -761,10 +761,10 @@ Changes vs the SOLUTION outline (which was single-repo):
     the mutation body must split into an internal `archiveBatch` (no marker I/O, no refusal) called
     by both the public `ArchiveThreads` wrapper and the barrier / completion paths (F4). This is an
     internal variant, not a global bypass.
-13. **Primary-bound commits do not carry `Personant-Day`.** The archival commits
+13. **Primary-bound commits do not carry `mempro-Day`.** The archival commits
     (`fileadapter_archive.go`), the cell-12 adopt (`recovery.go:525`), and the cell-9 stamp
     (`stamp.go:98`) all commit with no day trailer. F3 requires every primary commit to carry
-    `Personant-Day` = the day being sealed or repaired (marker-day for in-flight barrier/archival
+    `mempro-Day` = the day being sealed or repaired (marker-day for in-flight barrier/archival
     completion; HEADDAY-at-repair-time for standalone stamp-repair; current day only for greenfield
     adopt — see F3/§1.1). These commit sites need that day threaded in (the barrier/recovery caller
     knows it).

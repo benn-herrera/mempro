@@ -19,7 +19,7 @@ import (
 // layout is either readable by a binary or it is not.
 //
 // Write discipline — load-bearing for the pre-Reconcile read (see
-// memops.MemoryOps.HomeFormat): the file is written ONLY by `personant
+// memops.MemoryOps.HomeFormat): the file is written ONLY by `mempro
 // init` (touch-if-missing) and by a future migration. Nothing on a turn
 // path touches it, so a mid-turn crash cannot tear it, and every write
 // goes through WriteFileAtomic anyway (temp + fsync + rename), so a
@@ -49,9 +49,9 @@ func homeVersionTOML(format int) []byte {
 // unparseable, or that carries no positive `format` key, IS an error —
 // treating corruption as "unversioned" would let a garbled stamp be
 // silently overwritten with a wrong revision.
-func ReadHomeFormat(paths PersonantPaths) (found bool, format int, err error) {
+func ReadHomeFormat(paths MemproPaths) (found bool, format int, err error) {
 	if paths.HomeVersion == "" {
-		return false, 0, errors.New("store: ReadHomeFormat: PersonantPaths.HomeVersion is empty")
+		return false, 0, errors.New("store: ReadHomeFormat: MemproPaths.HomeVersion is empty")
 	}
 	data, rerr := os.ReadFile(paths.HomeVersion)
 	if rerr != nil {
@@ -74,9 +74,9 @@ func ReadHomeFormat(paths PersonantPaths) (found bool, format int, err error) {
 // WriteHomeFormat atomically records format as the home's on-disk
 // revision, replacing any existing stamp. A non-positive format is a
 // caller bug, refused at the boundary.
-func WriteHomeFormat(paths PersonantPaths, format int) error {
+func WriteHomeFormat(paths MemproPaths, format int) error {
 	if paths.HomeVersion == "" {
-		return errors.New("store: WriteHomeFormat: PersonantPaths.HomeVersion is empty")
+		return errors.New("store: WriteHomeFormat: MemproPaths.HomeVersion is empty")
 	}
 	if format <= 0 {
 		return fmt.Errorf("store: WriteHomeFormat: format %d is not a valid revision", format)

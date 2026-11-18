@@ -33,14 +33,14 @@ import (
 // Set it to any non-empty value (the justfile recipes set it to "1")
 // to RUN the live tests; leave it unset to SKIP them. One constant so the
 // helpers, the justfile, and any future caller share one name (DRY).
-const LiveTestsEnv = "PERSONANT_LIVE_TESTS"
+const LiveTestsEnv = "MEMPRO_LIVE_TESTS"
 
 // CorpusTestsEnv is the opt-in environment variable for the slow,
 // artifact-dependent recall-corpus measurement tests. Set it to any
 // non-empty value (the justfile's recall-corpus-test recipe sets it) to RUN
 // them; leave it unset to SKIP them. Distinct from LiveTestsEnv: these
 // tests are gated on cost + derived-artifact presence, not a live endpoint.
-const CorpusTestsEnv = "PERSONANT_CORPUS_TESTS"
+const CorpusTestsEnv = "MEMPRO_CORPUS_TESTS"
 
 // SlowSimTestsEnv is the opt-in environment variable for the slow, in-suite
 // sim mock rungs whose wall-clock would blow the `just test` per-package
@@ -49,7 +49,7 @@ const CorpusTestsEnv = "PERSONANT_CORPUS_TESTS"
 // them. Distinct from the other two: these are gated purely on wall-clock
 // cost within the normal (non-live, non-corpus) mock suite — the fast arm of
 // the same test still runs in the default `just test`.
-const SlowSimTestsEnv = "PERSONANT_SLOW_SIM_TESTS"
+const SlowSimTestsEnv = "MEMPRO_SLOW_SIM_TESTS"
 
 // ReaperEmbeddingModel is the embedding model id served by the local,
 // non-metered `reaper` endpoint.
@@ -63,13 +63,13 @@ const ReaperChatModel = "gemma-4-main"
 const ReaperAPIKey = "dummy"
 
 // reaperDefaultURL is the dev-machine reaper endpoint, overridable via the
-// PERSONANT_REAPER_URL environment variable.
+// MEMPRO_REAPER_URL environment variable.
 const reaperDefaultURL = "http://reaper.local:4000/v1"
 
 // ReaperURL returns the base URL of the `reaper` endpoint used by the live
-// tests: PERSONANT_REAPER_URL when set, else the dev-machine default.
+// tests: MEMPRO_REAPER_URL when set, else the dev-machine default.
 func ReaperURL() string {
-	if url := os.Getenv("PERSONANT_REAPER_URL"); url != "" {
+	if url := os.Getenv("MEMPRO_REAPER_URL"); url != "" {
 		return url
 	}
 	return reaperDefaultURL

@@ -131,7 +131,7 @@ func TestValidProjectName(t *testing.T) {
 		in   string
 		want bool
 	}{
-		{"lowercase", "personant", true},
+		{"lowercase", "mempro", true},
 		{"mixed case with space and underscore", "My App_2", true},
 		{"leading dot", ".dotfiles", true},
 		{"unicode", "résumé", true},
@@ -165,7 +165,7 @@ func TestIsHighSpecificity(t *testing.T) {
 		{"http url", "http://x.test/a/b", true},
 		{"rooted path", "internal/turn/history.go", true},
 		{"abs path", "/etc/foo.toml", true},
-		{"dot-slash path", "./cmd/personant/main.go", true},
+		{"dot-slash path", "./cmd/mempro/main.go", true},
 		{"tilde path", "~/.config/foo.yaml", true},
 
 		// Generic / non-identifier: must NOT be protected.

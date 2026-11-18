@@ -1,4 +1,4 @@
-module personant
+module mempro
 
 go 1.27.3
 

@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"personant/internal/clock"
-	"personant/internal/memops"
+	"mempro/internal/clock"
+	"mempro/internal/memops"
 )
 
 // DecayTurns / decayTime are the spec §2.6.1 default thresholds for

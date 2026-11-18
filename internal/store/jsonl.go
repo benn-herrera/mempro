@@ -10,7 +10,7 @@ import (
 	"os"
 	"sort"
 
-	"personant/internal/memops"
+	"mempro/internal/memops"
 )
 
 // jsonlMaxLineBytes caps one ReadJSONL line, its trailing newline

@@ -6,9 +6,8 @@ and integrity checks run once a day: the day's commit passes thread registry
 integrity validation, and the rollover leaves derived files fresh. The turn repository is deleted and recreated
 at each rollover.
 
-**Checkpoint (clean service-run stop + project creation) → turn repository.** A Personant
+**Checkpoint (clean service-run stop + project creation) → turn repository.** A mempro
 **checkpoint** is a commit of the whole store working tree, hand-edits included, to the turn
 repository, made at a clean service-run stop and after a project is created. Creating or closing a
 thread lands in its turn's own commit. The history
 repository is written only at day rollover, apart from crash recovery ([§4.5.8](../../4-user-surface/4.5-project-identity-and-the-project-s-directory/4.5.8-startup-recovery-after-unclean-shutdown.md)).
-

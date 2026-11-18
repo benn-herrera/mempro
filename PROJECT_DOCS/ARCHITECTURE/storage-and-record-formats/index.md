@@ -4,7 +4,7 @@ Standard pattern: THESIS "The building blocks", row "Indexes".
 
 SPEC §2 states the outcomes: memory lives under one store directory, is plain text and is
 versioned in git. This section holds the layout and record formats this implementation uses.
-`personant verify` enforces the constraints marked below; `personant index rebuild` regenerates
+`mempro verify` enforces the constraints marked below; `mempro index rebuild` regenerates
 derived files.
 
 Contents:

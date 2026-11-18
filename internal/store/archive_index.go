@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"personant/internal/memops"
+	"mempro/internal/memops"
 )
 
 // Archive index store ops (§3.8). The archive index is
@@ -22,7 +22,7 @@ import (
 // ReadSpine's missing-file semantics). Entries are returned in file order
 // (which is sorted by thr_id, since every write goes through
 // WriteJSONL's sort).
-func LoadArchiveIndex(paths PersonantPaths) ([]memops.ArchiveEntry, error) {
+func LoadArchiveIndex(paths MemproPaths) ([]memops.ArchiveEntry, error) {
 	records, err := ReadJSONL[memops.ArchiveEntry](paths.ArchiveIndex)
 	if errors.Is(err, os.ErrNotExist) {
 		return nil, nil
@@ -39,7 +39,7 @@ func LoadArchiveIndex(paths PersonantPaths) ([]memops.ArchiveEntry, error) {
 // RecoveredAt by re-appending the same id, and an archival of an id that
 // was previously recovered legitimately supersedes the old breadcrumb.
 // A no-op (empty entries) makes no write.
-func AppendArchiveEntries(paths PersonantPaths, entries []memops.ArchiveEntry) error {
+func AppendArchiveEntries(paths MemproPaths, entries []memops.ArchiveEntry) error {
 	if len(entries) == 0 {
 		return nil
 	}
@@ -68,7 +68,7 @@ func AppendArchiveEntries(paths PersonantPaths, entries []memops.ArchiveEntry) e
 // is false when no such entry exists (the not-found signal — callers map
 // it to memops.ErrArchiveEntryNotFound at the port boundary). Errors only
 // on read failures.
-func FindArchiveEntry(paths PersonantPaths, thrID string) (memops.ArchiveEntry, bool, error) {
+func FindArchiveEntry(paths MemproPaths, thrID string) (memops.ArchiveEntry, bool, error) {
 	records, err := LoadArchiveIndex(paths)
 	if err != nil {
 		return memops.ArchiveEntry{}, false, fmt.Errorf("find archive entry: %w", err)

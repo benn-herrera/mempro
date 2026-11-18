@@ -14,7 +14,7 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"personant/internal/memops"
+	"mempro/internal/memops"
 )
 
 // thrFrontmatterDelimiter is the literal `---` line that brackets the
@@ -42,19 +42,19 @@ const turnFileDigits = 7
 
 // ThreadDir returns the canonical directory for a thread by id:
 // <Home>/threads/thr_<n>/.
-func ThreadDir(paths PersonantPaths, threadID string) string {
+func ThreadDir(paths MemproPaths, threadID string) string {
 	return filepath.Join(paths.ThreadsDir, threadID)
 }
 
 // ThreadMetaPath returns the path to a thread's metadata file:
 // <Home>/threads/thr_<n>/thread.md (frontmatter + title, no body).
-func ThreadMetaPath(paths PersonantPaths, threadID string) string {
+func ThreadMetaPath(paths MemproPaths, threadID string) string {
 	return filepath.Join(ThreadDir(paths, threadID), threadMetaFileName)
 }
 
 // ThreadTurnsDir returns the path to a thread's turn-excerpt directory:
 // <Home>/threads/thr_<n>/turns/.
-func ThreadTurnsDir(paths PersonantPaths, threadID string) string {
+func ThreadTurnsDir(paths MemproPaths, threadID string) string {
 	return filepath.Join(ThreadDir(paths, threadID), threadTurnsDirName)
 }
 
@@ -71,8 +71,8 @@ func turnFileName(turnNumber int) string {
 //
 // Entries that do not match the canonical naming pattern are silently
 // ignored (e.g. temp directories left from a crashed save). The
-// validator in `personant verify` is the place to flag drift.
-func ListThreadIDs(paths PersonantPaths) ([]string, error) {
+// validator in `mempro verify` is the place to flag drift.
+func ListThreadIDs(paths MemproPaths) ([]string, error) {
 	entries, err := os.ReadDir(paths.ThreadsDir)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
@@ -101,11 +101,11 @@ func ListThreadIDs(paths PersonantPaths) ([]string, error) {
 //
 // Tolerate-and-continue policy: a thread whose thread.md fails to read
 // or parse is logged via logf and skipped. Index building tolerates
-// drift; `personant verify` is the validator that fails hard on bad
+// drift; `mempro verify` is the validator that fails hard on bad
 // files. A nil logf is silent.
 //
 // A missing ThreadsDir returns (nil, nil) — fresh-init state.
-func LoadAllThreadFrontmatter(paths PersonantPaths, logf func(format string, args ...any)) ([]memops.ThreadMeta, error) {
+func LoadAllThreadFrontmatter(paths MemproPaths, logf func(format string, args ...any)) ([]memops.ThreadMeta, error) {
 	if logf == nil {
 		logf = func(string, ...any) {}
 	}
@@ -144,7 +144,7 @@ func LoadAllThreadFrontmatter(paths PersonantPaths, logf func(format string, arg
 // thread.md is absent. Returns a wrapped error when the frontmatter
 // delimiters are missing, the YAML fails to parse, or required fields
 // (id/project) are unset.
-func LoadThreadFrontmatter(paths PersonantPaths, threadID string) (memops.ThreadMeta, error) {
+func LoadThreadFrontmatter(paths MemproPaths, threadID string) (memops.ThreadMeta, error) {
 	path := ThreadMetaPath(paths, threadID)
 	data, err := os.ReadFile(path)
 	if err != nil {
@@ -186,7 +186,7 @@ func LoadThreadFrontmatter(paths PersonantPaths, threadID string) (memops.Thread
 // (oldest→newest) with a blank line between, so the result reads
 // naturally top-to-bottom. A thread with no excerpts yet returns
 // ("", nil).
-func ReadThreadBody(paths PersonantPaths, threadID string, byteBudget int) (string, error) {
+func ReadThreadBody(paths MemproPaths, threadID string, byteBudget int) (string, error) {
 	// selected is newest-first; it is reversed for the chronological join.
 	var selected []string
 	total := 0
@@ -216,7 +216,7 @@ func ReadThreadBody(paths PersonantPaths, threadID string, byteBudget int) (stri
 // ExcerptsNewestFirst calls yield with each excerpt of a thread's assembly
 // window — at most its ThreadTurnWindow most recent — newest first, until
 // yield returns false. An excerpt is read only when it is reached.
-func ExcerptsNewestFirst(paths PersonantPaths, threadID string, yield func(memops.ThreadExcerpt) bool) error {
+func ExcerptsNewestFirst(paths MemproPaths, threadID string, yield func(memops.ThreadExcerpt) bool) error {
 	refs, err := threadExcerptRefs(paths, threadID, ThreadTurnWindow)
 	if err != nil {
 		return err
@@ -240,7 +240,7 @@ func ExcerptsNewestFirst(paths PersonantPaths, threadID string, yield func(memop
 // boundary the fine-tier embedding index chunks on, which a join would
 // lose (an excerpt's own text can contain the blank-line separator the
 // join inserts). A thread with no excerpts yet returns (nil, nil).
-func ReadThreadExcerpts(paths PersonantPaths, threadID string) ([]memops.ThreadExcerpt, error) {
+func ReadThreadExcerpts(paths MemproPaths, threadID string) ([]memops.ThreadExcerpt, error) {
 	refs, err := threadExcerptRefs(paths, threadID, math.MaxInt)
 	if err != nil {
 		return nil, fmt.Errorf("read thread excerpts %s: %w", threadID, err)
@@ -289,7 +289,7 @@ func readExcerptList(turnsDir string, refs []excerptRef) ([]memops.ThreadExcerpt
 // below it are the debt window. A thread shorter than the assembly window
 // has no scrolled-out excerpts, so it returns (nil, nil). Returned in
 // turn-number order (oldest→newest), matching ReadThreadExcerpts.
-func ReadDebtWindowExcerpts(paths PersonantPaths, threadID string, maxN int) ([]memops.ThreadExcerpt, error) {
+func ReadDebtWindowExcerpts(paths MemproPaths, threadID string, maxN int) ([]memops.ThreadExcerpt, error) {
 	if maxN <= 0 {
 		return nil, nil
 	}
@@ -313,7 +313,7 @@ func ReadDebtWindowExcerpts(paths PersonantPaths, threadID string, maxN int) ([]
 // plus ReadThreadBody with no byte budget. For callers that genuinely
 // need the entire thread (the closure curator). Index, verify, and the
 // working-set assembler should use the cheaper narrower calls.
-func LoadThread(paths PersonantPaths, threadID string) (memops.Thread, error) {
+func LoadThread(paths MemproPaths, threadID string) (memops.Thread, error) {
 	fm, err := LoadThreadFrontmatter(paths, threadID)
 	if err != nil {
 		return memops.Thread{}, err
@@ -333,7 +333,7 @@ func LoadThread(paths PersonantPaths, threadID string) (memops.Thread, error) {
 //
 // This rewrites only the small bounded metadata file; the turn-excerpt
 // directory is untouched.
-func SaveThreadFrontmatter(paths PersonantPaths, threadID string, fm memops.ThreadMeta) error {
+func SaveThreadFrontmatter(paths MemproPaths, threadID string, fm memops.ThreadMeta) error {
 	if fm.ID == "" {
 		return fmt.Errorf("save thread frontmatter: id is empty")
 	}
@@ -381,7 +381,7 @@ func SaveThreadFrontmatter(paths PersonantPaths, threadID string, fm memops.Thre
 // SeedThread is the convenience inverse of LoadThread for callers that
 // have a fully-formed memops.Thread in hand — test fixtures and any
 // future bulk-import path. Every block is written as a loose excerpt.
-func SeedThread(paths PersonantPaths, thr memops.Thread) error {
+func SeedThread(paths MemproPaths, thr memops.Thread) error {
 	if err := SaveThreadFrontmatter(paths, thr.Meta.ID, thr.Meta); err != nil {
 		return err
 	}
@@ -515,7 +515,7 @@ func parseTurnHeading(line string) int {
 // Appending is O(1): one small file written, nothing evicted. An empty
 // excerpt is a no-op (the closure path re-engages a thread to rewrite
 // frontmatter without adding a turn).
-func AppendThreadTurn(paths PersonantPaths, threadID string, turnNumber int, excerpt string) error {
+func AppendThreadTurn(paths MemproPaths, threadID string, turnNumber int, excerpt string) error {
 	if excerpt == "" {
 		return nil
 	}

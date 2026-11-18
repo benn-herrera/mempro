@@ -6,12 +6,12 @@ import (
 	"strings"
 	"testing"
 
-	"personant/internal/memops"
-	"personant/internal/memops/fileadapter"
-	"personant/internal/store"
+	"mempro/internal/memops"
+	"mempro/internal/memops/fileadapter"
+	"mempro/internal/store"
 )
 
-func newChainHome(t *testing.T) (store.PersonantPaths, memops.ProjectMeta) {
+func newChainHome(t *testing.T) (store.MemproPaths, memops.ProjectMeta) {
 	t.Helper()
 	tmp := t.TempDir()
 	paths := store.PathsForHome(tmp)

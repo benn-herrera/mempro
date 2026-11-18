@@ -72,7 +72,7 @@ func TestBuildCommitRendering(t *testing.T) {
 
 func TestShortForm(t *testing.T) {
 	stamped := shortForm(Build{Revision: "abc1234def", Time: "2026-07-27T00:00:00Z"})
-	for _, want := range []string{"personant " + Substrate, "commit abc1234", "home format " + strconv.Itoa(CurrentHomeFormat)} {
+	for _, want := range []string{"mempro " + Substrate, "commit abc1234", "home format " + strconv.Itoa(CurrentHomeFormat)} {
 		if !strings.Contains(stamped, want) {
 			t.Errorf("stamped short form %q missing %q", stamped, want)
 		}
@@ -84,7 +84,7 @@ func TestShortForm(t *testing.T) {
 	if strings.Contains(bare, "commit") {
 		t.Errorf("unstamped short form mentions a commit: %q", bare)
 	}
-	for _, want := range []string{"personant " + Substrate, "home format " + strconv.Itoa(CurrentHomeFormat)} {
+	for _, want := range []string{"mempro " + Substrate, "home format " + strconv.Itoa(CurrentHomeFormat)} {
 		if !strings.Contains(bare, want) {
 			t.Errorf("unstamped short form %q missing %q", bare, want)
 		}

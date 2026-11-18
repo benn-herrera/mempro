@@ -1,10 +1,10 @@
-# README – Personant
+# README – mempro
 
-> **Work in progress.** Personant is being rebuilt to run under opencode. The opencode plugin and
+> **Work in progress.** mempro is being rebuilt to run under opencode. The opencode plugin and
 > memory service are not built yet, and parts of this document describe the target, not the
 > current tree. Progress: [`ROADMAP.md`](ROADMAP.md) Part A.
 
-Personant is a memory system for a coding agent, designed to run under unmodified
+mempro is a memory system for a coding agent, designed to run under unmodified
 [opencode](https://opencode.ai) as a server plugin plus a Go memory service. It owns what enters
 every model request, so the agent keeps one continuous career across sessions and projects.
 What it is built from and what is new: [`THESIS.md`](THESIS.md); operating model:
@@ -29,7 +29,7 @@ The aim is a durable assistant with one continuous career.
 - Go 1.27.3+ (`go.mod`)
 - macOS or Linux
 - Development only: Python 3, standard library only. `just recall-madlibs` runs it, and every
-  test and sim recipe depends on that recipe. Running Personant does not need Python.
+  test and sim recipe depends on that recipe. Running mempro does not need Python.
 - To run the plugin route: opencode at the pinned release. The plugin and the production service are
   not built yet, so the pin is not yet stated anywhere; see
   [`ARCHITECTURE.md`](ARCHITECTURE.md) "Plugin route".
@@ -44,15 +44,15 @@ What the current tree builds and runs:
 
 ```sh
 git clone <repo>
-cd personant
-just build          # compiles every package and produces bin/personant
-./bin/personant init      # creates the memory store at ~/.personant/
-./bin/personant version
+cd mempro
+just build          # compiles every package and produces bin/mempro
+./bin/mempro init      # creates the memory store at ~/.mempro/
+./bin/mempro version
 ```
 
-`bin/personant` carries the memory-store commands (`init`, `index`, `verify`, `archive`, `version`;
-the full command surface: [`SPEC.md`](SPEC.md) §4.1). Memory initializes at `~/.personant/` as a git repository; override with
-`$PERSONANT_HOME` or `--home`.
+`bin/mempro` carries the memory-store commands (`init`, `index`, `verify`, `archive`, `version`;
+the full command surface: [`SPEC.md`](SPEC.md) §4.1). Memory initializes at `~/.mempro/` as a git repository; override with
+`$MEMPRO_HOME` or `--home`.
 
 ## How an opencode Session Relates to Memory
 
@@ -61,14 +61,14 @@ open items: [`SPEC.md`](SPEC.md) §1.1.
 
 ## Where Settings Live
 
-opencode's configuration, Personant's own settings and the store directory: [`SPEC.md`](SPEC.md) §8.1,
+opencode's configuration, mempro's own settings and the store directory: [`SPEC.md`](SPEC.md) §8.1,
 §8.2.2 and §2.1; [`ARCHITECTURE.md`](ARCHITECTURE.md) "One inspection location". The current
 code does not match them yet (ROADMAP A12, A12a).
 
 ## Build Targets
 
 ```sh
-just build                # compile every package, then bin/personant (edit gate, step 1)
+just build                # compile every package, then bin/mempro (edit gate, step 1)
 just test-run <pkg> [re]  # run only the touched test(s) (edit gate, step 2)
 just test                 # checkpoint gate: fmt-check + go vet + go test, cache-scoped
 just test-changed         # diagnostic: only the packages the working tree could affect
@@ -91,7 +91,7 @@ just recall-corpus-fetch  # refresh the committed Wikipedia corpus (networked, s
 just add-dependency <mod>@<ver>  # pin one vetted module
 just update-dependencies  # upgrade the whole module graph
 just agents               # install the agent set
-just clean                # remove bin/personant
+just clean                # remove bin/mempro
 ```
 
 `just` alone lists every recipe with its description.
@@ -129,7 +129,7 @@ just sim-tokenceiling-rung                        # live inference, 1 sim-day
 
 Knobs are `just` variables (`just DURATION=1d sim`; overrides go before the recipe name) or environment variables (`DURATION=1d just
 sim`). Both live toggles use the `reaper` endpoint from `internal/testsupport` (override with
-`PERSONANT_REAPER_URL`) and need a reachable `reaper.local` endpoint; a missing or unreachable endpoint is a
+`MEMPRO_REAPER_URL`) and need a reachable `reaper.local` endpoint; a missing or unreachable endpoint is a
 hard failure, not a skip. On macOS, sim runs are wrapped in `caffeinate` and `taskpolicy` against
 idle sleep and background-QoS demotion.
 
@@ -146,9 +146,9 @@ tests drop out of the normal compile and rot silently.
 
 | Opt-in | Set by | Effect |
 |---|---|---|
-| `PERSONANT_LIVE_TESTS=1` | `just integration-test` | live reaper endpoint tests; unreachable = failure |
-| `PERSONANT_CORPUS_TESTS=1` | `just recall-corpus-test` | slow Wikipedia corpus measurement |
-| `PERSONANT_SLOW_SIM_TESTS=1` | `just sim-shadow-slow-test` | slow sim rungs |
+| `MEMPRO_LIVE_TESTS=1` | `just integration-test` | live reaper endpoint tests; unreachable = failure |
+| `MEMPRO_CORPUS_TESTS=1` | `just recall-corpus-test` | slow Wikipedia corpus measurement |
+| `MEMPRO_SLOW_SIM_TESTS=1` | `just sim-shadow-slow-test` | slow sim rungs |
 | `-sim.live-embedding` / `-sim.live-inference` | `just LIVE_*=true sim` | live sim elements |
 
 ## Module Map
@@ -157,7 +157,7 @@ See [`ARCHITECTURE.md`](ARCHITECTURE.md) "Module map".
 
 ## Storage Layout
 
-Memory is plain text in git under `~/.personant/` (override with `$PERSONANT_HOME` or `--home`).
+Memory is plain text in git under `~/.mempro/` (override with `$MEMPRO_HOME` or `--home`).
 The tree: [`ARCHITECTURE.md`](ARCHITECTURE.md) "Store directory layout"; outcomes: [`SPEC.md`](SPEC.md) §2.
 
 ## Crash Recovery
@@ -172,7 +172,7 @@ runtime beneath it (storage, turn chain, recall, closing, archival, crash recove
 exercised in-process by the acceptance simulation ([`SPEC.md`](SPEC.md) §9.1). Open decisions are
 listed in `ROADMAP.md` "Pending decisions"; known defects are `ROADMAP.md` items.
 
-`personant version` prints the version lines. What they are: [`SPEC.md`](SPEC.md) §9.1 "Version
+`mempro version` prints the version lines. What they are: [`SPEC.md`](SPEC.md) §9.1 "Version
 lines" and [`CONVENTIONS.md`](CONVENTIONS.md) "Versioning and acceptance".
 
 ## Design Principles
@@ -185,7 +185,7 @@ writes" and "Storage non-negotiables".
 | Package | Author / Org | License | Use |
 |---|---|---|---|
 | `github.com/BurntSushi/toml` | BurntSushi | MIT | `version.toml` parsing |
-| `github.com/go-git/go-git/v5` | go-git contributors | Apache 2.0 | `internal/autogit` — automatic git operations on `~/.personant/` |
+| `github.com/go-git/go-git/v5` | go-git contributors | Apache 2.0 | `internal/autogit` — automatic git operations on `~/.mempro/` |
 | `github.com/go-git/go-billy/v5` | go-git contributors | Apache 2.0 | `internal/autogit`, `internal/store` — filesystem layer under go-git |
 | `github.com/spf13/cobra` | Steve Francia | Apache 2.0 | CLI subcommand dispatch (`cmd/`) |
 | `gopkg.in/yaml.v3` | Canonical Ltd. | MIT / Apache 2.0 | Thread frontmatter read/write |

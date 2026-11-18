@@ -6,10 +6,10 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/memops"
-	"personant/internal/memops/fileadapter"
-	"personant/internal/model"
-	"personant/internal/store"
+	"mempro/internal/memops"
+	"mempro/internal/memops/fileadapter"
+	"mempro/internal/model"
+	"mempro/internal/store"
 )
 
 // gatedEmbedder wraps the deterministic mock embedder with a gate on
@@ -39,7 +39,7 @@ func (g *gatedEmbedder) Embed(ctx context.Context, texts []string) ([][]float64,
 // seedDeadZoneThread lays down one active thread with `turns` retained
 // excerpts (turn 1..turns), planting probeToken in probeTurn only. Returns
 // the excerpt text by turn so the test can build queries from it.
-func seedDeadZoneThread(t *testing.T, paths store.PersonantPaths, threadID string, turns, probeTurn int, probeToken string) map[int]string {
+func seedDeadZoneThread(t *testing.T, paths store.MemproPaths, threadID string, turns, probeTurn int, probeToken string) map[int]string {
 	t.Helper()
 	ts := "2026-07-01T00:00:00Z"
 	rec := memops.SpineRecord{

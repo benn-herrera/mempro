@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/crashpoint"
-	"personant/internal/dedup"
-	"personant/internal/memops"
+	"mempro/internal/crashpoint"
+	"mempro/internal/dedup"
+	"mempro/internal/memops"
 )
 
 const fileStoreThread = "thr_1"
@@ -37,7 +37,7 @@ func numberedLines(n, changed int) string {
 	return b.String()
 }
 
-func applyEvents(t *testing.T, paths PersonantPaths, turn int, events ...memops.FileEvent) []string {
+func applyEvents(t *testing.T, paths MemproPaths, turn int, events ...memops.FileEvent) []string {
 	t.Helper()
 	written, err := ApplyFileEvents(paths, fileStoreThread, turn, fileStoreAt(turn), events)
 	if err != nil {
@@ -50,7 +50,7 @@ func writeEvent(path, content string) memops.FileEvent {
 	return memops.FileEvent{Kind: memops.FileEventWrite, Path: path, Content: content}
 }
 
-func readIndex(t *testing.T, paths PersonantPaths) []dedup.FileEntry {
+func readIndex(t *testing.T, paths MemproPaths) []dedup.FileEntry {
 	t.Helper()
 	entries, err := ReadTrackedIndex(paths, fileStoreThread)
 	if err != nil {
@@ -60,7 +60,7 @@ func readIndex(t *testing.T, paths PersonantPaths) []dedup.FileEntry {
 }
 
 // storeFiles lists the names under the thread's files/ directory.
-func storeFiles(t *testing.T, paths PersonantPaths) []string {
+func storeFiles(t *testing.T, paths MemproPaths) []string {
 	t.Helper()
 	des, err := os.ReadDir(filepath.Join(ThreadDir(paths, fileStoreThread), trackedFilesDirName))
 	if err != nil {
@@ -331,7 +331,7 @@ func TestFileStoreRewritesCorruptExistingBlob(t *testing.T) {
 
 // assertIndexedFilesPresent fails for each blob or kept diff the index
 // names that is absent.
-func assertIndexedFilesPresent(t *testing.T, paths PersonantPaths) {
+func assertIndexedFilesPresent(t *testing.T, paths MemproPaths) {
 	t.Helper()
 	for _, e := range readIndex(t, paths) {
 		if _, err := os.Stat(TrackedBlobPath(paths, fileStoreThread, e.ID)); err != nil {
@@ -348,7 +348,7 @@ func assertIndexedFilesPresent(t *testing.T, paths PersonantPaths) {
 	}
 }
 
-func indexPaths(t *testing.T, paths PersonantPaths) []string {
+func indexPaths(t *testing.T, paths MemproPaths) []string {
 	t.Helper()
 	var out []string
 	for _, e := range readIndex(t, paths) {
@@ -357,7 +357,7 @@ func indexPaths(t *testing.T, paths PersonantPaths) []string {
 	return out
 }
 
-func writeLegacySidecar(t *testing.T, paths PersonantPaths) string {
+func writeLegacySidecar(t *testing.T, paths MemproPaths) string {
 	t.Helper()
 	legacy := filepath.Join(ThreadDir(paths, fileStoreThread), threadFilesFileName)
 	if err := os.WriteFile(legacy, []byte("{}\n"), 0o644); err != nil {
@@ -413,7 +413,7 @@ func TestPruneTrackedFilesKeepsCurrentBlobAndWindowDiffs(t *testing.T) {
 // pastWindowFixture holds entries at turn 1 (old.go, and shared-old.go
 // whose content shared-new.go also holds) and at turn 10, and returns a
 // turn count that keeps only the turn-10 entries.
-func pastWindowFixture(t *testing.T, paths PersonantPaths) int {
+func pastWindowFixture(t *testing.T, paths MemproPaths) int {
 	t.Helper()
 	applyEvents(t, paths, 1, writeEvent("old.go", "old\n"), writeEvent("shared-old.go", "shared\n"))
 	applyEvents(t, paths, 10, writeEvent("new.go", "new\n"), writeEvent("shared-new.go", "shared\n"))

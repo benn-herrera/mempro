@@ -21,7 +21,7 @@ interface SpineRecord {
 }
 ```
 
-`anchors_projected_at_turn` and `description` decode as 0 and empty on old records. `anchors` and `anchors_projected_at_turn` are derived (the anchor projection computes them from `history_symbols`) but stored in the authoritative record. The display line and the registry slot are generated from the record alone (SPEC §2.2, §2.2.2); without the stored copy, composing a request would read every `thread.md`. They are written at owner-turn close and at closing (`internal/turn/engage.go`, `internal/turn/closure.go`). `personant index rebuild` does not regenerate them, and no drift check covers them.
+`anchors_projected_at_turn` and `description` decode as 0 and empty on old records. `anchors` and `anchors_projected_at_turn` are derived (the anchor projection computes them from `history_symbols`) but stored in the authoritative record. The display line and the registry slot are generated from the record alone (SPEC §2.2, §2.2.2); without the stored copy, composing a request would read every `thread.md`. They are written at owner-turn close and at closing (`internal/turn/engage.go`, `internal/turn/closure.go`). `mempro index rebuild` does not regenerate them, and no drift check covers them.
 
 At owner-turn close, after merge → project → trim (see "Projection"), the projected anchors are written
 to the record; `anchors_projected_at_turn` is set to the current owner-turn index only when the
@@ -30,4 +30,4 @@ projected set differs from the prior one. Every engagement rewrites `last_engage
 
 Contents:
 
-- [Constraints enforced by `personant verify`](constraints-enforced-by-personant-verify.md)
+- [Constraints enforced by `mempro verify`](constraints-enforced-by-mempro-verify.md)

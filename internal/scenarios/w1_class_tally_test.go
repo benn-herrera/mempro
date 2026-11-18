@@ -6,8 +6,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"personant/internal/metrics"
-	"personant/internal/recall/measure"
+	"mempro/internal/metrics"
+	"mempro/internal/recall/measure"
 )
 
 // TestW1ClassTally_SurvivesRecallerSwap is the #111 regression guard: the W1

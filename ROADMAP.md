@@ -1,4 +1,4 @@
-# ROADMAP – Personant
+# ROADMAP – mempro
 
 Future intent only. Not part of the contract doc set; not handed to coding dispatches.
 A finished item leaves nothing. Do not mark it as done and let it persist. Just remove it.
@@ -35,7 +35,7 @@ composition reaches the model and memory silently misses the step) or fail close
 request; the session stops while the service is down). What opencode does when the `context` hook
 throws or the service refuses is unestablished (`OPENCODE_RESEARCH/OPENCODE_RESUME_PROBE.md` §6). Blocks
 ARCHITECTURE "Plugin route". A5 ships fail-open as the interim; **decide before A9 finalises.**
-never enters memory, whatever opencode's transcript shows: Personant composes its own context,
+never enters memory, whatever opencode's transcript shows: mempro composes its own context,
 and the transcript does not decide what enters it.
 
 ### U9 Restart persistence
@@ -56,7 +56,7 @@ and the transcript does not decide what enters it.
 
 ### U11 CONVENTIONS rule
   Not adopted.** External state (an agent's data home, telemetry) never
-  lives inside `~/.personant/` or a test store directory, because crash recovery quarantines untracked files.
+  lives inside `~/.mempro/` or a test store directory, because crash recovery quarantines untracked files.
   The requirement for opencode's data home holds either way (`OPENCODE_RESEARCH/OPENCODE_RESUME_PROBE.md` §5,
   ARCHITECTURE "Start order and resume"); the question is whether it becomes a general CONVENTIONS
   rule. Yes or no; adopt into CONVENTIONS if yes.
@@ -117,7 +117,7 @@ decisions named in them.
   not evidence until it does. Then: a recovery turn on a context call with no preceding prompt;
   reconcile against opencode's stored messages at service start; start order (service listening
   before opencode, managed background server included); opencode's data home outside
-  `~/.personant/`; restart persistence per **U9**. Add a record that
+  `~/.mempro/`; restart persistence per **U9**. Add a record that
   distinguishes a retraction rollback from a crash rollback, so reconcile re-ingests
   crash rollbacks and never a retracted turn (**U8**). (`OPENCODE_RESEARCH/OPENCODE_RESUME_PROBE.md` §§4–5; SPEC §1.6,
   §4.5.8.)
@@ -144,15 +144,15 @@ decisions named in them.
   `FileAdapter.LoadThread`. Measured per-turn ratio over the seed-24095 mock sim: 1.27 from day 9 to
   day 20 and 1.47 from day 9 to day 31 (`ReadThreadBody` → `readExcerptText` alone: 1.21 and 1.44),
   against a flat band of 1.25. Small in absolute terms (≈ 1.3% of sim CPU at day 31). (SPEC §9.1.)
-- [ ] **A12. Install and config.** `personant init` writes the opencode-side
+- [ ] **A12. Install and config.** `mempro init` writes the opencode-side
   settings (`compaction.auto: false`, the plugin entry) in opencode's own format, and the
-  `~/.config/personant/config.toml` template once A12a fixes what `[embedding] model` names; the
+  `~/.config/mempro/config.toml` template once A12a fixes what `[embedding] model` names; the
   store directory holds no settings file. Implement the CLI verbs SPEC §4.1 keeps but `cmd/`
   lacks (`search`, `deps`, `log`), or remove them from SPEC. (SPEC §2.1, §4.1, §8; ARCHITECTURE
   "One inspection location".)
 - [ ] **A12a. Embeddings through opencode.** Recall's embedding index (SPEC §3.4) needs an
-  embedding endpoint, and Personant has no inference path of its own (**U5**). Establish opencode's
-  route for embeddings; if it has none, fork opencode to add one. No Personant-side endpoint
+  embedding endpoint, and mempro has no inference path of its own (**U5**). Establish opencode's
+  route for embeddings; if it has none, fork opencode to add one. No mempro-side endpoint
   configuration.
 
 ### Part B: after the first usable build
@@ -176,7 +176,7 @@ decisions named in them.
   now-stub. The plugin route makes this reachable (the service is already the single writer).
 
   A user routinely interleaves work: two tasks open at once, attention alternating. CWD-scoped
-  agents get this for free, since each directory is an isolated context. Personant cannot take that
+  agents get this for free, since each directory is an isolated context. mempro cannot take that
   shortcut: its premise is a single unified awareness and career, so a context per directory would
   fragment what the system exists to keep whole. It must multitask: multiple live conversations
   open against one shared memory.
@@ -242,11 +242,11 @@ decisions named in them.
   to career memory (a technique); nothing writes one and no layout exists, so B10's career-memory
   write checks and batch review have no subject yet (ARCHITECTURE "Career memory").
 - [ ] **B12. Enforcement of "the service is the only writer of the store directory" (ARCHITECTURE "Automatic vs model-controlled").** opencode's shell reaches
-  `~/.personant/`, so the statement cannot hold as written. Decide whether to enforce it (for
+  `~/.mempro/`, so the statement cannot hold as written. Decide whether to enforce it (for
   example a plugin hook on shell tool calls) or restate it as intention in SPEC and ARCHITECTURE.
-- [ ] **B13. `personant init` refuses an existing store directory.** `init` creates a store directory and nothing else: it
+- [ ] **B13. `mempro init` refuses an existing store directory.** `init` creates a store directory and nothing else: it
   succeeds on an absent or empty directory and otherwise exits non-zero, naming the path and
-  pointing to `personant verify`. Drops "idempotent" from SPEC §4.1 and §8.1; touches
+  pointing to `mempro verify`. Drops "idempotent" from SPEC §4.1 and §8.1; touches
   `cmd/init.go`, `store.Init` and the init tests.
 - [ ] **B14. Rune-safe truncation of thread descriptions and summaries.** `descriptionFromNewThread`
   and `summarizeForNewThread` (`internal/turn/excerpt.go`) cut with `s[:maxLen-3]`, a byte index, so
@@ -266,7 +266,7 @@ Concrete, mostly single-package items; independent of the sequence above unless 
   permanently. SPEC §3.9.1 requires the store to live only
   in the store working tree and the turn repository. Day-rollover completion's restore of the store
   from history repository HEAD depends on the current behavior (ARCHITECTURE "Tracked-file store").
-- [ ] **Anchor projection can emit an anchor `personant verify` rejects.** `turn.ProjectAnchors`
+- [ ] **Anchor projection can emit an anchor `mempro verify` rejects.** `turn.ProjectAnchors`
   ranks high-specificity identifiers first with no length bound, and extraction admits URLs, file
   paths and hex ids up to 64 characters (`internal/turn/chain.go`), while `verify` errors on an
   anchor outside 3–50 characters (`internal/verify/verify.go`), so a thread whose top symbol is a
@@ -278,13 +278,13 @@ Concrete, mostly single-package items; independent of the sequence above unless 
   a stale digest. Quarantine-and-proceed treats derived files as absent from history-repository
   HEAD (`internal/memops/fileadapter/fileadapter_barrier.go`).
 - [ ] **`meta.json` `thread_count` is never written.** `memops.ProjectMeta.ThreadCount` is
-  decoded and `personant verify` checks it is non-negative (`internal/verify/verify.go`), but no
+  decoded and `mempro verify` checks it is non-negative (`internal/verify/verify.go`), but no
   code assigns it, so every project reads 0; the live count is `digest.json`'s
   (`internal/index/digests.go`).
 - [ ] **Closing summaries are not length-bounded before they are written.**
   `curator.DraftClosure` (`internal/curator/curator.go`) only trims the summarizer's draft, and
   `applyClosureResolution` (`internal/turn/closure.go`) writes it to `spine.jsonl` as is. The only
-  check is `personant verify`'s `spine.entry-max-chars` bound (`internal/verify/verify.go`), which
+  check is `mempro verify`'s `spine.entry-max-chars` bound (`internal/verify/verify.go`), which
   `CheckSpineIntegrity` runs at the day-commit, so an over-long draft fails the day rollover's
   thread registry integrity check (SPEC §2.2).
 - [ ] **Tag-less conversational turns are not kept.** `internal/turn/engage.go` returns before
@@ -356,7 +356,7 @@ Concrete, mostly single-package items; independent of the sequence above unless 
 - [ ] **Recall's model-judgment signal is not built.** SPEC §3.4 signal 3; candidates are fetched
   on the symbolic and embedding signals alone (ARCHITECTURE "The model drafts, deterministic code
   writes").
-- [ ] **Event-log rotation.** `personant init` creates `logs/archive/` (`internal/store/init.go`)
+- [ ] **Event-log rotation.** `mempro init` creates `logs/archive/` (`internal/store/init.go`)
   and startup recovery leaves it alone (`internal/recovery/logs.go`), but nothing rotates logs
   into it. Intended layout: monthly gzipped tarballs of logs older than 90 days
   (`logs/archive/YYYY-MM.tar.gz`), which would be the store's only non-text file and needs a
@@ -387,7 +387,7 @@ Concrete, mostly single-package items; independent of the sequence above unless 
 - [ ] **Prompt/response timestamp index.** A metadata index of when each prompt was sent and each
   response received, kept out-of-band and never injected into model context. The §2.8 event log
   carries clock stamps; this is for efficient temporal queries. (SPEC §2.8.)
-- [ ] **Inter-agent data-sharing security.** Deterministic containment for sharing Personant's
+- [ ] **Inter-agent data-sharing security.** Deterministic containment for sharing mempro's
   memory with a client's agent system under NDA-class restrictions. Principle: exclusion, not
   redaction; secret bytes never enter the model's context. Sketch: (1) prepare a redacted base
   dataset offline (allow-list, default-deny hides existence); (2) rebuild all derived structures
@@ -414,7 +414,7 @@ Concrete, mostly single-package items; independent of the sequence above unless 
   class. (SPEC §3.0, §3.1.)
 - [ ] **Encrypted at-rest storage** (back of mind).
 - [ ] **Configuration migration on system upgrade**, covering opencode-held settings that
-  `personant init` writes as well as `~/.config/personant/`.
+  `mempro init` writes as well as `~/.config/mempro/`.
 - [ ] **Multi-user** (v2.0; locked, not under active consideration).
 - [ ] **Weight-baked instinct from outcome history.** Once local fine-tuning is mature and stable,
   the memory store's *outcome record*, not its content, becomes a training signal for a personal
@@ -433,7 +433,7 @@ Concrete, mostly single-package items; independent of the sequence above unless 
   `ARCHITECTURE.md` keeps a short now-stub covering what is built (`MemoryOps.Consolidate` git
   gc/repack, SPEC §3.11; `measure.RebuildTrees`) plus the interface fact SPEC §3.10.8 needs.
 
-  Personant's memory layering is deliberately analogous to organic memory: working short-term (the
+  mempro's memory layering is deliberately analogous to organic memory: working short-term (the
   live working set), consolidated long-term (thread registry and thread bodies, mostly read), archival cold
   storage (off the thread registry, rarely touched), and a metadata layer for operating on active context fast.
   Under sustained use this organization fragments — threads close out of order, the thread registry accretes,

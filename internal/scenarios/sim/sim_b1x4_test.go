@@ -4,9 +4,9 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/memops"
-	"personant/internal/store"
-	"personant/internal/turn"
+	"mempro/internal/memops"
+	"mempro/internal/store"
+	"mempro/internal/turn"
 )
 
 // B1+X4 embedder-enabled acceptance rung — anti-vacuity proofs.

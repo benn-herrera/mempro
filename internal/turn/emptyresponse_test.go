@@ -17,10 +17,10 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/memops/fileadapter"
-	"personant/internal/model"
-	"personant/internal/prompt"
-	"personant/internal/store"
+	"mempro/internal/memops/fileadapter"
+	"mempro/internal/model"
+	"mempro/internal/prompt"
+	"mempro/internal/store"
 )
 
 // TestRunEmptyResponseRepromptRecovers — stage 1 on a conversational turn:

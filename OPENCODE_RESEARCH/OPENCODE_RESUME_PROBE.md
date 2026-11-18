@@ -150,7 +150,7 @@ Column key:
   open.
 - **No duplicates.** No delta was ingested twice. The only re-run, the resumed step, was not ingested at all.
 - **TUI-visible transcript.** Every case shows all five user prompts. Checkpoint placeholders appear as
-  `compaction` messages with summary `PERSONANT PROBE CHECKPOINT` after turns 2 and 5. The killed turn's `idle`
+  `compaction` messages with summary `MEMPRO PROBE CHECKPOINT` after turns 2 and 5. The killed turn's `idle`
   marker is absent in the `idle`/`tool` kill cases.
 
 ## 5. What broke in the probe and what a real implementation needs
@@ -208,7 +208,7 @@ Column key:
      sweep.
    - Decide whether the plugin fails closed. Not established: whether a throwing `context` hook aborts the request
      (§6).
-5. **Keep opencode's data out of the memory home.** Personant recovery quarantines untracked files there.
+5. **Keep opencode's data out of the memory home.** mempro recovery quarantines untracked files there.
 6. **Decide what survives a restart.** `History` and the turn counter (which drives checkpoint cadence) reset on
    every relaunch. Through opencode, the TUI keeps the conversation while the model loses it. Persist History, or
    rebuild it from opencode's store.

@@ -1,6 +1,6 @@
 package store
 
-import "personant/internal/memops"
+import "mempro/internal/memops"
 
 // SymbolRecord is one line of symbols.jsonl (spec §2.4). Derived inverse
 // index: symbol → threads where it appears.

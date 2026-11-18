@@ -13,12 +13,12 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/clock"
-	"personant/internal/memops"
-	"personant/internal/recall/measure"
-	"personant/internal/scenarios"
-	"personant/internal/store"
-	"personant/internal/turn"
+	"mempro/internal/clock"
+	"mempro/internal/memops"
+	"mempro/internal/recall/measure"
+	"mempro/internal/scenarios"
+	"mempro/internal/store"
+	"mempro/internal/turn"
 )
 
 // corpusQueriesPath is the recall_madlibs corpus query artifact the

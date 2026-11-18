@@ -5,10 +5,10 @@ import (
 	"os"
 	"testing"
 
-	"personant/internal/memops"
+	"mempro/internal/memops"
 )
 
-func archiveTestPaths(t *testing.T) PersonantPaths {
+func archiveTestPaths(t *testing.T) MemproPaths {
 	t.Helper()
 	paths := PathsForHome(t.TempDir())
 	if err := os.MkdirAll(paths.ArchiveDir, 0o755); err != nil {

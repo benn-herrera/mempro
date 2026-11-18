@@ -12,10 +12,10 @@ import (
 	"strings"
 	"testing"
 
-	"personant/internal/memops"
+	"mempro/internal/memops"
 )
 
-func newThreadHome(t *testing.T) PersonantPaths {
+func newThreadHome(t *testing.T) MemproPaths {
 	t.Helper()
 	tmp := t.TempDir()
 	paths := PathsForHome(tmp)
@@ -454,7 +454,7 @@ func TestReadThreadBodyWindowsOnRead(t *testing.T) {
 }
 
 // appendTurns seeds thr_1 with excerpts 1..n.
-func appendTurns(t *testing.T, paths PersonantPaths, n int) {
+func appendTurns(t *testing.T, paths MemproPaths, n int) {
 	t.Helper()
 	for i := 1; i <= n; i++ {
 		if err := AppendThreadTurn(paths, "thr_1", i, turnExcerpt(i)); err != nil {

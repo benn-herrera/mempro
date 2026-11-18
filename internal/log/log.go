@@ -11,7 +11,7 @@ import (
 	"sync"
 	"sync/atomic"
 
-	"personant/internal/clock"
+	"mempro/internal/clock"
 )
 
 // Level controls log verbosity.

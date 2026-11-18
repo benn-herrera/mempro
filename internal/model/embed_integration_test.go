@@ -7,7 +7,7 @@
 // a skip — you explicitly asked for the live path.
 //
 // reaper coordinates default to the dev-machine address and are
-// overridable via PERSONANT_REAPER_URL. The API key is the local
+// overridable via MEMPRO_REAPER_URL. The API key is the local
 // non-metered placeholder `dummy` — no secret involved.
 
 package model
@@ -16,7 +16,7 @@ import (
 	"context"
 	"testing"
 
-	"personant/internal/testsupport"
+	"mempro/internal/testsupport"
 )
 
 func TestHTTPEmbedder_Live(t *testing.T) {

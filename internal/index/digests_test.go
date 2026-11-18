@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"personant/internal/memops"
-	"personant/internal/store"
+	"mempro/internal/memops"
+	"mempro/internal/store"
 )
 
 func mkSpineEngaged(id, project, lastEngaged string, anchors ...string) memops.SpineRecord {

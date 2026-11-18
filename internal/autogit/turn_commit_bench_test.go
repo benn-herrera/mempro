@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/clock"
-	"personant/internal/store"
+	"mempro/internal/clock"
+	"mempro/internal/store"
 )
 
 // BenchmarkTurnCommit times the per-turn daily commit CommitTurn makes —
@@ -97,7 +97,7 @@ func benchTurnCommit(b *testing.B, n int, thread string) {
 }
 
 type turnBenchHome struct {
-	paths    store.PersonantPaths
+	paths    store.MemproPaths
 	spine    []byte
 	threadMD []byte
 	turnBody []byte
@@ -194,7 +194,7 @@ func (h *turnBenchHome) write(b *testing.B, rel string, data []byte) {
 }
 
 // probeIndexRoundTrip times one index load and one save of the daily repo.
-func probeIndexRoundTrip(b *testing.B, paths store.PersonantPaths) (load, save time.Duration) {
+func probeIndexRoundTrip(b *testing.B, paths store.MemproPaths) (load, save time.Duration) {
 	b.Helper()
 	repo, err := openRepo(paths, Daily)
 	if err != nil {

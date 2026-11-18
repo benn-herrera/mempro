@@ -27,10 +27,10 @@ import (
 	"sync"
 	"sync/atomic"
 
-	"personant/internal/memops"
-	"personant/internal/model"
-	"personant/internal/recall/exact"
-	"personant/internal/recall/scoring"
+	"mempro/internal/memops"
+	"mempro/internal/model"
+	"mempro/internal/recall/exact"
+	"mempro/internal/recall/scoring"
 )
 
 // maxEmbedChars caps the text sent to the embedder for one thread, query,
@@ -413,9 +413,9 @@ func (s *Service) pendingFlushDepth(threadID string) int {
 
 // recallCacheLocator is the optional interface a MemoryOps adapter
 // satisfies to expose the operational directory the persisted vector cache
-// lives in (§5.1, $PERSONANT_HOME/.recall-cache/). The adapter owns paths —
+// lives in (§5.1, $MEMPRO_HOME/.recall-cache/). The adapter owns paths —
 // they are its secret — so the cache directory is surfaced through this
-// narrow type-assertion rather than a port method or a PersonantPaths in a
+// narrow type-assertion rather than a port method or a MemproPaths in a
 // signature (the §5/§11.6 negative constraint: the cache is operational
 // state, not a port concept). The file adapter implements it; a port mock
 // that does not is simply run without a persisted cache (Prepare falls back

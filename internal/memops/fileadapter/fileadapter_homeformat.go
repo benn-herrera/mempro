@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"personant/internal/store"
+	"mempro/internal/store"
 )
 
 // Home on-disk format stamp (SPEC §9.1). The file substrate keeps it in

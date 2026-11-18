@@ -24,10 +24,10 @@ import (
 	"sort"
 	"testing"
 
-	"personant/internal/memops"
-	"personant/internal/metrics"
-	"personant/internal/recall/scoring"
-	"personant/internal/testsupport"
+	"mempro/internal/memops"
+	"mempro/internal/metrics"
+	"mempro/internal/recall/scoring"
+	"mempro/internal/testsupport"
 )
 
 // corpusQueriesPath is the derived query artifact for the

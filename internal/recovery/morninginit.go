@@ -4,10 +4,10 @@ import (
 	"context"
 	"fmt"
 
-	"personant/internal/autogit"
-	"personant/internal/crashpoint"
-	"personant/internal/index"
-	"personant/internal/store"
+	"mempro/internal/autogit"
+	"mempro/internal/crashpoint"
+	"mempro/internal/index"
+	"mempro/internal/store"
 )
 
 // Morning-init (#94 R3b §2.5): the daily-DB birth primitive — exactly
@@ -28,7 +28,7 @@ var (
 // MorningInit (re)creates .git-daily from the current worktree: nuke any
 // half-created remnant (idempotent — rm of an absent path is a no-op,
 // and the daily DB is disposable by construction, §9), init the daily
-// storage, baseline-commit the whole worktree (Personant-Turn-less,
+// storage, baseline-commit the whole worktree (mempro-Turn-less,
 // AllowEmptyCommits so even a bare home mints a valid HEAD), and stamp
 // the derived watermark = baseline hash.
 //
@@ -43,7 +43,7 @@ var (
 //
 // Cost is O(active working-set bytes), independent of career-history
 // length (§6.1) — it hashes the worktree, never primary history.
-func MorningInit(ctx context.Context, paths store.PersonantPaths) (baselineHash string, rebuilt bool, err error) {
+func MorningInit(ctx context.Context, paths store.MemproPaths) (baselineHash string, rebuilt bool, err error) {
 	if err := ctx.Err(); err != nil {
 		return "", false, err
 	}

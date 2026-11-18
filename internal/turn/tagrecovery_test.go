@@ -14,11 +14,11 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/memops"
-	"personant/internal/memops/fileadapter"
-	"personant/internal/model"
-	"personant/internal/prompt"
-	"personant/internal/store"
+	"mempro/internal/memops"
+	"mempro/internal/memops/fileadapter"
+	"mempro/internal/model"
+	"mempro/internal/prompt"
+	"mempro/internal/store"
 )
 
 // fsWriteDelta is the pre-prompt §3.9 file-edit event the D6 tests buffer
@@ -29,7 +29,7 @@ func fsWriteDelta(path string) Delta {
 
 // spineTurnCount reads thrID's spine TurnCount, failing the test on any
 // read error or a missing record.
-func spineTurnCount(t *testing.T, paths store.PersonantPaths, thrID string) int {
+func spineTurnCount(t *testing.T, paths store.MemproPaths, thrID string) int {
 	t.Helper()
 	records, err := store.ReadSpine(paths.Spine)
 	if err != nil {

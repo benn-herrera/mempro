@@ -8,11 +8,11 @@ import (
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
 
-	"personant/internal/autogit"
-	"personant/internal/memops/fileadapter"
-	"personant/internal/recovery"
-	"personant/internal/scenarios"
-	"personant/internal/store"
+	"mempro/internal/autogit"
+	"mempro/internal/memops/fileadapter"
+	"mempro/internal/recovery"
+	"mempro/internal/scenarios"
+	"mempro/internal/store"
 )
 
 // TestSimBarrier2Day is the #94 R3b barrier-crossing rung: a 2-simulated-

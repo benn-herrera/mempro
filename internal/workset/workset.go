@@ -23,8 +23,8 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"personant/internal/memops"
-	"personant/internal/prompt"
+	"mempro/internal/memops"
+	"mempro/internal/prompt"
 )
 
 // Inputs is the per-turn input shape Compose consumes. Every field is

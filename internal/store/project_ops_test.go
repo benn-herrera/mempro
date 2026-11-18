@@ -6,12 +6,12 @@ import (
 	"path/filepath"
 	"testing"
 
-	"personant/internal/memops"
+	"mempro/internal/memops"
 )
 
-// projectFixturePaths returns a PersonantPaths rooted at t.TempDir() with
+// projectFixturePaths returns a MemproPaths rooted at t.TempDir() with
 // the projects/ subtree present.
-func projectFixturePaths(t *testing.T) PersonantPaths {
+func projectFixturePaths(t *testing.T) MemproPaths {
 	t.Helper()
 	paths := PathsForHome(t.TempDir())
 	if err := os.MkdirAll(paths.ProjectsDir, 0o755); err != nil {

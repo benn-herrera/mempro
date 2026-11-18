@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"personant/internal/memops"
-	"personant/internal/recall/scoring"
+	"mempro/internal/memops"
+	"mempro/internal/recall/scoring"
 )
 
 // Within-thread summary-tree sleep-cycle builder (design within-thread-

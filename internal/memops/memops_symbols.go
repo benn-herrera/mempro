@@ -13,7 +13,7 @@ import (
 // and only need stdlib (strings, regexp, unicode).
 
 // ID format patterns. RE2-compiled once at package init for reuse by JSONL
-// readers/writers and the future `personant verify` command.
+// readers/writers and the future `mempro verify` command.
 var (
 	ThreadIDPattern  = regexp.MustCompile(`^thr_\d+$`)
 	ProjectIDPattern = regexp.MustCompile(`^prj_\d+$`)

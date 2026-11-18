@@ -1,6 +1,6 @@
 ### 3.9 Working-set content dedup
 
-This section covers the slots Personant composes into the working set ([§3.1](../3.1-working-set-composition/index.md)). Dedup never
+This section covers the slots mempro composes into the working set ([§3.1](../3.1-working-set-composition/index.md)). Dedup never
 rewrites opencode's stored transcript or edits its tool-result rows (the [§1.7](../../1-operating-model/1.7-opencode-storage.md) database cleanup is separate): a transcript row is
 dropped from the request once memory has captured it, so repeated file copies there never reach
 the model.

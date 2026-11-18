@@ -4,8 +4,8 @@ import (
 	"strconv"
 	"strings"
 
-	"personant/internal/dedup"
-	"personant/internal/prompt"
+	"mempro/internal/dedup"
+	"mempro/internal/prompt"
 )
 
 // turnAnchorList returns the anchor list to print in the per-turn

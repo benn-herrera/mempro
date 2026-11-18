@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"personant/internal/memops"
+	"mempro/internal/memops"
 )
 
 // The high-specificity identifier patterns (URL / file path / hex ID)

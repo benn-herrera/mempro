@@ -4,9 +4,9 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/clock"
-	"personant/internal/scenarios"
-	"personant/internal/testsupport"
+	"mempro/internal/clock"
+	"mempro/internal/scenarios"
+	"mempro/internal/testsupport"
 )
 
 // TestShadowLayerB_ReverseDivergence drives a mock workload through the real

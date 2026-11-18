@@ -17,10 +17,10 @@ import (
 	"strings"
 	"testing"
 
-	"personant/internal/dedup"
-	"personant/internal/memops"
-	"personant/internal/store"
-	"personant/internal/workset"
+	"mempro/internal/dedup"
+	"mempro/internal/memops"
+	"mempro/internal/store"
+	"mempro/internal/workset"
 )
 
 // TestComposeWorkingSet_LayerE_DirectivesAndConventions seeds the three
@@ -724,7 +724,7 @@ func snapshotExcerpts(t *testing.T, a *FileAdapter, id string) map[string]string
 	return snap
 }
 
-func writeDigest(t *testing.T, paths store.PersonantPaths, d memops.ProjectDigest) {
+func writeDigest(t *testing.T, paths store.MemproPaths, d memops.ProjectDigest) {
 	t.Helper()
 	dir := filepath.Join(paths.ProjectsDir, d.Project)
 	if err := os.MkdirAll(dir, 0o755); err != nil {
@@ -742,7 +742,7 @@ func writeDigest(t *testing.T, paths store.PersonantPaths, d memops.ProjectDiges
 // assertEventLogContains scans every *.log file under the LogsDir and
 // fails if no line matches all three substring needles. Used to verify
 // adapter-side warnings hit the canonical destination.
-func assertEventLogContains(t *testing.T, paths store.PersonantPaths, needles ...string) {
+func assertEventLogContains(t *testing.T, paths store.MemproPaths, needles ...string) {
 	t.Helper()
 	entries, err := os.ReadDir(paths.LogsDir)
 	if err != nil {

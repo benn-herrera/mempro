@@ -1,7 +1,7 @@
 ### Store directory layout
 
 ```
-$PERSONANT_HOME/                    # default ~/.personant; configurable
+$MEMPRO_HOME/                    # default ~/.mempro; configurable
   spine.jsonl                       # thread registry; authoritative, sorted lexically by id
   symbols.jsonl                     # [derived] inverse symbol → threads index
   threads/thr_<id>/                 # one directory per thread
@@ -14,7 +14,7 @@ $PERSONANT_HOME/                    # default ~/.personant; configurable
     meta.json                       # project metadata (authoritative)
     digest.json                     # [derived] the project's other-projects slot entry
   directives/
-    defaults.md                     # baked-in defaults; rewritten from the binary by every `personant init`
+    defaults.md                     # baked-in defaults; rewritten from the binary by every `mempro init`
     user.md                         # user-wide overrides, including feedback directive tuning
     prj_<n>/project.md              # project-scoped directives
   logs/YYYY-MM-DD.log               # plain-text, append-only, one file per day
@@ -34,13 +34,12 @@ $PERSONANT_HOME/                    # default ~/.personant; configurable
 
 | Type | Examples | Drift policy |
 |---|---|---|
-| Authoritative | `spine.jsonl`, `threads/*`, `directives/*.md`, `projects/*/meta.json`, `logs/*.log`, `version.toml`, `archive/index.jsonl` | Source of truth; hand-editable (`directives/defaults.md` is rewritten by every `personant init`). `logs/*.log` is the append-only turn-grain forensic record that crash recovery preserves and re-appends. |
+| Authoritative | `spine.jsonl`, `threads/*`, `directives/*.md`, `projects/*/meta.json`, `logs/*.log`, `version.toml`, `archive/index.jsonl` | Source of truth; hand-editable (`directives/defaults.md` is rewritten by every `mempro init`). `logs/*.log` is the append-only turn-grain forensic record that crash recovery preserves and re-appends. |
 | Derived | `symbols.jsonl`, `projects/*/digest.json` | Regenerable from the authoritative files; a day rollover or archival batch fails if it leaves a derived file stale; turn-repository commits are not checked; never hand-edited. |
-| Operational | `.git-daily/`, `turn-journal.jsonl`, `op-in-progress.json`, `derived-watermark`, `working-set.json`, `.recall-cache/`, `recovery/` | System-managed, not drift-checked, and gitignored: the managed gitignore block (the part of the store's `.gitignore` that Personant writes and keeps current) lists each, `.git/` and `.git-daily/` included, so neither repository sees the other as untracked (the ignore-block rule; see "Crash recovery and the turn and history repositories"). |
+| Operational | `.git-daily/`, `turn-journal.jsonl`, `op-in-progress.json`, `derived-watermark`, `working-set.json`, `.recall-cache/`, `recovery/` | System-managed, not drift-checked, and gitignored: the managed gitignore block (the part of the store's `.gitignore` that mempro writes and keeps current) lists each, `.git/` and `.git-daily/` included, so neither repository sees the other as untracked (the ignore-block rule; see "Crash recovery and the turn and history repositories"). |
 
 A `last-active` or `history` file left by an older store is not managed; it is untracked content.
 
 `.git/`, the history repository, is in no row: system-managed and gitignored like the operational files, it is the only home of archived threads (SPEC §3.8.1) and so irreplaceable; a missing one is refuse-to-open.
 
 `.recall-cache/` and `working-set.json` are filed operational for different reasons. `.recall-cache/` holds derived vectors and summary trees (SPEC §3.4 *Persistence*), but regenerating it costs embedding calls, so it cannot be kept fresh at every day rollover and archival batch as derived files are. Instead each sidecar carries a content-staleness key, a stale or missing sidecar is rebuilt on load, and deleting the directory costs only re-embedding. `working-set.json` holds the active-set order and the dormant set, which no authoritative file records and nothing rebuilds. Losing it costs only recency: the next service run starts with both sets empty (`turn.LoadSession`); a malformed file fails the load.
-

@@ -9,9 +9,9 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"personant/internal/dedup"
-	"personant/internal/memops"
-	"personant/internal/prompt"
+	"mempro/internal/dedup"
+	"mempro/internal/memops"
+	"mempro/internal/prompt"
 )
 
 // Delta is an alias for memops.Delta — the canonical context-

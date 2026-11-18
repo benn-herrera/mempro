@@ -23,7 +23,7 @@
 - Recall-fidelity series are `recall_fidelity_{precision,recall,f1}` and
   `recall_fidelity_adversarial_{precision,recall,f1}`; the intra-thread descent divergence (SPEC
   §9.4) is `recall_intra_descent_divergence`.
-- Live run configurations use `reaper.local` (`reaper.local` is the live-run host, oMLX serving the gemma-4 family, reached through `internal/testsupport`, override `PERSONANT_REAPER_URL`; gemma-4 family inference, `nomicai-modernbert-embed-base-bf16`
+- Live run configurations use `reaper.local` (`reaper.local` is the live-run host, oMLX serving the gemma-4 family, reached through `internal/testsupport`, override `MEMPRO_REAPER_URL`; gemma-4 family inference, `nomicai-modernbert-embed-base-bf16`
   embeddings). Service-in-loop raises per-turn cost from tens of milliseconds to single-digit
   seconds against roughly 20 minutes for a mock 120-day run, so the mock regime stays the default
   loop. The anchor-projection workload variants (`vague-new`, `drift`, `invert`, interleave) report
@@ -52,4 +52,3 @@
   journal bytes, empty `RevertedPaths` on rollover and archival paths, exactly one day-commit, and an
   idempotent second `Reconcile`. The matrix is unit-grade (synthetic store directories; it runs in `just test`); `TestSimBarrier2Day` adds a 2-day run configuration that crosses a
   rollover to the default suite.
-

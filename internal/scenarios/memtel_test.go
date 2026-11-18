@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/clock"
+	"mempro/internal/clock"
 )
 
 // TestMemTelemetry_AppendsParseableSamples is the contract test for the

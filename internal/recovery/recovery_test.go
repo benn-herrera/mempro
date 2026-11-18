@@ -10,11 +10,11 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/autogit"
-	"personant/internal/crashpoint"
-	"personant/internal/eventlog"
-	"personant/internal/memops"
-	"personant/internal/store"
+	"mempro/internal/autogit"
+	"mempro/internal/crashpoint"
+	"mempro/internal/eventlog"
+	"mempro/internal/memops"
+	"mempro/internal/store"
 )
 
 // Every state-machine cell is exercised against a synthetic on-disk
@@ -25,7 +25,7 @@ import (
 
 // ---------- fixtures ----------
 
-func newHome(t *testing.T) store.PersonantPaths {
+func newHome(t *testing.T) store.MemproPaths {
 	t.Helper()
 	paths := store.PathsForHome(t.TempDir())
 	if err := store.Init(paths, store.InitOptions{Quiet: true}); err != nil {
@@ -36,7 +36,7 @@ func newHome(t *testing.T) store.PersonantPaths {
 
 // baselineHome is a home that has been reconciled once (watermark
 // present — the post-upgrade steady state every cell except 12 assumes).
-func baselineHome(t *testing.T) store.PersonantPaths {
+func baselineHome(t *testing.T) store.MemproPaths {
 	t.Helper()
 	paths := newHome(t)
 	rep := reconcile(t, paths)
@@ -44,7 +44,7 @@ func baselineHome(t *testing.T) store.PersonantPaths {
 	return paths
 }
 
-func reconcile(t *testing.T, paths store.PersonantPaths) memops.RecoveryReport {
+func reconcile(t *testing.T, paths store.MemproPaths) memops.RecoveryReport {
 	t.Helper()
 	rep, err := Reconcile(context.Background(), paths)
 	if err != nil {
@@ -53,7 +53,7 @@ func reconcile(t *testing.T, paths store.PersonantPaths) memops.RecoveryReport {
 	return rep
 }
 
-func commitAll(t *testing.T, paths store.PersonantPaths, which autogit.Repo, msg string) string {
+func commitAll(t *testing.T, paths store.MemproPaths, which autogit.Repo, msg string) string {
 	t.Helper()
 	ctx := context.Background()
 	if err := autogit.Add(ctx, paths, which, "."); err != nil {
@@ -65,7 +65,7 @@ func commitAll(t *testing.T, paths store.PersonantPaths, which autogit.Repo, msg
 	return headHash(t, paths, which)
 }
 
-func headHash(t *testing.T, paths store.PersonantPaths, which autogit.Repo) string {
+func headHash(t *testing.T, paths store.MemproPaths, which autogit.Repo) string {
 	t.Helper()
 	h, err := autogit.HeadHash(context.Background(), paths, which)
 	if err != nil {
@@ -74,7 +74,7 @@ func headHash(t *testing.T, paths store.PersonantPaths, which autogit.Repo) stri
 	return h
 }
 
-func writeHome(t *testing.T, paths store.PersonantPaths, rel, content string) string {
+func writeHome(t *testing.T, paths store.MemproPaths, rel, content string) string {
 	t.Helper()
 	abs := filepath.Join(paths.Home, filepath.FromSlash(rel))
 	if err := os.MkdirAll(filepath.Dir(abs), 0o755); err != nil {
@@ -86,7 +86,7 @@ func writeHome(t *testing.T, paths store.PersonantPaths, rel, content string) st
 	return abs
 }
 
-func readHome(t *testing.T, paths store.PersonantPaths, rel string) string {
+func readHome(t *testing.T, paths store.MemproPaths, rel string) string {
 	t.Helper()
 	data, err := os.ReadFile(filepath.Join(paths.Home, filepath.FromSlash(rel)))
 	if err != nil {
@@ -95,7 +95,7 @@ func readHome(t *testing.T, paths store.PersonantPaths, rel string) string {
 	return string(data)
 }
 
-func homeFileExists(paths store.PersonantPaths, rel string) bool {
+func homeFileExists(paths store.MemproPaths, rel string) bool {
 	_, err := os.Stat(filepath.Join(paths.Home, filepath.FromSlash(rel)))
 	return err == nil
 }
@@ -107,14 +107,14 @@ func wantCells(t *testing.T, rep memops.RecoveryReport, cells ...string) {
 	}
 }
 
-func wantMarkerAbsent(t *testing.T, paths store.PersonantPaths) {
+func wantMarkerAbsent(t *testing.T, paths store.MemproPaths) {
 	t.Helper()
 	if _, present, err := store.ReadMarker(paths); err != nil || present {
 		t.Errorf("marker after reconcile: present=%v err=%v, want absent", present, err)
 	}
 }
 
-func wantWatermarkAtHead(t *testing.T, paths store.PersonantPaths) {
+func wantWatermarkAtHead(t *testing.T, paths store.MemproPaths) {
 	t.Helper()
 	wm, present, err := store.ReadDerivedWatermark(paths)
 	if err != nil || !present {
@@ -125,7 +125,7 @@ func wantWatermarkAtHead(t *testing.T, paths store.PersonantPaths) {
 	}
 }
 
-func wantJournalEmpty(t *testing.T, paths store.PersonantPaths) {
+func wantJournalEmpty(t *testing.T, paths store.MemproPaths) {
 	t.Helper()
 	records, torn, err := store.ScanJournal(paths)
 	if err != nil || len(records) != 0 || torn != 0 {
@@ -134,7 +134,7 @@ func wantJournalEmpty(t *testing.T, paths store.PersonantPaths) {
 }
 
 // eventLogged reports whether any daily log contains substr.
-func eventLogged(t *testing.T, paths store.PersonantPaths, substr string) bool {
+func eventLogged(t *testing.T, paths store.MemproPaths, substr string) bool {
 	t.Helper()
 	entries, err := os.ReadDir(paths.LogsDir)
 	if err != nil {
@@ -156,7 +156,7 @@ func eventLogged(t *testing.T, paths store.PersonantPaths, substr string) bool {
 }
 
 // recoveryArtifacts lists recovered-turn-*.md files under recovery/.
-func recoveryArtifacts(t *testing.T, paths store.PersonantPaths) []string {
+func recoveryArtifacts(t *testing.T, paths store.MemproPaths) []string {
 	t.Helper()
 	matches, err := filepath.Glob(filepath.Join(paths.RecoveryDir, "recovered-turn-*.md"))
 	if err != nil {
@@ -170,7 +170,7 @@ const userMDRel = "directives/user.md"
 // quarantinedContents returns the bytes of every quarantined copy of the
 // home-relative path rel, across all reconcile-timestamp dirs (a crash-
 // re-entry sequence legitimately spreads its quarantine over two passes).
-func quarantinedContents(t *testing.T, paths store.PersonantPaths, rel string) []string {
+func quarantinedContents(t *testing.T, paths store.MemproPaths, rel string) []string {
 	t.Helper()
 	matches, err := filepath.Glob(filepath.Join(paths.RecoveryDir, "quarantine", "*", filepath.FromSlash(rel)))
 	if err != nil {
@@ -188,7 +188,7 @@ func quarantinedContents(t *testing.T, paths store.PersonantPaths, rel string) [
 }
 
 // wantQuarantined asserts rel is recoverable byte-exact from quarantine.
-func wantQuarantined(t *testing.T, paths store.PersonantPaths, rel, wantContent string) {
+func wantQuarantined(t *testing.T, paths store.MemproPaths, rel, wantContent string) {
 	t.Helper()
 	got := quarantinedContents(t, paths, rel)
 	if len(got) == 0 {
@@ -281,7 +281,7 @@ func TestCell3_HandEditNeverReset(t *testing.T) {
 // signal (MARKER(turn,t2) := non-empty journal, first record t2); no
 // marker file is written. The cell MEANINGS are unchanged — every
 // assertion below is identical to the marker-file era.
-func tornTurnHome(t *testing.T) (store.PersonantPaths, string) {
+func tornTurnHome(t *testing.T) (store.MemproPaths, string) {
 	t.Helper()
 	paths := newHome(t)
 	if err := eventlog.Log(paths, "system", "baseline", "committed-line"); err != nil {
@@ -314,7 +314,7 @@ func tornTurnHome(t *testing.T) (store.PersonantPaths, string) {
 	return paths, committed
 }
 
-func assertTornTurnRecovered(t *testing.T, paths store.PersonantPaths, committedUserMD string) {
+func assertTornTurnRecovered(t *testing.T, paths store.MemproPaths, committedUserMD string) {
 	t.Helper()
 	if got := readHome(t, paths, userMDRel); got != committedUserMD {
 		t.Errorf("tracked file not reverted: %q", got)
@@ -517,7 +517,7 @@ func TestCell6_TornOnlyJournalQuarantined(t *testing.T) {
 // commit (dailyMsg — lets a caller give it a turn trailer) keeps the
 // worktree clean vs daily, mirroring the real batch's daily absorb.
 // Returns the deletion commit hash the repair must locate.
-func archivedUnstampedHome(t *testing.T, paths store.PersonantPaths, dailyMsg string) string {
+func archivedUnstampedHome(t *testing.T, paths store.MemproPaths, dailyMsg string) string {
 	t.Helper()
 	writeHome(t, paths, "threads/thr_5/thread.md", "archived thread body\n")
 	capture := commitAll(t, paths, autogit.Primary, "archive: capture 1 thread(s)")

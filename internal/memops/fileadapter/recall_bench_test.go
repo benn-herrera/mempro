@@ -20,9 +20,9 @@ import (
 	"fmt"
 	"testing"
 
-	"personant/internal/memops"
-	"personant/internal/recall/scoring"
-	"personant/internal/store"
+	"mempro/internal/memops"
+	"mempro/internal/recall/scoring"
+	"mempro/internal/store"
 )
 
 // benchThreadCounts is the live-thread sweep. Production caps the live

@@ -9,16 +9,16 @@ import (
 	"strings"
 	"testing"
 
-	"personant/internal/memops"
-	"personant/internal/memops/fileadapter"
-	"personant/internal/model"
-	"personant/internal/store"
+	"mempro/internal/memops"
+	"mempro/internal/memops/fileadapter"
+	"mempro/internal/model"
+	"mempro/internal/store"
 )
 
 // readLogLinesContaining walks every *.log under paths.LogsDir and
 // returns the lines containing substr. Pattern mirrors
 // assertSpineMatchFires in internal/scenarios/scenarios_test.go.
-func readLogLinesContaining(t *testing.T, paths store.PersonantPaths, substr string) []string {
+func readLogLinesContaining(t *testing.T, paths store.MemproPaths, substr string) []string {
 	t.Helper()
 	entries, err := os.ReadDir(paths.LogsDir)
 	if err != nil {
@@ -45,7 +45,7 @@ func readLogLinesContaining(t *testing.T, paths store.PersonantPaths, substr str
 // readPromotionLogLines is a back-compat shim around
 // readLogLinesContaining for the B.3 promotion tests; new callers
 // should use the general helper directly.
-func readPromotionLogLines(t *testing.T, paths store.PersonantPaths) []string {
+func readPromotionLogLines(t *testing.T, paths store.MemproPaths) []string {
 	t.Helper()
 	return readLogLinesContaining(t, paths, "staging.promoted")
 }

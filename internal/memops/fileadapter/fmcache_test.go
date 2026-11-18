@@ -7,8 +7,8 @@ import (
 	"sort"
 	"testing"
 
-	"personant/internal/memops"
-	"personant/internal/store"
+	"mempro/internal/memops"
+	"mempro/internal/store"
 )
 
 // sortMetas returns metas sorted by ID for order-independent comparison.
@@ -24,7 +24,7 @@ func sortMetas(ms []memops.ThreadMeta) []memops.ThreadMeta {
 
 // seedThreadMeta writes thread.md frontmatter directly via the store
 // (an out-of-band write, NOT through the adapter) and returns the meta.
-func seedThreadMeta(t *testing.T, paths store.PersonantPaths, id string, lifecycle memops.SymbolLifecycle, everCentral bool) memops.ThreadMeta {
+func seedThreadMeta(t *testing.T, paths store.MemproPaths, id string, lifecycle memops.SymbolLifecycle, everCentral bool) memops.ThreadMeta {
 	t.Helper()
 	now := rfc3339Now()
 	fm := memops.ThreadMeta{

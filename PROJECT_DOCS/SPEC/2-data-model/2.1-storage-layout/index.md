@@ -1,6 +1,6 @@
 ### 2.1 Storage layout
 
-Memory lives under one store directory (default `~/.personant`; the environment variable that
+Memory lives under one store directory (default `~/.mempro`; the environment variable that
 overrides it is in [§8.2.3](../../8-bootstrap-and-lifecycle/8.2-configuration-sources-and-precedence/8.2.3-environment-variables.md)). The **memory store** is that directory with its git history.
 Authoritative files are plain text, versioned in git, and inspectable with ordinary tools. A user's
 direct edit to an authoritative file is never destroyed by crash recovery: it is absorbed ([§4.5.8](../../4-user-surface/4.5-project-identity-and-the-project-s-directory/4.5.8-startup-recovery-after-unclean-shutdown.md)), or, where a torn turn's reset would revert it, preserved byte-exact in

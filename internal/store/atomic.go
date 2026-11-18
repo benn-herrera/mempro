@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"personant/internal/crashpoint"
+	"mempro/internal/crashpoint"
 )
 
 // Crashpoints armed by the R4 recovery matrix. Registered at package-init

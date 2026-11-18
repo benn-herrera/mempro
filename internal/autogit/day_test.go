@@ -46,8 +46,8 @@ func TestParseDayTrailer_Malformed(t *testing.T) {
 	cases := []string{
 		"day 5\n",                       // subject only, no trailer
 		"nothing here",                  //
-		"Personant-Day: not-a-number",   // malformed value
-		"x\n\nPersonant-Turn: t9-123\n", // wrong trailer key
+		"mempro-Day: not-a-number",   // malformed value
+		"x\n\nMempro-Turn: t9-123\n", // wrong trailer key
 	}
 	for _, msg := range cases {
 		if day, ok := ParseDayTrailer(msg); ok {

@@ -7,8 +7,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"personant/internal/log"
-	"personant/internal/memops"
+	"mempro/internal/log"
+	"mempro/internal/memops"
 )
 
 var (
@@ -19,7 +19,7 @@ var (
 var indexCmd = &cobra.Command{
 	Use:   "index",
 	Short: "manage derived files (symbols.jsonl, project digests)",
-	Long: `Operate on personant's derived files (spec §2.1): symbols.jsonl
+	Long: `Operate on mempro's derived files (spec §2.1): symbols.jsonl
 and projects/prj_<n>/digest.json. Subcommands rebuild from canonical
 sources or check for drift.`,
 }

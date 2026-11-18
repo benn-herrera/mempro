@@ -6,12 +6,12 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/clock"
-	"personant/internal/memops"
-	"personant/internal/memops/fileadapter"
-	"personant/internal/metrics"
-	"personant/internal/store"
-	"personant/internal/turn"
+	"mempro/internal/clock"
+	"mempro/internal/memops"
+	"mempro/internal/memops/fileadapter"
+	"mempro/internal/metrics"
+	"mempro/internal/store"
+	"mempro/internal/turn"
 )
 
 // newHarness builds an isolated home, default project, and starting

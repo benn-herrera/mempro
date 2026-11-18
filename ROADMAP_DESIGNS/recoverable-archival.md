@@ -25,7 +25,7 @@ DESIGN ONLY. Grounded against: `internal/memops/fileadapter/fileadapter.go`,
   `Checkout(commitHash, filePath, ...)` — the `git show <commit>:<path>` equivalent, via tree-walk +
   raw write. **But `Checkout` operates on ONE file**; a thread is a directory. **And the fileadapter
   does not currently import autogit at all** — this is the first adapter caller of the autogit seam.
-- `PersonantPaths` has NO archive-index field (paths.go). `SPEC.md:58` already reserves
+- `MemproPaths` has NO archive-index field (paths.go). `SPEC.md:58` already reserves
   `archive/index.jsonl` as canonical-but-empty-until-v0.2.
 - A thread is a DIRECTORY (`threads/thr_<n>/` = `thread.md` + `turns/` + `files.json`), confirmed by
   ArchiveThread's own `os.RemoveAll(ThreadDir)` and SPEC §2.3. §3.8.1's `git rm
@@ -160,7 +160,7 @@ A small `archive_index.go`: `LoadArchiveIndex(paths)`, `AppendArchiveEntries(pat
 (merge + sort by thr_id + atomic temp-rename write), `FindArchiveEntry(paths, thrID)`.
 `ArchiveEntry` domain type lives in `memops` (substrate-agnostic, per ARCHITECTURE.md port policy):
 `{ThrID, CommitHash, TreeHash, ArchivedAt, OriginalPath, SpineSummary, Anchors, Project, RecoveredAt
-(zero until recovered)}`. Add `PersonantPaths.ArchiveIndex` = `Home/archive/index.jsonl` and create
+(zero until recovered)}`. Add `MemproPaths.ArchiveIndex` = `Home/archive/index.jsonl` and create
 `archive/` in `store.Init`.
 
 ---
@@ -218,7 +218,7 @@ This is the reason #99 is acceptance-blocking, and the part with genuine design 
 ### 6.1 (a) Does opportunistic recall consider archived-recoverable threads?
 
 **Recommendation: NO for v0.1 — archived = off-recall until manually recovered.** The archive-index
-anchors/summary are a forensic + `personant archive list/recover` surface, NOT a live §3.4 recall
+anchors/summary are a forensic + `mempro archive list/recover` surface, NOT a live §3.4 recall
 match surface. Rationale:
 
 - §3.4 recall scans the spine + per-thread frontmatter via `fmCache.LoadAll`. Archived threads are
@@ -351,7 +351,7 @@ until `git gc` (which §3.8.2 keeps them reachable through).
 | `internal/turn/archival.go` | Drain collects coldest-first slice, calls `ArchiveThreads` ONCE; remove per-thread loop over `ArchiveThread`; keep the post-batch regen ONLY if the adapter does not already do it inside the batch (it now does — so REMOVE the drain's separate regen; flag this dedup). | Drain stays opportunistic + non-fatal; stays GLOBAL scope. |
 | `internal/scenarios/recall_fidelity.go` (#97), `harness_run.go` (#96) | Re-key fold from `archive.simulated-delete` to `archive.archived`; rename `recall_fidelity_archival_forgiven` → `recall_archived_recoverable`; keep the forgiveness logic (§6.2). | Do NOT make the archive index a live recall surface (6.1). |
 | `internal/scenarios/*` final-gauge | Add recovery-fetch verification phase (§6.3). | Once per ladder run, not per turn. |
-| `cmd/archive.go` (new) | `personant archive list` (reads index) + `personant archive recover <thr_id>` (calls `RecoverThread`). | CLI is a thin port caller; no archival logic in cmd. |
+| `cmd/archive.go` (new) | `mempro archive list` (reads index) + `mempro archive recover <thr_id>` (calls `RecoverThread`). | CLI is a thin port caller; no archival logic in cmd. |
 
 ---
 

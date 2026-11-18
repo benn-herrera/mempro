@@ -11,13 +11,13 @@ import (
 
 	"github.com/go-git/go-git/v5"
 
-	"personant/internal/autogit"
-	"personant/internal/clock"
-	"personant/internal/crashpoint"
-	"personant/internal/eventlog"
-	pnlog "personant/internal/log"
-	"personant/internal/memops"
-	"personant/internal/store"
+	"mempro/internal/autogit"
+	"mempro/internal/clock"
+	"mempro/internal/crashpoint"
+	"mempro/internal/eventlog"
+	pnlog "mempro/internal/log"
+	"mempro/internal/memops"
+	"mempro/internal/store"
 )
 
 // Crashpoints for the R4 W-ARCH matrix: the op=archival marker scope
@@ -195,7 +195,7 @@ func (a *FileAdapter) Consolidate(ctx context.Context, reason string) error {
 // cell 8).
 //
 // The marker is written BEFORE the batch body (F4) and carries the
-// current day (its commits' Personant-Day, F3); it is cleared only after
+// current day (its commits' mempro-Day, F3); it is cleared only after
 // the batch fully lands. An error anywhere leaves the marker set — the
 // batch fails loudly into the recovery path (detection → completion)
 // rather than half-releasing.
@@ -269,7 +269,7 @@ func (a *FileAdapter) absorbIntoDaily(ctx context.Context, reason string) error 
 // a commit's hash is only known AFTER it is written — circular with putting
 // it in a file that the same commit contains. We resolve this with a
 // bounded, per-drain commit shape (three commits, O(1) per drain, never
-// O(K)), all against PRIMARY, all carrying `Personant-Day: <day>` (F3):
+// O(K)), all against PRIMARY, all carrying `mempro-Day: <day>` (F3):
 //
 //  1. CAPTURE commit — stage the whole worktree (Add(".")) and commit.
 //     This pins every to-be-archived directory into a committed tree —

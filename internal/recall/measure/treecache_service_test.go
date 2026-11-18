@@ -8,9 +8,9 @@ import (
 	"strings"
 	"testing"
 
-	"personant/internal/model"
-	"personant/internal/recall/measure"
-	"personant/internal/store"
+	"mempro/internal/model"
+	"mempro/internal/recall/measure"
+	"mempro/internal/store"
 )
 
 // This file is the #111 Inc C Service-level test surface for the persisted
@@ -174,7 +174,7 @@ func recallEngaged(t *testing.T, svc *measure.Service, probe, engaged string) []
 
 // TestTreeCache_GitignoreLocation asserts the .tree lives under .recall-cache
 // (already gitignored) — no new tracked path is introduced (W5/G4). The path
-// is composed from store.PersonantPaths.RecallCache, the gitignored dir.
+// is composed from store.MemproPaths.RecallCache, the gitignored dir.
 func TestTreeCache_GitignoreLocation(t *testing.T) {
 	paths := store.PathsForHome(t.TempDir())
 	treeDir := filepath.Join(paths.RecallCache, "threads")

@@ -36,13 +36,12 @@ noted).
   `context` hook is dropped.
 - **No commands.** The plugin registers no command and asks the user nothing; memory work
   runs automatically (SPEC §4).
-- **Config.** `personant init` writes the settings opencode must hold (`compaction.auto: false`,
-  the plugin entry) into opencode's own config in opencode's own format. Personant-only settings
-  live in `~/.config/personant/` and never overlap opencode's (see "One inspection location").
+- **Config.** `mempro init` writes the settings opencode must hold (`compaction.auto: false`,
+  the plugin entry) into opencode's own config in opencode's own format. mempro-only settings
+  live in `~/.config/mempro/` and never overlap opencode's (see "One inspection location").
 - **Code Mode and plugins.** opencode's own server runs, so its JavaScript plugins and Code Mode (SPEC §1)
   work unchanged.
 - **Sessions and projects.** The project resolves from opencode's session directory alone (see
   "Project identity"). A session reads and writes the one memory; turns
   are assigned to threads, never to sessions; deleting a session does not touch memory
   (SPEC §1.1).
-

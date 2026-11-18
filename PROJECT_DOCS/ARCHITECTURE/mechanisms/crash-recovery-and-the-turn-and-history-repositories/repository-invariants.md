@@ -5,7 +5,7 @@
   repository's HEAD (≤1 turn).
 - **Day-commit guard:** the day-commit is guarded by history repository HEAD being a
   day-commit-shape commit (one the day-commit step made, as opposed to a back-fill or adopt commit
-  that carries the same trailer) with `Personant-Day == N`, not merely a trailered commit, so a
+  that carries the same trailer) with `mempro-Day == N`, not merely a trailered commit, so a
   re-drive after a crash never mints a second day-commit.
 - **Capture-before-removal rule:** `.git-daily` is deleted only after the store working tree is
   captured to the history repository.
@@ -19,4 +19,3 @@
   always passes it.
 - **Ignore-block rule:** both `.git/` and `.git-daily/` are in the managed `.gitignore` block, so neither repository
   sees the other's git directory as untracked debris.
-

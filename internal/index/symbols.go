@@ -28,8 +28,8 @@ package index
 import (
 	"sort"
 
-	"personant/internal/memops"
-	"personant/internal/store"
+	"mempro/internal/memops"
+	"mempro/internal/store"
 )
 
 // BuildSymbols computes the SymbolRecord set implied by the given spine

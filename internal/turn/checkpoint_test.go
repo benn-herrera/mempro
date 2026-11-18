@@ -6,15 +6,15 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/autogit"
-	"personant/internal/memops"
-	"personant/internal/memops/fileadapter"
-	"personant/internal/model"
-	"personant/internal/store"
+	"mempro/internal/autogit"
+	"mempro/internal/memops"
+	"mempro/internal/memops/fileadapter"
+	"mempro/internal/model"
+	"mempro/internal/store"
 )
 
 // headHash returns the substrate HEAD commit hash for the test home.
-func headHash(t *testing.T, paths store.PersonantPaths) string {
+func headHash(t *testing.T, paths store.MemproPaths) string {
 	t.Helper()
 	h, err := autogit.HeadHash(context.Background(), paths, autogit.Daily)
 	if err != nil {
@@ -25,7 +25,7 @@ func headHash(t *testing.T, paths store.PersonantPaths) string {
 
 // runTurn drives one full Run with the given scripted model content and
 // returns the substrate HEAD before and after the turn.
-func runTurn(t *testing.T, paths store.PersonantPaths, state *State, content, input string) (before, after string) {
+func runTurn(t *testing.T, paths store.MemproPaths, state *State, content, input string) (before, after string) {
 	t.Helper()
 	state.Client = model.NewScriptedMock([]model.Response{{Content: content}})
 	before = headHash(t, paths)
@@ -59,7 +59,7 @@ func TestCheckpoint_ThreadCreateCommitsOnce(t *testing.T) {
 // assertion (per-turn commit supersedes the structural-only cadence): a
 // turn with NO structural change still lands exactly one per-turn commit
 // — the durability recovery point that bounds crash loss to ≤1 turn —
-// and that commit carries the Personant-Turn trailer.
+// and that commit carries the mempro-Turn trailer.
 func TestCheckpoint_ContentOnlyTurnCommitsOnce(t *testing.T) {
 	paths, meta := newTestHome(t)
 	pinClock(t, time.Date(2026, 5, 9, 12, 0, 0, 0, time.UTC))
@@ -79,7 +79,7 @@ func TestCheckpoint_ContentOnlyTurnCommitsOnce(t *testing.T) {
 		t.Fatalf("HeadTurn: %v", err)
 	}
 	if headTurn == "" {
-		t.Fatalf("per-turn commit carries no Personant-Turn trailer")
+		t.Fatalf("per-turn commit carries no mempro-Turn trailer")
 	}
 }
 
@@ -167,7 +167,7 @@ func TestCheckpoint_SessionCloseBackstopIsNoOp(t *testing.T) {
 	// Under scoped per-turn staging out-of-band
 	// writes are absorbed only by a FULL sweep, never by a turn commit —
 	// so baseline-checkpoint the fixture before measuring, exactly as a
-	// real home's `personant init`/first backstop would have.
+	// real home's `mempro init`/first backstop would have.
 	if err := state.Ops.Checkpoint(context.Background(), "fixture-baseline"); err != nil {
 		t.Fatalf("fixture-baseline Checkpoint: %v", err)
 	}
@@ -189,7 +189,7 @@ func TestCheckpoint_SessionCloseBackstopIsNoOp(t *testing.T) {
 
 // commitCountBetween returns the number of commits on the first-parent path
 // from `after` back to (but excluding) `before`.
-func commitCountBetween(t *testing.T, paths store.PersonantPaths, before, after string) int {
+func commitCountBetween(t *testing.T, paths store.MemproPaths, before, after string) int {
 	t.Helper()
 	ctx := context.Background()
 	count := 0

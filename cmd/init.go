@@ -5,17 +5,17 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"personant/internal/log"
-	"personant/internal/memops"
-	"personant/internal/memops/fileadapter"
+	"mempro/internal/log"
+	"mempro/internal/memops"
+	"mempro/internal/memops/fileadapter"
 )
 
 var initFlagQuiet bool
 
 var initCmd = &cobra.Command{
 	Use:   "init",
-	Short: "scaffold $PERSONANT_HOME (idempotent)",
-	Long: `Initialize the personant home directory with the canonical layout
+	Short: "scaffold $MEMPRO_HOME (idempotent)",
+	Long: `Initialize the mempro home directory with the canonical layout
 (spec §2.1): directory tree, empty spine.jsonl/symbols.jsonl, seed
 directives, README, .gitignore, git init, and an
 initial commit. Re-running over an existing home is a near no-op.`,
@@ -26,7 +26,7 @@ initial commit. Re-running over an existing home is a near no-op.`,
 		}
 		ops := fileadapter.NewFileAdapter(paths)
 		// The READ-ONLY §9.1 gate variant. `init` must refuse to scaffold
-		// over a home written by a newer personant, but must NOT stamp: the
+		// over a home written by a newer mempro, but must NOT stamp: the
 		// home may not exist yet, and store.Init already owns the
 		// write-if-missing of version.toml.
 		if _, err := checkHomeFormat(context.Background(), ops); err != nil {

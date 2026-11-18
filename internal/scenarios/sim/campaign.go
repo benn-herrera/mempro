@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"personant/internal/prompt"
-	"personant/internal/scenarios"
+	"mempro/internal/prompt"
+	"mempro/internal/scenarios"
 )
 
 // campaignKind identifies which lifecycle program a campaign runs.

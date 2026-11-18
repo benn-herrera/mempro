@@ -8,11 +8,11 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/memops"
-	"personant/internal/memops/fileadapter"
-	"personant/internal/model"
-	"personant/internal/prompt"
-	"personant/internal/store"
+	"mempro/internal/memops"
+	"mempro/internal/memops/fileadapter"
+	"mempro/internal/model"
+	"mempro/internal/prompt"
+	"mempro/internal/store"
 )
 
 // captureClient wraps a model.Client and records the messages of the last
@@ -53,7 +53,7 @@ func (c *captureClient) assembledBytes() int {
 }
 
 // seedThread appends a spine record so a scripted turn can engage it.
-func seedThread(t *testing.T, paths store.PersonantPaths, projectID, id string) {
+func seedThread(t *testing.T, paths store.MemproPaths, projectID, id string) {
 	t.Helper()
 	rec := memops.SpineRecord{
 		ID:           id,

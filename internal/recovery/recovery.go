@@ -1,5 +1,5 @@
 // Package recovery is the startup reconcile orchestrator for the
-// personant substrate (#94, SPEC §4.5.8). Every open runs Reconcile
+// mempro substrate (#94, SPEC §4.5.8). Every open runs Reconcile
 // between Init and the first session read; the clean path is a cheap
 // no-op, and every unclean-shutdown shape maps to exactly one cell of
 // the recovery state machine below (the MAD-converged design in
@@ -55,7 +55,7 @@
 //     cell 11 op=recovery (crash during recovery)      → re-run with the original marker; every
 //     phase is idempotent, so re-entry converges to the same terminal state
 //     cell 12 dirty, NO watermark ever                 → greenfield/legacy: verify-gated
-//     adopt-commit to PRIMARY (Personant-Day trailer), stamp repair, full rebuild
+//     adopt-commit to PRIMARY (mempro-Day trailer), stamp repair, full rebuild
 //     op=barrier                                       → DETECT ONLY (F4): typed Pending to the
 //     adapter, which runs the idempotent §2.3 barrier-recovery routine; the DAILY
 //     observable is irrelevant to classification (the barrier owns daily's lifecycle)
@@ -124,12 +124,12 @@ import (
 	"fmt"
 	"strings"
 
-	"personant/internal/autogit"
-	"personant/internal/crashpoint"
-	"personant/internal/eventlog"
-	"personant/internal/index"
-	"personant/internal/memops"
-	"personant/internal/store"
+	"mempro/internal/autogit"
+	"mempro/internal/crashpoint"
+	"mempro/internal/eventlog"
+	"mempro/internal/index"
+	"mempro/internal/memops"
+	"mempro/internal/store"
 )
 
 // Cell names reported in RecoveryReport.CellsHit. Stable identifiers —
@@ -191,7 +191,7 @@ var (
 // place; the ADAPTER (which owns ArchiveThreads, both repo handles and
 // the day-commit) completes it and re-invokes Reconcile once for the
 // terminal classification.
-func Reconcile(ctx context.Context, paths store.PersonantPaths) (memops.RecoveryReport, error) {
+func Reconcile(ctx context.Context, paths store.MemproPaths) (memops.RecoveryReport, error) {
 	var rep memops.RecoveryReport
 	// One quarantine destination per pass; the directory is created only
 	// if something is actually quarantined, so clean opens stay O(1).
@@ -580,7 +580,7 @@ func Reconcile(ctx context.Context, paths store.PersonantPaths) (memops.Recovery
 // sweep untracked in-flight debris (into the same quarantine), restore
 // the log bytes. Every step is idempotent so a crash at any point
 // re-converges through cell 11.
-func resetSequence(ctx context.Context, paths store.PersonantPaths, rep *memops.RecoveryReport, q *quarantine) error {
+func resetSequence(ctx context.Context, paths store.MemproPaths, rep *memops.RecoveryReport, q *quarantine) error {
 	// Quarantine snapshot before the rollback — the logs-preserve pattern
 	// applied to canonical files. The marker proves an op was in flight
 	// at the crash, but not WHEN each dirty byte was written: a hand-edit
@@ -624,13 +624,13 @@ func resetSequence(ctx context.Context, paths store.PersonantPaths, rep *memops.
 
 // adoptLegacy is cell 12's verify-gated adopt-commit: the dirty
 // worktree's content is structurally validated and committed as-is to
-// PRIMARY, carrying the Personant-Day trailer for the CURRENT day — the
+// PRIMARY, carrying the mempro-Day trailer for the CURRENT day — the
 // sole bootstrap carve-out of the uniform-trailer rule (F3: no
 // marker-day and no prior HEADDAY exists on a greenfield/legacy home).
 // Derived drift is NOT part of the gate — a legacy home's derived state
 // is stale by definition and is rebuilt immediately after; only
 // structural (schema/constraint) errors refuse the adopt.
-func adoptLegacy(ctx context.Context, paths store.PersonantPaths, rep *memops.RecoveryReport) error {
+func adoptLegacy(ctx context.Context, paths store.MemproPaths, rep *memops.RecoveryReport) error {
 	report, err := verifyStructural(paths)
 	if err != nil {
 		return fmt.Errorf("recovery: legacy verify: %w", err)
@@ -711,6 +711,6 @@ func origLabel(eff store.Marker, present bool) string {
 // event log is forensics, and a log-write failure must never abort a
 // recovery that is otherwise converging (the failure itself would then
 // block every subsequent open).
-func logEvent(paths store.PersonantPaths, action, details string) {
+func logEvent(paths store.MemproPaths, action, details string) {
 	_ = eventlog.Log(paths, memops.LogCategoryRecovery, action, details)
 }

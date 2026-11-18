@@ -9,10 +9,10 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/clock"
-	"personant/internal/memops"
-	"personant/internal/memops/fileadapter"
-	"personant/internal/store"
+	"mempro/internal/clock"
+	"mempro/internal/memops"
+	"mempro/internal/memops/fileadapter"
+	"mempro/internal/store"
 )
 
 // TestArchiveListRecoverRoundTrip drives the real CLI surface end-to-end:

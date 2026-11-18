@@ -4,10 +4,10 @@ import (
 	"context"
 	"fmt"
 
-	"personant/internal/autogit"
-	"personant/internal/index"
-	pnlog "personant/internal/log"
-	"personant/internal/store"
+	"mempro/internal/autogit"
+	"mempro/internal/index"
+	pnlog "mempro/internal/log"
+	"mempro/internal/store"
 )
 
 // RebuildDerived is THE derived-state regeneration path: it rebuilds
@@ -37,7 +37,7 @@ import (
 // half-created — e.g. mid-morning-init, or the scenario harness's bare
 // homes) rebuilds and skips the stamp: no watermark is strictly slower
 // at next open, never wrong.
-func RebuildDerived(ctx context.Context, paths store.PersonantPaths, opts index.Options) error {
+func RebuildDerived(ctx context.Context, paths store.MemproPaths, opts index.Options) error {
 	if err := ctx.Err(); err != nil {
 		return err
 	}

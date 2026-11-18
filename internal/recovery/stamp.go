@@ -12,11 +12,11 @@ import (
 	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/go-git/go-git/v5/plumbing/object"
 
-	"personant/internal/autogit"
-	"personant/internal/crashpoint"
-	"personant/internal/memops"
-	"personant/internal/store"
-	"personant/internal/verify"
+	"mempro/internal/autogit"
+	"mempro/internal/crashpoint"
+	"mempro/internal/memops"
+	"mempro/internal/store"
+	"mempro/internal/verify"
 )
 
 // Archival stamp repair (cell 9) and the cell-12 verify gate.
@@ -24,7 +24,7 @@ import (
 // unstampedEntries returns the archive-index entries whose deletion-
 // commit token never landed (the archival crash window between the
 // deletion commit and the stamp commit).
-func unstampedEntries(paths store.PersonantPaths) ([]memops.ArchiveEntry, error) {
+func unstampedEntries(paths store.MemproPaths) ([]memops.ArchiveEntry, error) {
 	entries, err := store.LoadArchiveIndex(paths)
 	if err != nil {
 		return nil, err
@@ -54,11 +54,11 @@ func unstampedEntries(paths store.PersonantPaths) ([]memops.ArchiveEntry, error)
 // recovery precedes validity (see autogit.ResetHard's flag rationale).
 //
 // R3b: the stamp commit targets PRIMARY (archival lives there) under
-// the recovery-repair exemption to primary's barrier exclusivity, and carries the Personant-Day
+// the recovery-repair exemption to primary's barrier exclusivity, and carries the mempro-Day
 // trailer = HEADDAY-at-repair-time (F3) — a standalone stamp-repair
 // never advances the day; on a trailerless (pre-R3b) primary it falls
 // back to the current day, the bootstrap carve-out.
-func stampRepair(ctx context.Context, paths store.PersonantPaths, rep *memops.RecoveryReport) error {
+func stampRepair(ctx context.Context, paths store.MemproPaths, rep *memops.RecoveryReport) error {
 	unstamped, err := unstampedEntries(paths)
 	if err != nil {
 		return fmt.Errorf("recovery: stamp repair: read index: %w", err)
@@ -107,7 +107,7 @@ func stampRepair(ctx context.Context, paths store.PersonantPaths, rep *memops.Re
 		return fmt.Errorf("recovery: stamp repair: stage index: %w", err)
 	}
 	crashpoint.At(cpStampPreCommit)
-	// Personant-Day = HEADDAY at repair time (never advances the day).
+	// mempro-Day = HEADDAY at repair time (never advances the day).
 	repairDay, ok, derr := autogit.HeadDay(ctx, paths, autogit.Primary)
 	if derr != nil {
 		return fmt.Errorf("recovery: stamp repair: read HEADDAY: %w", derr)
@@ -144,7 +144,7 @@ func stampRepair(ctx context.Context, paths store.PersonantPaths, rep *memops.Re
 // path AND on its re-entry (zero unstamped entries — a prior pass may
 // have crashed between index write and absorb), so both converge to a
 // clean tree. A home with no archive index yet is a no-op.
-func absorbStampIntoDaily(ctx context.Context, paths store.PersonantPaths) error {
+func absorbStampIntoDaily(ctx context.Context, paths store.MemproPaths) error {
 	if _, err := os.Stat(paths.ArchiveIndex); err != nil {
 		if errors.Is(err, os.ErrNotExist) {
 			return nil
@@ -167,7 +167,7 @@ func absorbStampIntoDaily(ctx context.Context, paths store.PersonantPaths) error
 
 // archiveIndexRel returns the archive index's home-relative,
 // slash-separated path — the form autogit's scoped staging speaks.
-func archiveIndexRel(paths store.PersonantPaths) (string, error) {
+func archiveIndexRel(paths store.MemproPaths) (string, error) {
 	rel, err := filepath.Rel(paths.Home, paths.ArchiveIndex)
 	if err != nil {
 		return "", fmt.Errorf("index path: %w", err)
@@ -186,7 +186,7 @@ func archiveIndexRel(paths store.PersonantPaths) (string, error) {
 // Exported (#94 R3b): the adapter's F1 roll-forward completion uses it
 // as the deletion-commit discriminator — NEVER worktree-clean-vs-HEAD,
 // which an overnight hand-edit would fool into minting a duplicate.
-func LocateDeletionCommit(ctx context.Context, paths store.PersonantPaths, parentHash, originalPath string) (string, bool, error) {
+func LocateDeletionCommit(ctx context.Context, paths store.MemproPaths, parentHash, originalPath string) (string, bool, error) {
 	if err := ctx.Err(); err != nil {
 		return "", false, err
 	}
@@ -274,7 +274,7 @@ func treeHasPath(c *object.Commit, path string) (bool, error) {
 // the cell-12 adopt gate. The caller gates on report.Errors only —
 // derived Drift is expected on a legacy home and is rebuilt immediately
 // after the adopt.
-func verifyStructural(paths store.PersonantPaths) (memops.VerifyReport, error) {
+func verifyStructural(paths store.MemproPaths) (memops.VerifyReport, error) {
 	return verify.Verify(paths, verify.VerifyOptions{Quiet: true})
 }
 

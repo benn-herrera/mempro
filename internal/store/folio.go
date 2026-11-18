@@ -12,8 +12,8 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"personant/internal/crashpoint"
-	"personant/internal/memops"
+	"mempro/internal/crashpoint"
+	"mempro/internal/memops"
 )
 
 // A thread's turn excerpts live in two tiers: loose files under turns/
@@ -42,7 +42,7 @@ var ErrExcerptNotUTF8 = errors.New("excerpt is not valid UTF-8")
 
 // ThreadFolioPath returns the path of a thread's excerpt folio:
 // <Home>/threads/thr_<n>/folio.jsonl.
-func ThreadFolioPath(paths PersonantPaths, threadID string) string {
+func ThreadFolioPath(paths MemproPaths, threadID string) string {
 	return filepath.Join(ThreadDir(paths, threadID), threadFolioFileName)
 }
 
@@ -137,7 +137,7 @@ func ReadFolio(path string) ([]FolioLine, error) {
 
 // readThreadFolio reads a thread's folio; a thread without one returns
 // (nil, nil). A repeated name is an error.
-func readThreadFolio(paths PersonantPaths, threadID string) ([]FolioLine, error) {
+func readThreadFolio(paths MemproPaths, threadID string) ([]FolioLine, error) {
 	path := ThreadFolioPath(paths, threadID)
 	lines, err := ReadFolio(path)
 	if errors.Is(err, os.ErrNotExist) {
@@ -184,7 +184,7 @@ func listLooseExcerpts(turnsDir string) ([]ExcerptEntry, error) {
 // (name, tier), so a name held in both tiers appears twice. Entries sort by
 // (number, name), the folio entry first for the same name. A malformed
 // folio is an error.
-func ListExcerptEntries(paths PersonantPaths, threadID string) ([]ExcerptEntry, error) {
+func ListExcerptEntries(paths MemproPaths, threadID string) ([]ExcerptEntry, error) {
 	out, err := listLooseExcerpts(ThreadTurnsDir(paths, threadID))
 	if err != nil {
 		return nil, fmt.Errorf("list excerpts %s: %w", threadID, err)
@@ -239,7 +239,7 @@ func readableExcerpts(loose []ExcerptEntry, folio []FolioLine) []excerptRef {
 // both that tail and the loose count the folio is not read. A shorter loose
 // list proves nothing: an excerpt too large to bind, or one in conflict,
 // stays loose below the folio's entries.
-func threadExcerptRefs(paths PersonantPaths, threadID string, need int) ([]excerptRef, error) {
+func threadExcerptRefs(paths MemproPaths, threadID string, need int) ([]excerptRef, error) {
 	loose, err := listLooseExcerpts(ThreadTurnsDir(paths, threadID))
 	if err != nil {
 		return nil, err
@@ -307,7 +307,7 @@ type SettleOutcome struct {
 // An excerpt to be bound that is not valid UTF-8 fails the call with an
 // error wrapping ErrExcerptNotUTF8 and naming its home-relative path; the
 // thread is checked whole before anything is written.
-func SettleExcerptTiers(paths PersonantPaths, threadID string, retired bool) (SettleOutcome, error) {
+func SettleExcerptTiers(paths MemproPaths, threadID string, retired bool) (SettleOutcome, error) {
 	return moveExcerpts(paths, threadID, !retired, func(refs []excerptRef) []ExcerptTier {
 		tiers := make([]ExcerptTier, len(refs))
 		bound := folioPlacementCount(len(refs), retired)
@@ -332,13 +332,13 @@ func folioPlacementCount(n int, retired bool) int {
 
 // bindExcerpts moves the excerpts with the given turn numbers into the
 // folio, leaving the rest where readers find them.
-func bindExcerpts(paths PersonantPaths, threadID string, numbers []int) (SettleOutcome, error) {
+func bindExcerpts(paths MemproPaths, threadID string, numbers []int) (SettleOutcome, error) {
 	return moveExcerpts(paths, threadID, false, tiersFor(numbers, ExcerptFolio))
 }
 
 // unbindExcerpts moves the excerpts with the given turn numbers back to
 // loose files, leaving the rest where readers find them.
-func unbindExcerpts(paths PersonantPaths, threadID string, numbers []int) (SettleOutcome, error) {
+func unbindExcerpts(paths MemproPaths, threadID string, numbers []int) (SettleOutcome, error) {
 	return moveExcerpts(paths, threadID, true, tiersFor(numbers, ExcerptLoose))
 }
 
@@ -365,7 +365,7 @@ func tiersFor(numbers []int, tier ExcerptTier) func([]excerptRef) []ExcerptTier 
 // Order is what keeps every excerpt readable: unbound excerpts are written
 // loose and fsynced before the folio drops them, and the folio holding the
 // bound excerpts is written and fsynced before their loose files go.
-func moveExcerpts(paths PersonantPaths, threadID string, mayUnbind bool, plan func([]excerptRef) []ExcerptTier) (SettleOutcome, error) {
+func moveExcerpts(paths MemproPaths, threadID string, mayUnbind bool, plan func([]excerptRef) []ExcerptTier) (SettleOutcome, error) {
 	var out SettleOutcome
 	fail := func(err error) (SettleOutcome, error) {
 		return SettleOutcome{}, fmt.Errorf("settle excerpts %s: %w", threadID, err)

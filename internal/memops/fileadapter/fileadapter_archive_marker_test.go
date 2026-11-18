@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"personant/internal/crashpoint"
-	"personant/internal/store"
+	"mempro/internal/crashpoint"
+	"mempro/internal/store"
 )
 
 // Tests for the op=archival / op=sleep marker scopes (#94, Wave R3):

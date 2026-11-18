@@ -12,7 +12,7 @@ import (
 	"github.com/go-git/go-git/v5/plumbing/cache"
 	"github.com/go-git/go-git/v5/storage/filesystem"
 
-	"personant/internal/store"
+	"mempro/internal/store"
 )
 
 // Repo selects which of the two git DBs an autogit verb operates on
@@ -54,13 +54,13 @@ func (r Repo) String() string {
 // a divorced git-dir via git.Open(filesystem storage, worktree fs) —
 // PlainOpen/PlainInit are not usable for the daily handle (they assume
 // .git).
-func openRepo(paths store.PersonantPaths, which Repo) (*git.Repository, error) {
+func openRepo(paths store.MemproPaths, which Repo) (*git.Repository, error) {
 	switch which {
 	case Primary:
 		return git.PlainOpen(paths.Home)
 	case Daily:
 		if paths.GitDaily == "" {
-			return nil, errors.New("autogit: PersonantPaths.GitDaily is empty")
+			return nil, errors.New("autogit: MemproPaths.GitDaily is empty")
 		}
 		storer := filesystem.NewStorage(osfs.New(paths.GitDaily), cache.NewObjectLRUDefault())
 		return git.Open(storer, osfs.New(paths.Home))
@@ -73,7 +73,7 @@ func openRepo(paths store.PersonantPaths, which Repo) (*git.Repository, error) {
 // history/trees directly (locateDeletionCommit, trackedLogFiles). It
 // exists so no caller outside this package ever spells the git-dir
 // resolution itself — the Repo selector stays greppable there too.
-func Open(paths store.PersonantPaths, which Repo) (*git.Repository, error) {
+func Open(paths store.MemproPaths, which Repo) (*git.Repository, error) {
 	return openRepo(paths, which)
 }
 
@@ -89,12 +89,12 @@ func Open(paths store.PersonantPaths, which Repo) (*git.Repository, error) {
 // The storage init + HEAD symbolic ref below is exactly git.Init minus
 // that link (and minus core.worktree, which git.Open ignores because
 // the worktree fs is passed explicitly on every open).
-func InitDaily(ctx context.Context, paths store.PersonantPaths) error {
+func InitDaily(ctx context.Context, paths store.MemproPaths) error {
 	if err := ctx.Err(); err != nil {
 		return fmt.Errorf("autogit.InitDaily: %w", err)
 	}
 	if paths.GitDaily == "" {
-		return errors.New("autogit.InitDaily: PersonantPaths.GitDaily is empty")
+		return errors.New("autogit.InitDaily: MemproPaths.GitDaily is empty")
 	}
 	storer := filesystem.NewStorage(osfs.New(paths.GitDaily), cache.NewObjectLRUDefault())
 	if err := storer.Init(); err != nil {
@@ -111,9 +111,9 @@ func InitDaily(ctx context.Context, paths store.PersonantPaths) error {
 // half-created recreate rows). Idempotent: removing an absent dir is a
 // no-op. It NEVER touches the worktree or primary — the daily DB is
 // disposable scaffolding (§9).
-func NukeDaily(paths store.PersonantPaths) error {
+func NukeDaily(paths store.MemproPaths) error {
 	if paths.GitDaily == "" {
-		return errors.New("autogit.NukeDaily: PersonantPaths.GitDaily is empty")
+		return errors.New("autogit.NukeDaily: MemproPaths.GitDaily is empty")
 	}
 	if err := os.RemoveAll(paths.GitDaily); err != nil {
 		return fmt.Errorf("autogit.NukeDaily: %w", err)
@@ -153,7 +153,7 @@ func (s DailyState) String() string {
 // failure on an existing-but-corrupt .git-daily is the half-created
 // signal, NOT a propagated error — a corrupt daily is always recreated
 // from the worktree and can never wedge an open.
-func ProbeDaily(paths store.PersonantPaths) DailyState {
+func ProbeDaily(paths store.MemproPaths) DailyState {
 	if paths.GitDaily == "" {
 		return DailyMissing
 	}

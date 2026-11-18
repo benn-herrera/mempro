@@ -12,7 +12,7 @@ import (
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing/object"
 
-	"personant/internal/store"
+	"mempro/internal/store"
 )
 
 // This file holds the crash-stability additions (#94, Wave R2): the
@@ -24,7 +24,7 @@ import (
 // per-turn commit's turn id. Recovery reads HEADTURN from it; a HEAD
 // commit without the trailer reads as "no turn recorded" (⊥) — the
 // normal state for every pre-per-turn-commit history.
-const TurnTrailerKey = "Personant-Turn"
+const TurnTrailerKey = "mempro-Turn"
 
 // TurnCommitMessage composes the per-turn commit message: a short
 // subject built from reason, then the turn trailer as the final
@@ -38,7 +38,7 @@ func TurnCommitMessage(turnID, reason string) string {
 }
 
 // ParseTurnTrailer extracts the turn id from a commit message, or ""
-// when the message carries no Personant-Turn trailer. The last matching
+// when the message carries no mempro-Turn trailer. The last matching
 // line wins, per git trailer convention.
 func ParseTurnTrailer(message string) string {
 	const prefix = TurnTrailerKey + ":"
@@ -57,7 +57,7 @@ func ParseTurnTrailer(message string) string {
 // pre-upgrade histories). Under the dual-repo scheme turns commit to
 // Daily, so recovery reads HEADTURN there; Primary commits never carry
 // the turn trailer (§4).
-func HeadTurn(ctx context.Context, paths store.PersonantPaths, which Repo) (string, error) {
+func HeadTurn(ctx context.Context, paths store.MemproPaths, which Repo) (string, error) {
 	if err := ctx.Err(); err != nil {
 		return "", fmt.Errorf("autogit.HeadTurn: %w", err)
 	}
@@ -96,7 +96,7 @@ type WorktreeState struct {
 // Worktree computes the WorktreeState of paths.Home against the selected
 // repo's HEAD. Turn-scope dirtiness is a DAILY observable (turns commit
 // to daily); archival/barrier code asks Primary.
-func Worktree(ctx context.Context, paths store.PersonantPaths, which Repo) (WorktreeState, error) {
+func Worktree(ctx context.Context, paths store.MemproPaths, which Repo) (WorktreeState, error) {
 	if err := ctx.Err(); err != nil {
 		return WorktreeState{}, fmt.Errorf("autogit.Worktree: %w", err)
 	}
@@ -160,7 +160,7 @@ func Worktree(ctx context.Context, paths store.PersonantPaths, which Repo) (Work
 // resetting the worktree to primary HEAD (which lags by up to a day)
 // would silently destroy the day. The selector exists for uniformity
 // and greppability, not because a Primary reset is ever legitimate.
-func ResetHard(ctx context.Context, paths store.PersonantPaths, which Repo) (revertedPaths []string, err error) {
+func ResetHard(ctx context.Context, paths store.MemproPaths, which Repo) (revertedPaths []string, err error) {
 	if err := ctx.Err(); err != nil {
 		return nil, fmt.Errorf("autogit.ResetHard: %w", err)
 	}

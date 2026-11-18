@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	"personant/internal/dedup"
-	"personant/internal/memops"
-	"personant/internal/store"
+	"mempro/internal/dedup"
+	"mempro/internal/memops"
+	"mempro/internal/store"
 )
 
 // invariantHarness builds a Harness pointed at a fresh, valid home —
